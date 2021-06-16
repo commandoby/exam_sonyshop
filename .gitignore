@@ -1,0 +1,20 @@
+.idea/
+out/
+target/
+sample/
+
+  
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Maven files
+pom.xml
+*.iml
+
+# Other files
+*.jpeg
+*.jpg
+*.png
