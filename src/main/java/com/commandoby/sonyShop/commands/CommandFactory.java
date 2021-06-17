@@ -12,6 +12,7 @@ public class CommandFactory {
 
     static {
         COMMAND_LIST.put(SIGN_IN_COMMAND.getCommand(), new SignInCommandImpl());
+        COMMAND_LIST.put(REGISTER_COMMAND.getCommand(), new RegisterPageCommandImpl());
         COMMAND_LIST.put(HOME_PAGE_COMMAND.getCommand(), new HomePageCommandImpl());
         COMMAND_LIST.put(PRODUCT_LIST_COMMAND.getCommand(), new ProductListPageCommandImpl());
         COMMAND_LIST.put(PRODUCT_COMMAND.getCommand(), new ProductPageCommandImpl());

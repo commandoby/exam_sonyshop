@@ -27,6 +27,7 @@
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
                 <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
                 </button>
+                <button type="submit" class="btn btn-primary" disabled>${sessionScope.email}</button>
                 <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
             </div>
         </div>

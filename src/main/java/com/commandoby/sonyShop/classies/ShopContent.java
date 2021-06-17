@@ -181,4 +181,8 @@ public class ShopContent {
     public static List<User> getUserList() {
         return userList;
     }
+
+    public static void setUser(User user) {
+        userList.add(user);
+    }
 }

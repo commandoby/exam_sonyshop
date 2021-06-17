@@ -2,6 +2,7 @@ package com.commandoby.sonyShop.enums;
 
 public enum PagesPathEnum {
     HOME_PAGE("category.jsp"),
+    REGISTER_PAGE("register.jsp"),
     SIGN_IN_PAGE("login.jsp"),
     PRODUCTS_LIST_PAGE("products.jsp"),
     PRODUCT_PAGE("product.jsp"),
