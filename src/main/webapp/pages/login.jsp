@@ -29,8 +29,11 @@
                        placeholder="Enter password" name="password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
-            <button type="submit" class="btn btn-primary w-25" name="command" value="home_page">Login</button>
-            <button type="submit" class="btn btn-primary w-25" name="command" value="register">Register</button>
+            <button type="submit" class="btn btn-primary w-50" name="command" value="home_page">Login</button>
+        </form>
+        <br>
+        <form method="post">
+            <button type="submit" class="btn btn-primary w-50" name="command" value="register">Register</button>
         </form>
     </div>
 </div>
