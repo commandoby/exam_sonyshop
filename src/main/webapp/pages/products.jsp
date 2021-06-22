@@ -25,10 +25,17 @@
             <input type="text" class="form-control w-25" id="search_value" placeholder="Enter name" name="search_value">
             <div class="input-group-append">
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-                <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
-                </button>
-                <button type="submit" class="btn btn-primary" disabled>${sessionScope.email}</button>
-                <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
+                <c:if test="${not empty sessionScope.email}">
+                    <button type="submit" class="btn btn-primary" name="command" value="basket">
+                        Basket (${basket_size})
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="command" value="user">
+                            ${sessionScope.email}</button>
+                    <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
+                </c:if>
+                <c:if test="${empty sessionScope.email}">
+                    <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
+                </c:if>
             </div>
         </div>
     </div>
@@ -54,10 +61,12 @@
                                 name="command" value="product">
                             List of product
                         </button>
-                        <button type="submit" class="btn btn-primary"
-                                name="command" value="product_list">
-                            Add to basket
-                        </button>
+                        <c:if test="${not empty sessionScope.email}">
+                            <button type="submit" class="btn btn-primary"
+                                    name="command" value="product_list">
+                                Add to basket
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </form>

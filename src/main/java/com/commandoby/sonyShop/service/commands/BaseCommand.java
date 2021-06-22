@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.commands;
+package com.commandoby.sonyShop.service.commands;
 
 import com.commandoby.sonyShop.exceptions.CommandException;
 

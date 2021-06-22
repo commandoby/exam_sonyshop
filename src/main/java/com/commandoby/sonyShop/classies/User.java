@@ -8,13 +8,15 @@ public class User {
     private String email;
     private String password;
     private String data;
+    private int balance;
 
-    public User(String name, String surname, String email, String password, String data) {
+    public User(String name, String surname, String email, String password, String data, int balance) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.data = data;
+        this.balance = balance;
     }
 
     public User(Builder builder) {
@@ -23,6 +25,7 @@ public class User {
         email = builder.email;
         password = builder.password;
         data = builder.data;
+        balance = builder.balance;
     }
 
     public String getName() {
@@ -45,17 +48,21 @@ public class User {
         return data;
     }
 
+    public int getBalance() {
+        return balance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(data, user.data);
+        return balance == user.balance && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(data, user.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, surname, email, password, data);
+        return Objects.hash(name, surname, email, password, data, balance);
     }
 
     @Override
@@ -66,6 +73,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", data='" + data + '\'' +
+                ", balance=" + balance +
                 '}';
     }
 
@@ -79,6 +87,7 @@ public class User {
         private String email;
         private String password;
         private String data;
+        private int balance;
 
         private Builder() {
         }
@@ -105,6 +114,11 @@ public class User {
 
         public Builder withData(String data) {
             this.data = data;
+            return this;
+        }
+
+        public Builder withBalance(int balance) {
+            this.balance = balance;
             return this;
         }
 

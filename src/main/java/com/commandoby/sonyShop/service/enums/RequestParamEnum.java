@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.enums;
+package com.commandoby.sonyShop.service.enums;
 
 public enum RequestParamEnum {
     INFO("info"),
@@ -8,6 +8,7 @@ public enum RequestParamEnum {
     EMAIL("email"),
     PASSWORD("password"),
     SECOND_PASSWORD("second_password"),
+    USER("user"),
     COMMAND("command"),
     CATEGORIES("categories"),
     CATEGORY_NAME("category_name"),

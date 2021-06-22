@@ -1,13 +1,14 @@
-package com.commandoby.sonyShop.enums;
+package com.commandoby.sonyShop.service.enums;
 
 public enum PagesPathEnum {
-    HOME_PAGE("category.jsp"),
+    HOME_PAGE("home.jsp"),
     REGISTER_PAGE("register.jsp"),
     SIGN_IN_PAGE("login.jsp"),
     PRODUCTS_LIST_PAGE("products.jsp"),
     PRODUCT_PAGE("product.jsp"),
     BASKET_PAGE("basket.jsp"),
-    PAY_PAGE("pay.jsp");
+    PAY_PAGE("pay.jsp"),
+    USER_PAGE("user.jsp");
 
     private final String path;
 

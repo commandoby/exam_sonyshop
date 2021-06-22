@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.commands;
+package com.commandoby.sonyShop.service.commands;
 
 import com.commandoby.sonyShop.classies.Basket;
 import com.commandoby.sonyShop.classies.Category;
@@ -6,7 +6,7 @@ import com.commandoby.sonyShop.classies.Product;
 import com.commandoby.sonyShop.classies.ShopContent;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
-import com.commandoby.sonyShop.search.Search;
+import com.commandoby.sonyShop.service.search.SimpleSearch;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.commandoby.sonyShop.enums.PagesPathEnum.PRODUCTS_LIST_PAGE;
-import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.service.enums.PagesPathEnum.PRODUCTS_LIST_PAGE;
+import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
 public class ProductListPageCommandImpl implements BaseCommand {
     private Logger log = Logger.getLogger(getClass().getName());
@@ -65,7 +65,7 @@ public class ProductListPageCommandImpl implements BaseCommand {
     private List<Product> getSearchProductList(HttpServletRequest servletRequest, List<Product> productList) {
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
         if (searchValue != null && !searchValue.equals("")) {
-            Search<Product> search = new Search<>();
+            SimpleSearch<Product> search = new SimpleSearch<>();
             return search.searchName(searchValue, productList);
         }
         return productList;

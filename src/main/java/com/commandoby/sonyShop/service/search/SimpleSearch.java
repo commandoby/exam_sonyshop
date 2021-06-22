@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.search;
+package com.commandoby.sonyShop.service.search;
 
 import com.commandoby.sonyShop.classies.ShopObject;
 import org.apache.log4j.Logger;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Search<E extends ShopObject> {
+public class SimpleSearch<E extends ShopObject> {
     private Logger log = Logger.getLogger(getClass());
 
     public List<E> searchName(String partOfName, List<E> list) {

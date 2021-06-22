@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.enums;
+package com.commandoby.sonyShop.service.enums;
 
 public enum CommandsEnum {
     SIGN_IN_COMMAND("sign-in"),
@@ -7,7 +7,8 @@ public enum CommandsEnum {
     PRODUCT_LIST_COMMAND("product_list"),
     PRODUCT_COMMAND("product"),
     BASKET_COMMAND("basket"),
-    PAY_COMMAND("pay");
+    PAY_COMMAND("pay"),
+    USER_COMMAND("user");
 
     private final String command;
 

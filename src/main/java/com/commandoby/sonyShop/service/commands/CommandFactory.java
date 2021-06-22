@@ -1,11 +1,11 @@
-package com.commandoby.sonyShop.commands;
+package com.commandoby.sonyShop.service.commands;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.commandoby.sonyShop.enums.CommandsEnum.*;
-import static com.commandoby.sonyShop.enums.RequestParamEnum.COMMAND;
+import static com.commandoby.sonyShop.service.enums.CommandsEnum.*;
+import static com.commandoby.sonyShop.service.enums.RequestParamEnum.COMMAND;
 
 public class CommandFactory {
     private static final Map<String, BaseCommand> COMMAND_LIST = new HashMap<>();
@@ -18,12 +18,13 @@ public class CommandFactory {
         COMMAND_LIST.put(PRODUCT_COMMAND.getCommand(), new ProductPageCommandImpl());
         COMMAND_LIST.put(BASKET_COMMAND.getCommand(), new BasketPageCommandImpl());
         COMMAND_LIST.put(PAY_COMMAND.getCommand(), new PayCommandImpl());
+        COMMAND_LIST.put(USER_COMMAND.getCommand(), new UserPageCommandImpl());
     }
 
     public static BaseCommand defineCommand(HttpServletRequest servletRequest) {
         String commandKey = servletRequest.getParameter(COMMAND.getValue());
         if (commandKey == null || commandKey.isEmpty()) {
-            commandKey = SIGN_IN_COMMAND.getCommand();
+            commandKey = HOME_PAGE_COMMAND.getCommand();
         }
 
         return COMMAND_LIST.get(commandKey);

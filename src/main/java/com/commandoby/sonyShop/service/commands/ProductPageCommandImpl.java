@@ -1,9 +1,8 @@
-package com.commandoby.sonyShop.commands;
+package com.commandoby.sonyShop.service.commands;
 
 import com.commandoby.sonyShop.classies.Basket;
 import com.commandoby.sonyShop.classies.Product;
 import com.commandoby.sonyShop.classies.ShopContent;
-import com.commandoby.sonyShop.enums.RequestParamEnum;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import org.apache.log4j.Logger;
@@ -11,8 +10,8 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.commandoby.sonyShop.enums.PagesPathEnum.PRODUCT_PAGE;
-import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.service.enums.PagesPathEnum.PRODUCT_PAGE;
+import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
 public class ProductPageCommandImpl implements BaseCommand{
     Logger log = Logger.getLogger(getClass());

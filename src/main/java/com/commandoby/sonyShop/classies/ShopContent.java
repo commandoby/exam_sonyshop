@@ -15,7 +15,7 @@ public class ShopContent {
     private static final Category memoryCard = new Category("Memory card", "memcard.jpeg", "memcard");
 
     static {
-        userList.add(new User("Admin", "Admin", "admin", "admin", "1980-01-01"));
+        userList.add(new User("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999));
 
         categoriesList.add(phone);
         categoriesList.add(mp3Player);

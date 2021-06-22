@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Products list</title>
+    <title>Basket</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -24,7 +24,8 @@
             <button type="submit" class="btn btn-success" name="command" value="pay">&nbsp&nbsp Pay &nbsp&nbsp
             </button>
             <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-            <button type="submit" class="btn btn-primary" disabled>${sessionScope.email}</button>
+            <button type="submit" class="btn btn-primary" name="command" value="user">
+                ${sessionScope.email}</button>
             <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
         </div>
     </div>
