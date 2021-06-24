@@ -1,6 +1,6 @@
 <%@ page import="com.commandoby.sonyShop.classies.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.commandoby.sonyShop.classies.Basket" %>
+<%@ page import="com.commandoby.sonyShop.classies.Order" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
@@ -32,19 +32,20 @@
 </form>
 
 <%
-    int id_basket = 0;
-    Basket basket = (Basket) session.getAttribute("basket");
-    if (basket == null) basket = new Basket();
+    int id_product = 0;
+    Order order = (Order) session.getAttribute("order");
+    if (order == null) order = new Order();
 %>
 <div class="container">
     <br>
     <h3>There are ${basket_size} products in the basket for the amount of:
         <b style="color: orangered">${basket_price}</b></h3>
-    <c:if test="${not empty basket}">
-        <c:forEach items="<%= basket.getProductList() %>" var="product">
+    <h3>User balance: <b style="color: orangered">${user_balance}</b></h3>
+    <c:if test="${not empty order}">
+        <c:forEach items="<%= order.getProductList() %>" var="product">
             <form method="post">
                 <div class="media border">
-                    <input type="hidden" name="remove_id" value="<%= id_basket %>"/>
+                    <input type="hidden" name="remove_id" value="<%= id_product %>"/>
                     <input type="hidden" name="product_name" value="${product.getName()}"/>
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
                          src="${contextPath}/images/${product.getCategories().getTag()}/${product.getImageName()}"
@@ -63,7 +64,7 @@
                 </div>
             </form>
             <br>
-            <% id_basket++; %>
+            <% id_product++; %>
         </c:forEach>
     </c:if>
 </div>

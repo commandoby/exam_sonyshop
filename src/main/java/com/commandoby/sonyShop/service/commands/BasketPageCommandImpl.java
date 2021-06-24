@@ -1,14 +1,14 @@
 package com.commandoby.sonyShop.service.commands;
 
-import com.commandoby.sonyShop.classies.Basket;
+import com.commandoby.sonyShop.classies.Order;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
+import com.commandoby.sonyShop.service.enums.PagesPathEnum;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.commandoby.sonyShop.service.enums.PagesPathEnum.BASKET_PAGE;
 import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
 public class BasketPageCommandImpl implements BaseCommand {
@@ -18,48 +18,56 @@ public class BasketPageCommandImpl implements BaseCommand {
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         int basketPrice = 0;
         int basketSize = 0;
+        int userBalance = 0;
         int removeProduct;
-        Basket basket;
+        Order order;
 
         if (servletRequest.getParameter(REMOVE_PRODUCT_ID.getValue()) != null) {
             removeProduct = Integer.parseInt(servletRequest
                     .getParameter(REMOVE_PRODUCT_ID.getValue()));
-            basket = getBasketList(servletRequest, removeProduct);
+            order = getBasketList(servletRequest, removeProduct);
         } else {
-            basket = getBasketList(servletRequest);
+            order = getBasketList(servletRequest);
         }
 
-        basketPrice = basket.getBasketPrice();
-        basketSize = basket.getProductList().size();
+        basketPrice = order.getOrderPrice();
+        basketSize = order.getProductList().size();
 
-        servletRequest.setAttribute(BASKET_PRICE.getValue(), basketPrice);
-        servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
-        servletRequest.setAttribute(BASKET.getValue(), basket);
-
-        return BASKET_PAGE.getPath();
-    }
-
-    private static Basket getBasketList(HttpServletRequest servletRequest) {
-        HttpSession session = servletRequest.getSession();
-        Basket basket = (Basket) session.getAttribute(BASKET.getValue());
-        if (basket == null) basket = new Basket();
-        return basket;
-    }
-
-    private Basket getBasketList(HttpServletRequest servletRequest, int id) {
-        HttpSession session = servletRequest.getSession();
-        Basket basket = (Basket) session.getAttribute(BASKET.getValue());
         try {
-            basket.removeProduct(id);
+            userBalance = UserPageCommandImpl.getUser(servletRequest).getBalance();
+            servletRequest.setAttribute(USER_BALANCE.getValue(), userBalance);
         } catch (NoFoundException e) {
             log.error(e);
         }
-        session.setAttribute(BASKET.getValue(), basket);
-        return basket;
+
+        servletRequest.setAttribute(BASKET_PRICE.getValue(), basketPrice);
+        servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
+        servletRequest.setAttribute(ORDER.getValue(), order);
+
+        return PagesPathEnum.BASKET_PAGE.getPath();
+    }
+
+    private static Order getBasketList(HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession();
+        Order order = (Order) session.getAttribute(ORDER.getValue());
+        if (order == null) order = new Order();
+        return order;
+    }
+
+    private Order getBasketList(HttpServletRequest servletRequest, int id) {
+        HttpSession session = servletRequest.getSession();
+        Order order = (Order) session.getAttribute(ORDER.getValue());
+        try {
+            order.removeProduct(id);
+        } catch (NoFoundException e) {
+            log.error(e);
+        }
+        session.setAttribute(ORDER.getValue(), order);
+        return order;
     }
 
     public static int getBasketSize(HttpServletRequest servletRequest) {
-        Basket basket = getBasketList(servletRequest);
-        return basket.getProductList().size();
+        Order order = getBasketList(servletRequest);
+        return order.getProductList().size();
     }
 }

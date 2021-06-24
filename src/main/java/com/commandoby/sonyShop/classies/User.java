@@ -1,5 +1,7 @@
 package com.commandoby.sonyShop.classies;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -9,6 +11,7 @@ public class User {
     private String password;
     private String data;
     private int balance;
+    private List<Order> orders = new ArrayList<>();
 
     public User(String name, String surname, String email, String password, String data, int balance) {
         this.name = name;
@@ -50,6 +53,18 @@ public class User {
 
     public int getBalance() {
         return balance;
+    }
+
+    public void updateBalance(int distinction) {
+        balance += distinction;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
     }
 
     @Override

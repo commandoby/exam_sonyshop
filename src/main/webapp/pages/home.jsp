@@ -23,6 +23,9 @@
             </div>
             <input type="text" class="form-control w-25" id="search_value" placeholder="Enter name" name="search_value">
             <div class="input-group-append">
+                <button type="submit" class="btn btn-primary" name="command" value="search">
+                    Advanced Search
+                </button>
                 <c:if test="${not empty sessionScope.email}">
                     <button type="submit" class="btn btn-primary" name="command" value="basket">
                         Basket (${basket_size})

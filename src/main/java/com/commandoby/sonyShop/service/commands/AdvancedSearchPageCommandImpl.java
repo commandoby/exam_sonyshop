@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.service.commands;
 
+import com.commandoby.sonyShop.classies.ShopContent;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.service.enums.PagesPathEnum;
 
@@ -7,15 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
-public class RegisterPageCommandImpl implements BaseCommand {
+public class AdvancedSearchPageCommandImpl implements BaseCommand{
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
-        String email = servletRequest.getParameter(EMAIL.getValue());
-        String password = servletRequest.getParameter(PASSWORD.getValue());
 
-        servletRequest.setAttribute(EMAIL.getValue(), email);
-        servletRequest.setAttribute(PASSWORD.getValue(), password);
+        servletRequest.setAttribute(CATEGORIES.getValue(), ShopContent.getCategoriesList());
 
-        return PagesPathEnum.REGISTER_PAGE.getPath();
+        return PagesPathEnum.ADVANCED_SEARCH.getPath();
     }
 }

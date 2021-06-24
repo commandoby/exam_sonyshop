@@ -17,24 +17,12 @@ public class Category implements ShopObject{
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getImageName() {
         return imageName;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
     public String getTag() {
         return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
     }
 
     @Override

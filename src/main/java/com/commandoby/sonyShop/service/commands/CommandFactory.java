@@ -17,8 +17,9 @@ public class CommandFactory {
         COMMAND_LIST.put(PRODUCT_LIST_COMMAND.getCommand(), new ProductListPageCommandImpl());
         COMMAND_LIST.put(PRODUCT_COMMAND.getCommand(), new ProductPageCommandImpl());
         COMMAND_LIST.put(BASKET_COMMAND.getCommand(), new BasketPageCommandImpl());
-        COMMAND_LIST.put(PAY_COMMAND.getCommand(), new PayCommandImpl());
+        COMMAND_LIST.put(PAY_COMMAND.getCommand(), new PayPageCommandImpl());
         COMMAND_LIST.put(USER_COMMAND.getCommand(), new UserPageCommandImpl());
+        COMMAND_LIST.put(ADVANCED_SEARCH_COMMAND.getCommand(), new AdvancedSearchPageCommandImpl());
     }
 
     public static BaseCommand defineCommand(HttpServletRequest servletRequest) {

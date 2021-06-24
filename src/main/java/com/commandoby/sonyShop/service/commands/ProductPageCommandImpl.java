@@ -1,16 +1,16 @@
 package com.commandoby.sonyShop.service.commands;
 
-import com.commandoby.sonyShop.classies.Basket;
+import com.commandoby.sonyShop.classies.Order;
 import com.commandoby.sonyShop.classies.Product;
 import com.commandoby.sonyShop.classies.ShopContent;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
+import com.commandoby.sonyShop.service.enums.PagesPathEnum;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.commandoby.sonyShop.service.enums.PagesPathEnum.PRODUCT_PAGE;
 import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
 public class ProductPageCommandImpl implements BaseCommand{
@@ -32,7 +32,7 @@ public class ProductPageCommandImpl implements BaseCommand{
         int basketSize = BasketPageCommandImpl.getBasketSize(servletRequest);
         servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
 
-        return PRODUCT_PAGE.getPath();
+        return PagesPathEnum.PRODUCT_PAGE.getPath();
     }
 
     private Product getProduct(HttpServletRequest servletRequest, String name) throws NoFoundException {
@@ -44,9 +44,9 @@ public class ProductPageCommandImpl implements BaseCommand{
 
     private void addProductToBasket(HttpServletRequest servletRequest, Product product) throws NoFoundException {
         HttpSession session = servletRequest.getSession();
-        Basket basket = (Basket) session.getAttribute(BASKET.getValue());
-        if (basket == null) basket = new Basket();
-        basket.addProduct(product);
-        session.setAttribute(BASKET.getValue(), basket);
+        Order order = (Order) session.getAttribute(ORDER.getValue());
+        if (order == null) order = new Order();
+        order.addProduct(product);
+        session.setAttribute(ORDER.getValue(), order);
     }
 }

@@ -19,6 +19,7 @@ public class UserPageCommandImpl implements BaseCommand {
         try {
             User user = getUser(servletRequest);
             servletRequest.setAttribute(USER.getValue(), user);
+            servletRequest.setAttribute(USER_ORDERS.getValue(), user.getOrders());
         } catch (NoFoundException e) {
             log.error(e);
             return PagesPathEnum.HOME_PAGE.getPath();
@@ -30,7 +31,7 @@ public class UserPageCommandImpl implements BaseCommand {
         return PagesPathEnum.USER_PAGE.getPath();
     }
 
-    private User getUser(HttpServletRequest servletRequest) throws NoFoundException {
+    public static User getUser(HttpServletRequest servletRequest) throws NoFoundException {
         HttpSession session = servletRequest.getSession();
         String email = (String) session.getAttribute(EMAIL.getValue());
 
@@ -44,7 +45,7 @@ public class UserPageCommandImpl implements BaseCommand {
         return user;
     }
 
-    private User searchUser(String email) throws NoFoundException {
+    private static User searchUser(String email) throws NoFoundException {
         for (User user : ShopContent.getUserList()) {
             if (user.getEmail().equals(email)) {
                 return user;

@@ -3,12 +3,11 @@ package com.commandoby.sonyShop.service.commands;
 import com.commandoby.sonyShop.classies.ShopContent;
 import com.commandoby.sonyShop.classies.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
+import com.commandoby.sonyShop.service.enums.PagesPathEnum;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.commandoby.sonyShop.service.enums.PagesPathEnum.SIGN_IN_PAGE;
-import static com.commandoby.sonyShop.service.enums.PagesPathEnum.REGISTER_PAGE;
 import static com.commandoby.sonyShop.service.enums.RequestParamEnum.*;
 
 public class SignInCommandImpl implements BaseCommand {
@@ -21,12 +20,12 @@ public class SignInCommandImpl implements BaseCommand {
         if (servletRequest.getParameter(EMAIL.getValue()) != null) {
             if (!secondPasswordCheck(servletRequest)) {
                 servletRequest.setAttribute(INFO.getValue(), "Password mismatch");
-                return REGISTER_PAGE.getPath();
+                return PagesPathEnum.REGISTER_PAGE.getPath();
             }
 
             if (duplicateCheck(servletRequest)) {
                 servletRequest.setAttribute(INFO.getValue(), "User exists");
-                return REGISTER_PAGE.getPath();
+                return PagesPathEnum.REGISTER_PAGE.getPath();
             }
 
             String name = servletRequest.getParameter(NAME.getValue());
@@ -37,7 +36,7 @@ public class SignInCommandImpl implements BaseCommand {
             ShopContent.setUser(new User(name, surname, email, password, data, 100000));
         }
 
-        return SIGN_IN_PAGE.getPath();
+        return PagesPathEnum.SIGN_IN_PAGE.getPath();
     }
 
     private boolean secondPasswordCheck(HttpServletRequest servletRequest) {

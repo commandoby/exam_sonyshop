@@ -8,7 +8,8 @@ public enum CommandsEnum {
     PRODUCT_COMMAND("product"),
     BASKET_COMMAND("basket"),
     PAY_COMMAND("pay"),
-    USER_COMMAND("user");
+    USER_COMMAND("user"),
+    ADVANCED_SEARCH_COMMAND("search");
 
     private final String command;
 
