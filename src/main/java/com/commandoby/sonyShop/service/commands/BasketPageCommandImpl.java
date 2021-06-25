@@ -1,6 +1,7 @@
 package com.commandoby.sonyShop.service.commands;
 
 import com.commandoby.sonyShop.classies.Order;
+import com.commandoby.sonyShop.classies.Product;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.service.enums.PagesPathEnum;
@@ -69,5 +70,13 @@ public class BasketPageCommandImpl implements BaseCommand {
     public static int getBasketSize(HttpServletRequest servletRequest) {
         Order order = getBasketList(servletRequest);
         return order.getProductList().size();
+    }
+
+    public static void addProductToBasket(HttpServletRequest servletRequest, Product product) throws NoFoundException {
+        HttpSession session = servletRequest.getSession();
+        Order order = (Order) session.getAttribute(ORDER.getValue());
+        if (order == null) order = new Order();
+        order.addProduct(product);
+        session.setAttribute(ORDER.getValue(), order);
     }
 }

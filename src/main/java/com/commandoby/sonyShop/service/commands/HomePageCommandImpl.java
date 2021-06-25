@@ -43,6 +43,7 @@ public class HomePageCommandImpl implements BaseCommand {
     private List<Category> getSearchCategory(HttpServletRequest servletRequest) {
         List<Category> categoryList = ShopContent.getCategoriesList();
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
+        servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
         if (searchValue != null && !searchValue.equals("")) {
             SimpleSearch<Category> search = new SimpleSearch<>();
             return search.searchName(searchValue, categoryList);

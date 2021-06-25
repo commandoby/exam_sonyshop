@@ -1,5 +1,7 @@
 package com.commandoby.sonyShop.classies;
 
+import com.commandoby.sonyShop.exceptions.NoFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,5 +186,12 @@ public class ShopContent {
 
     public static void setUser(User user) {
         userList.add(user);
+    }
+
+    public static Product getProduct(String productName) throws NoFoundException {
+        for (Product product : productList) {
+            if (product.getName().equals(productName)) return product;
+        }
+        throw new NoFoundException("Product: " + productName + " not found.");
     }
 }

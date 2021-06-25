@@ -21,7 +21,12 @@
             <div class="input-group-prepend">
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Search</button>
             </div>
-            <input type="text" class="form-control w-25" id="search_value" placeholder="Enter name" name="search_value">
+            <c:if test="${not empty search}">
+                <input type="text" class="form-control" id="search_value" name="search_value" value="${search}">
+            </c:if>
+            <c:if test="${empty search}">
+                <input type="text" class="form-control" id="search_value" placeholder="Enter text" name="search_value">
+            </c:if>
             <div class="input-group-append">
                 <button type="submit" class="btn btn-primary" name="command" value="search">
                     Advanced Search

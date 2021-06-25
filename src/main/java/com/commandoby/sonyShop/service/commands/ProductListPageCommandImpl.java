@@ -1,6 +1,5 @@
 package com.commandoby.sonyShop.service.commands;
 
-import com.commandoby.sonyShop.classies.Order;
 import com.commandoby.sonyShop.classies.Category;
 import com.commandoby.sonyShop.classies.Product;
 import com.commandoby.sonyShop.classies.ShopContent;
@@ -11,7 +10,6 @@ import com.commandoby.sonyShop.service.search.SimpleSearch;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,8 @@ public class ProductListPageCommandImpl implements BaseCommand {
 
             String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());
             if (productAddName != null) {
-                addProductToBasket(servletRequest, productAddName);
+                Product product = ShopContent.getProduct(productAddName);
+                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
             }
         } catch (NoFoundException e) {
             log.error(e);
@@ -64,26 +63,11 @@ public class ProductListPageCommandImpl implements BaseCommand {
 
     private List<Product> getSearchProductList(HttpServletRequest servletRequest, List<Product> productList) {
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
+        servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
         if (searchValue != null && !searchValue.equals("")) {
             SimpleSearch<Product> search = new SimpleSearch<>();
             return search.searchName(searchValue, productList);
         }
         return productList;
-    }
-
-    private void addProductToBasket(HttpServletRequest servletRequest, String productName) throws NoFoundException {
-        HttpSession session = servletRequest.getSession();
-        Order basket = (Order) session.getAttribute(ORDER.getValue());
-        Product product = getProduct(productName);
-        if (basket == null) basket = new Order();
-        basket.addProduct(product);
-        session.setAttribute(ORDER.getValue(), basket);
-    }
-
-    private Product getProduct(String productName) throws NoFoundException {
-        for (Product product : ShopContent.getProductList()) {
-            if (product.getName().equals(productName)) return product;
-        }
-        throw new NoFoundException("Product: " + productName + " not found.");
     }
 }
