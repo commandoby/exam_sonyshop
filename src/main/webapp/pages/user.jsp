@@ -40,7 +40,7 @@
                 <h2><small>Name: </small>${user.getName()}</h2>
                 <h2><small>Surname: </small>${user.getSurname()}</h2>
                 <h2><small>Email: </small>${user.getEmail()}</h2>
-                <h2><small>Date of Birth: </small>${user.getData()}</h2>
+                <h2><small>Date of birth: </small>${user.getDateOfBirth()}</h2>
                 <h2><small>Balance: </small><b style="color: orangered">${user.getBalance()}</b></h2>
                 <button type="submit" class="btn btn-primary" disabled>Edit</button>
             </div>
@@ -55,7 +55,9 @@
             <h3>Purchases list</h3>
             <c:forEach items="${user_orders}" var="order">
                 <div class="container p-3 my-3 border">
-                    <h4>Order number <%=++id_order%>. Order price: ${order.getOrderPrice()}</h4>
+                    <h4>Order number <%=++id_order%>.
+                        Order price: ${order.getOrderPrice()}.
+                        Order date: ${order.getDate()}</h4>
                     <c:forEach items="${order.getProductList()}" var="product">
                         <button type="submit" class="btn btn-light" style="width:340px;height:200px"
                                 name="product_name" value="${product.getName()}">
