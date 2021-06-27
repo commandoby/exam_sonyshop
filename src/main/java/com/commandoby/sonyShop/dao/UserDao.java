@@ -6,5 +6,4 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 public interface UserDao extends BaseDao<User> {
 
     User getUserByEmail(String email) throws DAOException;
-
 }

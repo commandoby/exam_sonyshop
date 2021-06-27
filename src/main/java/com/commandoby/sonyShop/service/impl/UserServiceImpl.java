@@ -7,7 +7,6 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 
 public class UserServiceImpl implements UserService {
-
     private UserDao userDao = new UserDaoImpl();
 
     @Override

@@ -23,6 +23,7 @@ public class User extends BaseEntity {
     }
 
     public User(Builder builder) {
+        id = builder.id;
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -115,6 +116,7 @@ public class User extends BaseEntity {
     }
 
     public static final class Builder {
+        private int id;
         private String name;
         private String surname;
         private String email;
@@ -122,7 +124,11 @@ public class User extends BaseEntity {
         private String dateOfBirth;
         private int balance;
 
-        private Builder() {
+        private Builder() {}
+
+        public Builder withId(int id) {
+            this.id = id;
+            return this;
         }
 
         public Builder withName(String name) {

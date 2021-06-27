@@ -63,7 +63,7 @@
                                 name="product_name" value="${product.getName()}">
                             <div class="media" style="word-break: break-word">
                                 <img class="card-img p-3" style="max-width:160px;max-height: 180px"
-                                     src="${contextPath}/images/${product.getCategories().getTag()}/${product.getImageName()}"
+                                     src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
                                      alt="Card image">
                                 <div class="media-body" align="left">
                                     <p>${product.getName()}</p>

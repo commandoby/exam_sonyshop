@@ -48,7 +48,7 @@
                     <input type="hidden" name="remove_id" value="<%= id_product %>"/>
                     <input type="hidden" name="product_name" value="${product.getName()}"/>
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${product.getCategories().getTag()}/${product.getImageName()}"
+                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>

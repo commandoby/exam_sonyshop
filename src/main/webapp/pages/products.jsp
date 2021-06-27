@@ -59,7 +59,7 @@
                 <input type="hidden" name="product_name" value="${product.getName()}"/>
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${category_tag}/${product.getImageName()}"
+                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>

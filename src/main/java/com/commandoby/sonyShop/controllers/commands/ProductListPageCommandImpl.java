@@ -53,7 +53,7 @@ public class ProductListPageCommandImpl implements BaseCommand {
     private void getProductList(HttpServletRequest servletRequest, String tag) {
         List<Product> productList = new ArrayList<>();
         for (Product product : ShopContent.getProductList()) {
-            if (product.getCategories().getTag().equals(tag)) productList.add(product);
+            if (product.getCategory().getTag().equals(tag)) productList.add(product);
         }
 
         List<Product> newProductList = getSearchProductList(servletRequest, productList);

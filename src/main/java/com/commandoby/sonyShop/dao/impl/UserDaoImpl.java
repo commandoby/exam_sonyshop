@@ -20,38 +20,10 @@ public class UserDaoImpl implements UserDao {
 
     //Error causes fields
     private static final String ERROR_IN_CREATE_USER = "Error while adding user to database";
-    private static final String ERROR_IN_READ_USER = "Error while getting user from database";
+    private static final String ERROR_IN_READ_USER_BY_ID = "Error while getting user by id";
+    private static final String ERROR_IN_READ_USER_BY_EMAIL = "Error while getting user by email";
     private static final String ERROR_IN_UPDATE_USER = "Error while trying to update user in database";
     private static final String ERROR_IN_DELETE_USER = "Error while deleting user from database";
-    private static final String ERROR_IN_GET_USER_BY_EMAIL = "Error while getting user by email";
-
-
-    @Override
-    public User getUserByEmail(String email) throws DAOException {
-        User user = null;
-        Connection connection = databaseConnection.getConnection();
-
-        try (PreparedStatement ps = connection.prepareStatement(GET_USER_BY_EMAIL)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                user = new User(rs.getString("name"),
-                        rs.getString("surname"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("date_of_birth"),
-                        rs.getInt("balance"));
-                user.setId(rs.getInt("id"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(ERROR_IN_GET_USER_BY_EMAIL, e);
-        } finally {
-            databaseConnection.closeConnection(connection);
-        }
-        return user;
-    }
-
 
     @Override
     public int create(User user) throws DAOException {
@@ -77,11 +49,11 @@ public class UserDaoImpl implements UserDao {
         return userId;
     }
 
-
     @Override
     public User read(int id) throws DAOException {
         User user = null;
         Connection connection = databaseConnection.getConnection();
+
         try (PreparedStatement ps = connection.prepareStatement(GET_USER_BY_ID)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -96,17 +68,17 @@ public class UserDaoImpl implements UserDao {
                 user.setId(rs.getInt("id"));
             }
         } catch (SQLException e) {
-            throw new DAOException(ERROR_IN_READ_USER, e);
+            throw new DAOException(ERROR_IN_READ_USER_BY_ID, e);
         } finally {
             databaseConnection.closeConnection(connection);
         }
         return user;
     }
 
-
     @Override
     public void update(User user) throws DAOException {
         Connection connection = databaseConnection.getConnection();
+
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_USER)) {
             ps.setInt(1, user.getBalance());
             ps.setString(2, user.getEmail());
@@ -117,7 +89,6 @@ public class UserDaoImpl implements UserDao {
             databaseConnection.closeConnection(connection);
         }
     }
-
 
     @Override
     public void delete(int id) throws DAOException {
@@ -130,6 +101,32 @@ public class UserDaoImpl implements UserDao {
         } finally {
             databaseConnection.closeConnection(connection);
         }
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws DAOException {
+        User user = null;
+        Connection connection = databaseConnection.getConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(GET_USER_BY_EMAIL)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                user = new User(rs.getString("name"),
+                        rs.getString("surname"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("date_of_birth"),
+                        rs.getInt("balance"));
+                user.setId(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(ERROR_IN_READ_USER_BY_EMAIL, e);
+        } finally {
+            databaseConnection.closeConnection(connection);
+        }
+        return user;
     }
 
 }
