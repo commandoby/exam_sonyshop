@@ -13,7 +13,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int create(Category category) throws ServiceException {
-        return categoryDao.create(category);
+        category.setId(categoryDao.create(category));
+        return category.getId();
     }
 
     @Override

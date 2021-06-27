@@ -2,7 +2,6 @@ package com.commandoby.sonyShop.dao.domain;
 
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,10 +9,12 @@ import java.util.Objects;
 public class Order extends BaseEntity {
     private int orderPrice = 0;
     private String date;
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
 
-    public Order() {
-        productList = new ArrayList<>();
+    public Order() {}
+
+    public Order(String date) {
+        this.date = date;
     }
 
     public int getOrderPrice() {
@@ -65,7 +66,7 @@ public class Order extends BaseEntity {
                 "id=" + id +
                 ", orderPrice=" + orderPrice +
                 ", date=" + date +
-                ", productList=" + productList +
+                ", products=" + productList.size() +
                 '}';
     }
 }

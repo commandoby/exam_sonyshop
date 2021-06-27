@@ -80,6 +80,10 @@ public class User extends BaseEntity {
         return orders;
     }
 
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     public void addOrder(Order order) {
         orders.add(order);
     }
@@ -107,7 +111,7 @@ public class User extends BaseEntity {
                 ", password='" + password + '\'' +
                 ", dateOfBirth='" + dateOfBirth + '\'' +
                 ", balance=" + balance +
-                ", orders=" + orders +
+                ", orders=" + orders.size() +
                 '}';
     }
 
