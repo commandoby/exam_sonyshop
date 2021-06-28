@@ -5,11 +5,11 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 
 import java.util.List;
 
-public interface OrderService {
+public interface OrderService extends BaseService<Order> {
 
-    Order read(int id) throws ServiceException;
+    /*Order read(int id) throws ServiceException;
 
-    void delete(int id) throws ServiceException;
+    void delete(int id) throws ServiceException;*/
 
     int createOrderByUser(Order order, int userId) throws ServiceException;
 

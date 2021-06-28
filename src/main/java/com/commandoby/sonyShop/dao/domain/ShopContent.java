@@ -5,6 +5,7 @@ import com.commandoby.sonyShop.exceptions.NoFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ShopContent {
     private static List<User> userList = new ArrayList<>();
     private static final List<Category> categoriesList = new ArrayList<>();

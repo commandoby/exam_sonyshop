@@ -14,6 +14,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String ADD_ORDER = "INSERT INTO orders VALUES (NULL, ?, ?, ?)";
     private static final String GET_ORDER_BY_ID = "SELECT * FROM orders WHERE id = ?";
     private static final String GET_ALL_ORDERS_BY_USER_ID = "SELECT * FROM orders WHERE user_id = ?";
+    private static final String UPDATE_ORDER = "UPDATE orders SET price = ? WHERE id = ?";
     private static final String DELETE_PRODUCT = "DELETE FROM products WHERE id = ?";
     private static final String ADD_PRODUCT_BY_ORDER = "INSERT INTO orders_products VALUES (?, ?)";
     private static final String GET_ALL_PRODUCT_ID_BY_ORDER_ID = "SELECT * FROM orders_products WHERE order_id = ?";
@@ -23,11 +24,34 @@ public class OrderDaoImpl implements OrderDao {
     private static final String ERROR_IN_READ_ORDER_BY_ID = "Error while getting order by id";
     private static final String ERROR_IN_READ_ALL_ORDERS_BY_USER_ID =
             "Error while getting all orders by user id";
+    private static final String ERROR_IN_UPDATE_ORDER = "Error while trying to update order in database";
     private static final String ERROR_IN_DELETE_ORDER = "Error while deleting order from database";
     private static final String ERROR_IN_CREATE_PRODUCT_BY_ORDER =
             "Error while adding product by order";
     private static final String ERROR_IN_READ_ALL_PRODUCT_ID_BY_ORDER =
             "Error while getting all product id by order";
+
+    @Deprecated
+    @Override
+    public int create(Order order) throws DAOException {
+        int orderId = 0;
+        Connection connection = databaseConnection.getConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(ADD_ORDER, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, order.getOrderPrice());
+            ps.setString(2, order.getDate());
+            ps.setInt(3, 1);
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) orderId = rs.getInt(1);
+        } catch (SQLException e) {
+            throw new DAOException(ERROR_IN_CREATE_ORDER, e);
+        } finally {
+            databaseConnection.closeConnection(connection);
+        }
+        return orderId;
+    }
 
     @Override
     public Order read(int id) throws DAOException {
@@ -49,6 +73,20 @@ public class OrderDaoImpl implements OrderDao {
         }
 
         return order;
+    }
+
+    @Deprecated
+    @Override
+    public void update(Order entity) throws DAOException {
+        Connection connection = databaseConnection.getConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(UPDATE_ORDER)) {
+
+        } catch (SQLException e) {
+            throw new DAOException(ERROR_IN_UPDATE_ORDER, e);
+        } finally {
+            databaseConnection.closeConnection(connection);
+        }
     }
 
     @Override

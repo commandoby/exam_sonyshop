@@ -19,10 +19,24 @@ public class OrderServiceImpl implements OrderService {
     private CategoryDao categoryDao = new CategoryDaoImpl();
 
     @Override
+    public int create(Order order) throws ServiceException {
+        order.setId(orderDao.create(order));
+        if (!order.getProductList().isEmpty()) for (Product product : order.getProductList()) {
+            orderDao.addProductByOrder(order.getId(), product.getId());
+        }
+        return order.getId();
+    }
+
+    @Override
     public Order read(int id) throws ServiceException {
         Order order = orderDao.read(id);
         readProducts(order);
         return order;
+    }
+
+    @Override
+    public void update(Order order) throws ServiceException {
+        orderDao.update(order);
     }
 
     @Override

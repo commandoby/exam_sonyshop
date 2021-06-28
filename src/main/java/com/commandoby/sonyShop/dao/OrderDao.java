@@ -5,13 +5,7 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 
 import java.util.List;
 
-public interface OrderDao {
-
-    ConnectionPool databaseConnection = ConnectionPool.getInstance();
-
-    Order read(int id) throws DAOException;
-
-    void delete(int id) throws DAOException;
+public interface OrderDao extends BaseDao<Order> {
 
     int createOrderByUser(Order order, int userId) throws DAOException;
 

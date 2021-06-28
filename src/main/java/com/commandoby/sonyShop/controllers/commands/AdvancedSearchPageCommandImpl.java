@@ -21,10 +21,11 @@ public class AdvancedSearchPageCommandImpl implements BaseCommand {
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
         String pageItems = servletRequest.getParameter(PAGE_ITEMS.getValue());
+        String searchCategory = servletRequest.getParameter("search_category");
         if (pageItems == null || pageItems == "") pageItems = "all";
         Integer minPrice = getMinPrice(servletRequest);
         Integer maxPrice = getMaxPrice(servletRequest, minPrice);
-        List<Product> productList = AdvancedSearch.search(searchValue, minPrice, maxPrice);
+        List<Product> productList = AdvancedSearch.search(searchValue, minPrice, maxPrice, searchCategory);
 
         try {
             String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());

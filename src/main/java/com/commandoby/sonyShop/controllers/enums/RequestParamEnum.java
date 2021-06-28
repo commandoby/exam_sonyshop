@@ -25,6 +25,7 @@ public enum RequestParamEnum {
     BASKET_PRICE("basket_price"),
     REMOVE_PRODUCT_ID("remove_id"),
     SEARCH_VALUE("search_value"),
+    SEARCH_CATEGORY("search_category"),
     MIN_PRICE("min_price"),
     MAX_PRICE("max_price"),
     PAGE_ITEMS("page_items");

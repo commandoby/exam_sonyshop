@@ -6,9 +6,6 @@ import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.controllers.search.SimpleSearch;
-import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.CategoryService;
-import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +15,6 @@ import java.util.List;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class HomePageCommandImpl implements BaseCommand {
-    CategoryService categoryService = new CategoryServiceImpl();
     Logger log = Logger.getLogger(getClass());
 
     private static final String ADMIN_LOGIN = "admin";
@@ -47,13 +43,7 @@ public class HomePageCommandImpl implements BaseCommand {
     }
 
     private List<Category> getSearchCategory(HttpServletRequest servletRequest) {
-//        List<Category> categoryList = ShopContent.getCategoriesList();
-        List<Category> categoryList = null;
-        try {
-            categoryList = categoryService.getAllCategories();
-        } catch (ServiceException e) {
-            log.error(e);
-        }
+        List<Category> categoryList = ShopContent.getCategoriesList();
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
         servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
         if (searchValue != null && !searchValue.equals("")) {
