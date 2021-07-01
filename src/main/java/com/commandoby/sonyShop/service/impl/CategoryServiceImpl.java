@@ -28,8 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(int id) throws ServiceException {
-        categoryDao.delete(id);
+    public void delete(Category category) throws ServiceException {
+
     }
 
     @Override

@@ -38,11 +38,11 @@ public class ApplicationServiceTest {
         User user2 = userService.read(user1.getId());
         System.out.println(user2);
 
-        userService.delete(user.getId());
+        userService.delete(user);
         System.out.println();
 
         //test categoryService
-        Category category = new Category("Phone1", "phone1", "phone.jpeg", 1);
+        /*Category category = new Category("Phone1", "phone1", "phone.jpeg", 1);
         categoryService.create(category);
 
         List<Category> categoryList = categoryService.getAllCategories();
@@ -120,6 +120,6 @@ public class ApplicationServiceTest {
         System.out.println(userOrder1);
 
         userService.delete(userOrder1.getId());
-        categoryService.delete(categoryOrder.getId());
+        categoryService.delete(categoryOrder.getId());*/
     }
 }

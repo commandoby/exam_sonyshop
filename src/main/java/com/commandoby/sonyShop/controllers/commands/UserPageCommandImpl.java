@@ -19,7 +19,7 @@ public class UserPageCommandImpl implements BaseCommand {
         try {
             User user = getUser(servletRequest);
             servletRequest.setAttribute(USER.getValue(), user);
-            servletRequest.setAttribute(USER_ORDERS.getValue(), user.getOrders());
+//            servletRequest.setAttribute(USER_ORDERS.getValue(), user.getOrders());
         } catch (NoFoundException e) {
             log.error(e);
             return PagesPathEnum.HOME_PAGE.getPath();

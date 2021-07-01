@@ -34,8 +34,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(int id) throws ServiceException {
-        productDao.delete(id);
+    public void delete(Product product) throws ServiceException {
+
     }
 
     @Override

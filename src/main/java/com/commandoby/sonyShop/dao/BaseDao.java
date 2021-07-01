@@ -3,6 +3,7 @@ package com.commandoby.sonyShop.dao;
 import com.commandoby.sonyShop.dao.domain.BaseEntity;
 import com.commandoby.sonyShop.exceptions.DAOException;
 
+@Deprecated
 public interface BaseDao<T extends BaseEntity> {
 
     ConnectionPool databaseConnection = ConnectionPool.getInstance();

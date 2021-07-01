@@ -40,8 +40,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(int id) throws ServiceException {
-        orderDao.delete(id);
+    public void delete(Order order) throws ServiceException {
+
     }
 
     @Override
