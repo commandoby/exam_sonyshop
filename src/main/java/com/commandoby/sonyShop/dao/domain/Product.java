@@ -1,20 +1,30 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "products")
 public class Product extends BaseEntity implements ShopObject {
     private String name;
     private String imageName;
     private String description;
     private Category category;
     private int price;
+    private int quantity;
+    private List<Order> orders;
 
-    public Product(String name, String imageName, String description, Category category, int price) {
+    public Product() {}
+
+    public Product(String name, String imageName, String description, Category category,
+                   int price, int quantity) {
         this.name = name;
         this.imageName = imageName;
         this.description = description;
         this.category = category;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public Product(Builder builder) {
@@ -24,20 +34,38 @@ public class Product extends BaseEntity implements ShopObject {
         description = builder.description;
         category = builder.category;
         price = builder.price;
+        quantity = builder.quantity;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "image_name")
     public String getImageName() {
         return imageName;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id", nullable = false)
     public Category getCategory() {
         return category;
     }
@@ -46,6 +74,7 @@ public class Product extends BaseEntity implements ShopObject {
         this.category = category;
     }
 
+    @Column(name = "price")
     public int getPrice() {
         return price;
     }
@@ -54,17 +83,40 @@ public class Product extends BaseEntity implements ShopObject {
         this.price = price;
     }
 
+    @Column(name = "quantity")
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    @ManyToMany(mappedBy = "productList")
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return price == product.price && Objects.equals(name, product.name) && Objects.equals(imageName, product.imageName) && Objects.equals(category, product.category) && Objects.equals(description, product.description);
+        return price == product.price
+                && quantity == product.quantity
+                && Objects.equals(name, product.name)
+                && Objects.equals(imageName, product.imageName)
+                && Objects.equals(description, product.description)
+                && Objects.equals(category, product.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, imageName, category, description, price);
+        return Objects.hash(name, imageName, description, category, price, quantity);
     }
 
     @Override
@@ -74,8 +126,9 @@ public class Product extends BaseEntity implements ShopObject {
                 ", name='" + name + '\'' +
                 ", imageName='" + imageName + '\'' +
                 ", description='" + description + '\'' +
-                ", category='" + category.getName() + '\''  +
+                ", category=" + category.getName() +
                 ", price=" + price +
+                ", quantity=" + quantity +
                 '}';
     }
 
@@ -90,6 +143,7 @@ public class Product extends BaseEntity implements ShopObject {
         private String description;
         private Category category;
         private int price;
+        private int quantity;
 
         private Builder() {}
 
@@ -120,6 +174,11 @@ public class Product extends BaseEntity implements ShopObject {
 
         public Builder withPrice(int price) {
             this.price = price;
+            return this;
+        }
+
+        public Builder withQuantity(int quantity) {
+            this.quantity = quantity;
             return this;
         }
 

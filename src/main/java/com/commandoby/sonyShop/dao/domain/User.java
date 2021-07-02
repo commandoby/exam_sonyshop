@@ -1,8 +1,6 @@
 package com.commandoby.sonyShop.dao.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -93,9 +91,10 @@ public class User extends BaseEntity {
         this.balance = balance;
     }
 
-//    public List<Order> getOrders() {
-//        return orders;
-//    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public List<Order> getOrders() {
+        return orders;
+    }
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;

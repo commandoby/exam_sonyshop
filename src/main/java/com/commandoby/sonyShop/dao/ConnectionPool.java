@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@Deprecated
 public class ConnectionPool {
     //Singleton instance
     private static volatile ConnectionPool instance;

@@ -2,13 +2,17 @@ package com.commandoby.sonyShop.dao.domain;
 
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "orders")
 public class Order extends BaseEntity {
     private int orderPrice = 0;
     private String date;
+    private User user;
     private List<Product> productList = new ArrayList<>();
 
     public Order() {}
@@ -17,20 +21,43 @@ public class Order extends BaseEntity {
         this.date = date;
     }
 
+    @Column(name = "price")
     public int getOrderPrice() {
         return orderPrice;
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public void setOrderPrice(int orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
+    @Column(name = "date")
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "user_id", nullable = false)
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     public void addProduct(Product product) {

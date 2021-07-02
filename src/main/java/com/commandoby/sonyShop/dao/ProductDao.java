@@ -6,7 +6,7 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 
 import java.util.List;
 
-public interface ProductDao extends BaseDao<Product> {
+public interface ProductDao {
 
     List<Product> getAllProducts() throws DAOException;
 
@@ -14,5 +14,9 @@ public interface ProductDao extends BaseDao<Product> {
 
     Product getProductByName(String name) throws DAOException;
 
-    int getCategoryId(int productId) throws DAOException;
+    List<Product> getProductsByNameLike(String text) throws DAOException;
+
+    List<Product> getProductsByDescriptionLike(String text) throws DAOException;
+
+    List<Product> getProductsByNotNullQuantity() throws DAOException;
 }

@@ -10,15 +10,12 @@ import javax.persistence.LockModeType;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
-
     private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
 
     @Override
     public List<User> getAllUsers() throws DAOException {
         entityManager.getTransaction().begin();
-
         List<User> users = entityManager.createQuery("select u from User u").getResultList();
-        entityManager.flush();
         entityManager.getTransaction().commit();
 
         return users;
@@ -27,7 +24,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getUserByEmail(String email) throws DAOException {
         entityManager.getTransaction().begin();
-
         User user = (User) entityManager
                 .createQuery("select u from User u where u.email =: email")
                 .setLockMode(LockModeType.OPTIMISTIC)
@@ -40,7 +36,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<String> getAllUsersEmails() throws DAOException {
         entityManager.getTransaction().begin();
-
         List<String> emailList = entityManager.createQuery("select u.email from User u").getResultList();
         entityManager.getTransaction().commit();
 
@@ -50,7 +45,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findUsersByEmailLike(String email) throws DAOException {
         entityManager.getTransaction().begin();
-
         List<User> users = entityManager.createQuery("select u from User u where u.email like :email")
                 .setParameter("email", "%" + email + "%").getResultList();
         entityManager.getTransaction().commit();

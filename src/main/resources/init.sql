@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS sonyshop.products (
     image_name VARCHAR(200) NOT NULL,
     description VARCHAR(400) NULL,
     price INT NOT NULL,
+    quantity INT,
     category_id INT NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_ID_UNIQUE (id ASC),

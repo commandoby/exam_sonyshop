@@ -24,8 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User read(int id) throws ServiceException {
-        User user = entityManager.find(User.class, id);
-        return user;
+        return entityManager.find(User.class, id);
     }
 
     @Override
