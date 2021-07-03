@@ -60,20 +60,6 @@ public class Order extends BaseEntity {
         this.productList = productList;
     }
 
-    public void addProduct(Product product) {
-        orderPrice += product.getPrice();
-        productList.add(product);
-    }
-
-    public void removeProduct(int id) throws NoFoundException {
-        if (productList.get(id) != null) {
-            orderPrice -= productList.get(id).getPrice();
-            productList.remove(id);
-        } else {
-            throw new NoFoundException("Will not find a product to remove by id: " + id);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

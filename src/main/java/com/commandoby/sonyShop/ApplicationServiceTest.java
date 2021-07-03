@@ -99,8 +99,8 @@ public class ApplicationServiceTest {
         productService.create(productOrder1);
         productService.create(productOrder2);
         Order order = new Order(LocalDate.now().toString());
-        order.addProduct(productOrder1);
-        order.addProduct(productOrder2);
+        order.getProductList().add(productOrder1);
+        order.getProductList().add(productOrder2);
         User userOrder = new User("Ivan", "Ivanov", "ivan",
                 "ivanov", "1989-08-14", 100000);
         userService.create(userOrder);
@@ -115,7 +115,7 @@ public class ApplicationServiceTest {
         Product productOrder3 = new Product("Sony 20 III", "20_III.jpeg",
                 "Android, экран 8\" OLED (1080x2520)", categoryOrder, 2899, 250);
         productService.create(productOrder3);
-        order.addProduct(productOrder3);
+        order.getProductList().add(productOrder3);
         orderService.update(order);
 
         orderService.readAllOrdersByUser(userOrder).forEach(System.out::println);

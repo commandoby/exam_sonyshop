@@ -13,5 +13,7 @@ public interface UserDao {
 
     List<String> getAllUsersEmails() throws DAOException;
 
+    int getUserBalanceByEmail(String email) throws DAOException;
+
     List<User> findUsersByEmailLike(String email) throws DAOException;
 }

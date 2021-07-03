@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int getUserBalanceByEmail(String email) throws ServiceException {
+        return userDao.getUserBalanceByEmail(email);
+    }
+
+    @Override
     public List<User> findUsersByEmailLike(String email) throws ServiceException {
         return userDao.findUsersByEmailLike(email);
     }

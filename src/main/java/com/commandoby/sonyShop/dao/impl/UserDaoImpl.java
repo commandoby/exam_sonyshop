@@ -7,6 +7,7 @@ import com.commandoby.sonyShop.utills.DataSourceHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
@@ -23,12 +24,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) throws DAOException {
-        entityManager.getTransaction().begin();
-        User user = (User) entityManager
-                .createQuery("select u from User u where u.email =: email")
-                .setLockMode(LockModeType.OPTIMISTIC)
-                .setParameter("email", email).getSingleResult();
-        entityManager.getTransaction().commit();
+        User user = null;
+        try {
+            entityManager.getTransaction().begin();
+            user = (User) entityManager
+                    .createQuery("select u from User u where u.email =: email")
+                    .setParameter("email", email).getSingleResult();
+        } catch (NoResultException e) {
+            throw new DAOException("User not found by email.", e);
+        } finally {
+            entityManager.getTransaction().commit();
+        }
 
         return user;
     }
@@ -36,16 +42,29 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<String> getAllUsersEmails() throws DAOException {
         entityManager.getTransaction().begin();
-        List<String> emailList = entityManager.createQuery("select u.email from User u").getResultList();
+        List<String> emailList = entityManager
+                .createQuery("select u.email from User u").getResultList();
         entityManager.getTransaction().commit();
 
         return emailList;
     }
 
     @Override
+    public int getUserBalanceByEmail(String email) throws DAOException {
+        entityManager.getTransaction().begin();
+        int userBalance = entityManager
+                .createQuery("select u.balance from User u where u.email =: email")
+                .setParameter("email", email).getFirstResult();
+        entityManager.getTransaction().commit();
+        System.out.println(userBalance);
+        return userBalance;
+    }
+
+    @Override
     public List<User> findUsersByEmailLike(String email) throws DAOException {
         entityManager.getTransaction().begin();
-        List<User> users = entityManager.createQuery("select u from User u where u.email like :email")
+        List<User> users = entityManager
+                .createQuery("select u from User u where u.email like :email")
                 .setParameter("email", "%" + email + "%").getResultList();
         entityManager.getTransaction().commit();
 

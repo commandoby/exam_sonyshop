@@ -1,11 +1,17 @@
 package com.commandoby.sonyShop.controllers.commands;
 
+import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.dao.domain.ShopContent;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.controllers.search.AdvancedSearch;
+import com.commandoby.sonyShop.exceptions.ServiceException;
+import com.commandoby.sonyShop.service.CategoryService;
+import com.commandoby.sonyShop.service.ProductService;
+import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
+import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +21,10 @@ import java.util.List;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class AdvancedSearchPageCommandImpl implements BaseCommand {
-    Logger log = Logger.getLogger(getClass());
+    private Logger log = Logger.getLogger(getClass());
+    private AdvancedSearch advancedSearch = new AdvancedSearch();
+    private ProductService productService = new ProductServiceImpl();
+    private CategoryService categoryService = new CategoryServiceImpl();
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
@@ -25,30 +34,45 @@ public class AdvancedSearchPageCommandImpl implements BaseCommand {
         if (pageItems == null || pageItems == "") pageItems = "all";
         Integer minPrice = getMinPrice(servletRequest);
         Integer maxPrice = getMaxPrice(servletRequest, minPrice);
-        List<Product> productList = AdvancedSearch.search(searchValue, minPrice, maxPrice, searchCategory);
+        List<Category> categories = getCategories();
+        List<Product> products = advancedSearch.search(searchValue, minPrice, maxPrice, searchCategory);
 
-        try {
-            String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());
-            if (productAddName != null) {
-                Product product = ShopContent.getProduct(productAddName);
-                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
-            }
-        } catch (NoFoundException e) {
-            log.error(e);
-        }
+        addBasketProduct(servletRequest);
 
         int basketSize = BasketPageCommandImpl.getBasketSize(servletRequest);
 
         servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
-        servletRequest.setAttribute(CATEGORIES.getValue(), ShopContent.getCategoriesList());
+        servletRequest.setAttribute(CATEGORIES.getValue(), categories);
         servletRequest.setAttribute(PAGE_ITEMS.getValue(), pageItems);
         servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
         servletRequest.setAttribute(MIN_PRICE.getValue(), minPrice);
         servletRequest.setAttribute(MAX_PRICE.getValue(), maxPrice);
-        servletRequest.setAttribute(PRODUCT_LIST.getValue(), productList);
-        servletRequest.setAttribute(PRODUCT_SIZE.getValue(), productList.size());
+        servletRequest.setAttribute(PRODUCT_LIST.getValue(), products);
+        servletRequest.setAttribute(PRODUCT_SIZE.getValue(), products.size());
 
         return PagesPathEnum.ADVANCED_SEARCH.getPath();
+    }
+
+    private List<Category> getCategories() {
+        List<Category> categories = null;
+        try {
+            categories = categoryService.getAllCategories();
+        } catch (ServiceException e) {
+            log.warn(e);
+        }
+        return categories;
+    }
+
+    private void addBasketProduct(HttpServletRequest servletRequest) {
+        try {
+            String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());
+            if (productAddName != null) {
+                Product product = productService.getProductByName(productAddName);
+                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
+            }
+        } catch (NoFoundException | ServiceException e) {
+            log.error(e);
+        }
     }
 
     private Integer getMinPrice(HttpServletRequest servletRequest) {

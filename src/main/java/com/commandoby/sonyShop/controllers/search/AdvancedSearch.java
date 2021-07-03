@@ -1,43 +1,61 @@
 package com.commandoby.sonyShop.controllers.search;
 
 import com.commandoby.sonyShop.dao.domain.Product;
-import com.commandoby.sonyShop.dao.domain.ShopContent;
+import com.commandoby.sonyShop.exceptions.ServiceException;
+import com.commandoby.sonyShop.service.ProductService;
+import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
+import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class AdvancedSearch {
-    public static List<Product> search(String text, Integer minPrice, Integer maxPrice, String searchCategory) {
-        List<Product> productList = new ArrayList<>();
-        List<Product> productListDescription = new ArrayList<>();
+    private ProductService productService = new ProductServiceImpl();
+    private Logger log = Logger.getLogger(getClass());
 
-        for (Product product : ShopContent.getProductList()) {
-            if (searchCategory == null || product.getCategory().getTag().equals(searchCategory)) {
-                if (product.getName().toLowerCase().contains(text.trim().toLowerCase())) {
-                    if (getPriceCap(product, minPrice, maxPrice))
-                        productList.add(product);
-                } else {
-                    if (product.getDescription().toLowerCase().contains(text.trim().toLowerCase()))
+    public List<Product> search(String text, Integer minPrice, Integer maxPrice, String searchCategory) {
+        List<Product> shopProducts = getProducts();
+        List<Product> resultProductsName = new ArrayList<>();
+        List<Product> resultProductsDescription = new ArrayList<>();
+        Set<Product> productSet = new HashSet<>();
+
+        if (shopProducts != null)
+            for (Product product : shopProducts) {
+                if (searchCategory == null || product.getCategory().getTag().equals(searchCategory)) {
+                    if (product.getName().toLowerCase().contains(text.trim().toLowerCase())) {
                         if (getPriceCap(product, minPrice, maxPrice))
-                            productListDescription.add(product);
+                            resultProductsName.add(product);
+                    } else {
+                        if (product.getDescription().toLowerCase().contains(text.trim().toLowerCase()))
+                            if (getPriceCap(product, minPrice, maxPrice))
+                                resultProductsDescription.add(product);
+                    }
                 }
             }
-        }
 
-        sort(productList, productListDescription);
+        sort(resultProductsName);
+        sort(resultProductsDescription);
+        productSet.addAll(resultProductsName);
+        productSet.addAll(resultProductsDescription);
 
-        productList.addAll(productListDescription);
-        return productList;
+        return new ArrayList<>(productSet);
     }
 
-    private static boolean getPriceCap(Product product, Integer minPrice, Integer maxPrice) {
+    private List<Product> getProducts() {
+        List<Product> products = null;
+        try {
+            products = productService.getAllProducts();
+        } catch (ServiceException e) {
+            log.warn(e);
+        }
+        return products;
+    }
+
+    private boolean getPriceCap(Product product, Integer minPrice, Integer maxPrice) {
         return (minPrice == null || product.getPrice() >= minPrice)
                 && (maxPrice == null || product.getPrice() <= maxPrice);
     }
 
-    private static void sort(List<Product> firstList, List<Product> secondList) {
-        if (!firstList.isEmpty()) firstList.sort(Comparator.comparing(Product::getPrice));
-        if (!secondList.isEmpty()) secondList.sort(Comparator.comparing(Product::getPrice));
+    private void sort(List<Product> products) {
+        if (!products.isEmpty()) products.sort(Comparator.comparing(Product::getPrice));
     }
 }
