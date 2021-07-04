@@ -5,9 +5,6 @@ import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
-import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.UserService;
-import com.commandoby.sonyShop.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,18 +14,13 @@ import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class BasketPageCommandImpl implements BaseCommand {
     private Logger log = Logger.getLogger(getClass().getName());
-    private UserService userService = new UserServiceImpl();
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
-        int basketPrice = 0;
-        int basketSize = 0;
-        int userBalance = 0;
-        int removeProduct;
         Order order = getBasketList(servletRequest);
 
         if (servletRequest.getParameter(REMOVE_PRODUCT_ID.getValue()) != null) {
-            removeProduct = Integer.parseInt(servletRequest
+            int removeProduct = Integer.parseInt(servletRequest
                     .getParameter(REMOVE_PRODUCT_ID.getValue()));
             try {
                 removeProduct(servletRequest, order, removeProduct);
@@ -37,31 +29,13 @@ public class BasketPageCommandImpl implements BaseCommand {
             }
         }
 
-        basketPrice = order.getOrderPrice();
-        basketSize = order.getProductList().size();
-
-        userBalance = getUserBalance(servletRequest);
-        servletRequest.setAttribute(USER_BALANCE.getValue(), userBalance);
-
-        servletRequest.setAttribute(BASKET_PRICE.getValue(), basketPrice);
-        servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
-        servletRequest.setAttribute(ORDER.getValue(), order);
-
-        return PagesPathEnum.BASKET_PAGE.getPath();
-    }
-
-    private int getUserBalance(HttpServletRequest servletRequest) {
-        HttpSession session = servletRequest.getSession();
-        String email = (String) session.getAttribute(EMAIL.getValue());
-        int userBalance = 0;
-
-        try {
-            userBalance = userService.getUserBalanceByEmail(email);
-        } catch (ServiceException e) {
-            log.error(e);
+        if (order != null) {
+            servletRequest.setAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
+            servletRequest.setAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
+            servletRequest.setAttribute(ORDER.getValue(), order);
         }
 
-        return userBalance;
+        return PagesPathEnum.BASKET_PAGE.getPath();
     }
 
     private static Order getBasketList(HttpServletRequest servletRequest) {

@@ -51,9 +51,9 @@
 <form method="post">
     <input type="hidden" name="command" value="product"/>
     <div class="container">
-        <c:if test="${not empty user_orders}">
+        <c:if test="${not empty user.getOrders()}">
             <h3>Purchases list</h3>
-            <c:forEach items="${user_orders}" var="order">
+            <c:forEach items="${user.getOrders()}" var="order">
                 <div class="container p-3 my-3 border">
                     <h4>Order number <%=++id_order%>.
                         Order price: ${order.getOrderPrice()}.

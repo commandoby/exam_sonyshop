@@ -13,7 +13,5 @@ public interface UserService extends BaseService<User> {
 
     List<String> getAllUsersEmails() throws ServiceException;
 
-    int getUserBalanceByEmail(String email) throws ServiceException;
-
     List<User> findUsersByEmailLike(String email) throws ServiceException;
 }

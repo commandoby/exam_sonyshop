@@ -7,6 +7,7 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 import com.commandoby.sonyShop.utills.DataSourceHolder;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class ProductDaoImpl implements ProductDao {
@@ -34,11 +35,17 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getProductByName(String name) throws DAOException {
-        entityManager.getTransaction().begin();
-        Product product = (Product) entityManager
-                .createQuery("select u from Product u where u.name =: name")
-                .setParameter("name", name).getSingleResult();
-        entityManager.getTransaction().commit();
+        Product product;
+        try {
+            entityManager.getTransaction().begin();
+            product = (Product) entityManager
+                    .createQuery("select u from Product u where u.name =: name")
+                    .setParameter("name", name).getSingleResult();
+        } catch (NoResultException e) {
+            throw new DAOException("Product not found by name: " + name, e);
+        } finally {
+            entityManager.getTransaction().commit();
+        }
 
         return product;
     }

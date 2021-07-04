@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label for="username">Email:</label>
                 <input type="text" class="form-control w-50" id="email"
-                       placeholder="Enter email" name="email" required>
+                       placeholder="Enter email" name="email" value="${email}" required>
                 <div class="invalid-feedback">Please fill out email field</div>
             </div>
             <div class="form-group">
@@ -29,6 +29,7 @@
                        placeholder="Enter password" name="password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
+            <p style="color: red">${info}</p>
             <button type="submit" class="btn btn-success w-50" name="command" value="home_page">Login</button>
         </form>
         <br>

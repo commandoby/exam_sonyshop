@@ -13,80 +13,107 @@
 </head>
 <body>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<c:set var="search" value="${search_value}"/>
-<c:set var="pageItems" value="${page_items}"/>
-<c:set var="min" value="${min_price}"/>
-<c:set var="max" value="${max_price}"/>
 <h2 align="center">Search page</h2>
 
 <form method="post">
-    <input type="hidden" name="page_items" value="${pageItems}"/>
     <div class="container">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <button type="submit" class="btn btn-primary" name="command" value="search">Search</button>
             </div>
-            <c:if test="${not empty search}">
-                <input type="text" class="form-control" id="search_value" name="search_value" value="${search}">
-            </c:if>
-            <c:if test="${empty search}">
-                <input type="text" class="form-control" id="search_value" placeholder="Enter text" name="search_value">
-            </c:if>
+            <input type="text" class="form-control" id="search_value" placeholder="Enter text"
+                   name="search_value" value="${search_value}">
             <div class="input-group-append">
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-                <c:if test="${not empty sessionScope.email}">
+                <c:if test="${not empty sessionScope.user}">
                     <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
                     </button>
                     <button type="submit" class="btn btn-primary" name="command" value="user">
-                            ${sessionScope.email}</button>
+                            ${sessionScope.user.getEmail()}</button>
                     <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
                 </c:if>
-                <c:if test="${empty sessionScope.email}">
+                <c:if test="${empty sessionScope.user}">
                     <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
                 </c:if>
             </div>
         </div>
     </div>
     <div class="container">
+        <input type="hidden" name="command" value="search"/>
         <div class="btn-group">
             <div class="dropdown" align="left">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    All categories
+                    <c:if test="${empty search_category}">All categories</c:if>
+                    <c:if test="${not empty search_category}">${search_category}</c:if>
                 </button>
                 <div class="dropdown-menu">
                     <c:forEach items="${categories}" var="category">
-                        <a class="dropdown-item" href="?search_category=${category.getTag()}">
-                                ${category.getName()}</a>
+                        <button class="dropdown-item" type="submit" name="search_category"
+                                value="${category.getTag()}">${category.getName()}</button>
                     </c:forEach>
-                    <a class="dropdown-item" href="?#">All categories</a>
+                    <button class="dropdown-item" type="submit" name="search_category"
+                            value="">All categories
+                    </button>
                 </div>
+                <input type="hidden" name="search_category" value="${search_category}"/>
+            </div>
+        </div>
+        <div class="btn-group">
+            <div class="dropdown" align="left">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    ${search_comparing}
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" type="submit" name="search_comparing"
+                            value="Price +">Price +
+                    </button>
+                    <button class="dropdown-item" type="submit" name="search_comparing"
+                            value="Price -">Price -
+                    </button>
+                    <button class="dropdown-item" type="submit" name="search_comparing"
+                            value="Name +">Name +
+                    </button>
+                    <button class="dropdown-item" type="submit" name="search_comparing"
+                            value="Name -">Name -
+                    </button>
+                </div>
+                <input type="hidden" name="search_comparing" value="${search_comparing}"/>
             </div>
         </div>
         <div class="btn-group col-sm-3">
-            <c:if test="${empty min}">
-                <input type="text" class="form-control" id="min_price" placeholder="Min price" name="min_price">
-            </c:if>
-            <c:if test="${not empty min}">
-                <input type="text" class="form-control" id="min_price" name="min_price" value="${min}">
-            </c:if>
-            <c:if test="${empty max}">
-                <input type="text" class="form-control" id="max_price" placeholder="Max price" name="max_price">
-            </c:if>
-            <c:if test="${not empty max}">
-                <input type="text" class="form-control" id="max_price" name="max_price" value="${max}">
-            </c:if>
+            <input type="text" class="form-control" id="min_price" placeholder="Min price"
+                   name="min_price" value="${min_price}">
+            <input type="text" class="form-control" id="max_price" placeholder="Max price"
+                   name="max_price" value="${max_price}">
         </div>
         <div class="btn-group">
-            <c:choose>
-                <c:when test="${pageItems == 'all'}">
-                    <button type="button" class="btn btn-primary">10</button>
-                    <button type="button" class="btn btn-primary">20</button>
-                    <button type="button" class="btn btn-primary">50</button>
-                    <button type="button" class="btn btn-primary" disabled>All</button>
-                </c:when>
-            </c:choose>
+            <button type="submit" class="btn btn-primary" name="page_items" value="10"
+                    <c:if test="${page_items == '10'}">disabled</c:if>>10
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="20"
+                    <c:if test="${page_items == '20'}">disabled</c:if>>20
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="50"
+                    <c:if test="${page_items == '50'}">disabled</c:if>>50
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="0"
+                    <c:if test="${page_items == '0'}">disabled</c:if>>All
+            </button>
         </div>
+        <c:if test="${page_items != '0'}">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                        <c:if test="${page_number == '1'}">disabled</c:if>>Previous
+                </button>
+                <button type="button" class="btn btn-primary">Page ${page_number}</button>
+                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}">
+                    Next
+                </button>
+            </div>
+        </c:if>
     </div>
+        <input type="hidden" name="page_items" value="${page_items}"/>
+        <input type="hidden" name="page_number" value="${page_number}"/>
 </form>
 
 <div class="container">
@@ -111,7 +138,7 @@
                                 name="command" value="product">
                             List of product
                         </button>
-                        <c:if test="${not empty sessionScope.email}">
+                        <c:if test="${not empty sessionScope.user}">
                             <button type="submit" class="btn btn-primary"
                                     name="command" value="search">
                                 Add to basket

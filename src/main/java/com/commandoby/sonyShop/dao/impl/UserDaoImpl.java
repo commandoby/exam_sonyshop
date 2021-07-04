@@ -6,7 +6,6 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 import com.commandoby.sonyShop.utills.DataSourceHolder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import java.util.List;
 
@@ -24,14 +23,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) throws DAOException {
-        User user = null;
+        User user;
         try {
             entityManager.getTransaction().begin();
             user = (User) entityManager
                     .createQuery("select u from User u where u.email =: email")
                     .setParameter("email", email).getSingleResult();
         } catch (NoResultException e) {
-            throw new DAOException("User not found by email.", e);
+            throw new DAOException("User not found by email: " + email, e);
         } finally {
             entityManager.getTransaction().commit();
         }
@@ -47,17 +46,6 @@ public class UserDaoImpl implements UserDao {
         entityManager.getTransaction().commit();
 
         return emailList;
-    }
-
-    @Override
-    public int getUserBalanceByEmail(String email) throws DAOException {
-        entityManager.getTransaction().begin();
-        int userBalance = entityManager
-                .createQuery("select u.balance from User u where u.email =: email")
-                .setParameter("email", email).getFirstResult();
-        entityManager.getTransaction().commit();
-        System.out.println(userBalance);
-        return userBalance;
     }
 
     @Override

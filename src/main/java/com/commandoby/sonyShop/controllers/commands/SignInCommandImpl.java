@@ -22,10 +22,12 @@ public class SignInCommandImpl implements BaseCommand {
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         HttpSession session = servletRequest.getSession();
-        session.setAttribute(EMAIL.getValue(), "");
-        session.setAttribute(PASSWORD.getValue(), "");
+        session.setAttribute(USER.getValue(), null);
 
-        if (servletRequest.getParameter(EMAIL.getValue()) != null) {
+        String email = servletRequest.getParameter(EMAIL.getValue());
+        servletRequest.setAttribute(EMAIL.getValue(), email);
+
+        if (email != null) {
             if (!secondPasswordCheck(servletRequest)) {
                 servletRequest.setAttribute(INFO.getValue(), "Password mismatch");
                 return PagesPathEnum.REGISTER_PAGE.getPath();
@@ -56,8 +58,7 @@ public class SignInCommandImpl implements BaseCommand {
     private boolean secondPasswordCheck(HttpServletRequest servletRequest) {
         String password = servletRequest.getParameter(PASSWORD.getValue());
         String secondPassword = servletRequest.getParameter(SECOND_PASSWORD.getValue());
-        if (password.equals(secondPassword)) return true;
-        return false;
+        return password.equals(secondPassword);
     }
 
     private boolean duplicateCheck(HttpServletRequest servletRequest) {

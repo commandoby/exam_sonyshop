@@ -23,27 +23,16 @@ public class HomePageCommandImpl implements BaseCommand {
     private CategoryService categoryService = new CategoryServiceImpl();
     private UserService userService = new UserServiceImpl();
 
-    private static final String ADMIN_LOGIN = "admin";
-    private static final String ADMIN_PASSWORD = "admin";
-
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
-        HttpSession session = servletRequest.getSession();
 
         String email = servletRequest.getParameter(EMAIL.getValue());
         String password = servletRequest.getParameter(PASSWORD.getValue());
-//        User user = User.newBuilder().withEmail(email).withPassword(password).build();
+        servletRequest.setAttribute(EMAIL.getValue(), email);
 
-        if (validateParamNotNull(email) && validateParamNotNull(password)) {
-            if (checkReceivedUser(email, password)) {
-                session.setAttribute(EMAIL.getValue(), email);
-                session.setAttribute(PASSWORD.getValue(), password);
-            } else {
-                session.setAttribute(EMAIL.getValue(), "");
-                session.setAttribute(PASSWORD.getValue(), "");
-                return PagesPathEnum.SIGN_IN_PAGE.getPath();
-            }
-        }
+        if (validateParamNotNull(email) && validateParamNotNull(password)
+                && !checkReceivedUser(servletRequest, email, password))
+            return PagesPathEnum.SIGN_IN_PAGE.getPath();
 
         List<Category> categoryList = getSearchCategory(servletRequest);
         servletRequest.setAttribute(CATEGORIES.getValue(), categoryList);
@@ -72,15 +61,25 @@ public class HomePageCommandImpl implements BaseCommand {
         return categories;
     }
 
-    private boolean checkReceivedUser(String email, String password) {
+    private boolean checkReceivedUser(HttpServletRequest servletRequest, String email, String password) {
+        HttpSession session = servletRequest.getSession();
         User user = null;
         try {
             user = userService.getUserByEmail(email);
         } catch (ServiceException e) {
             log.info(e);
         }
-        if (user != null)
-            return user.getEmail().equals(email) && user.getPassword().equals(password);
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                session.setAttribute(USER.getValue(), user);
+                return true;
+            } else {
+                servletRequest.setAttribute(INFO.getValue(), "Invalid password.");
+            }
+        } else {
+            servletRequest.setAttribute(INFO.getValue(), "User is not found.");
+        }
+        session.setAttribute(USER.getValue(), null);
         return false;
     }
 

@@ -25,7 +25,7 @@
             </button>
             <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
             <button type="submit" class="btn btn-primary" name="command" value="user">
-                ${sessionScope.email}</button>
+                ${sessionScope.user.getEmail()}</button>
             <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
         </div>
     </div>
@@ -40,7 +40,7 @@
     <br>
     <h3>There are ${basket_size} products in the basket for the amount of:
         <b style="color: orangered">${basket_price}</b></h3>
-    <h3>User balance: <b style="color: orangered">${user_balance}</b></h3>
+    <h3>User balance: <b style="color: orangered">${sessionScope.user.getBalance()}</b></h3>
     <c:if test="${not empty order}">
         <c:forEach items="<%= order.getProductList() %>" var="product">
             <form method="post">

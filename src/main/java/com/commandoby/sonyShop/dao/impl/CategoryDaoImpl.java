@@ -6,6 +6,7 @@ import com.commandoby.sonyShop.exceptions.DAOException;
 import com.commandoby.sonyShop.utills.DataSourceHolder;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class CategoryDaoImpl implements CategoryDao {
@@ -23,11 +24,17 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public Category getCategoryByTag(String tag) throws DAOException {
-        entityManager.getTransaction().begin();
-        Category category = (Category) entityManager
-                .createQuery("select u from Category u where u.tag =: tag")
-                .setParameter("tag", tag).getSingleResult();
-        entityManager.getTransaction().commit();
+        Category category;
+        try {
+            entityManager.getTransaction().begin();
+            category = (Category) entityManager
+                    .createQuery("select u from Category u where u.tag =: tag")
+                    .setParameter("tag", tag).getSingleResult();
+        } catch (NoResultException e) {
+            throw new DAOException("Category not found by tag: " + tag, e);
+        } finally {
+            entityManager.getTransaction().commit();
+        }
 
         return category;
     }

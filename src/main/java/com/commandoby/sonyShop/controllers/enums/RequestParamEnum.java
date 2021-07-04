@@ -9,8 +9,6 @@ public enum RequestParamEnum {
     PASSWORD("password"),
     SECOND_PASSWORD("second_password"),
     USER("user"),
-    USER_BALANCE("user_balance"),
-    USER_ORDERS("user_orders"),
     COMMAND("command"),
     CATEGORIES("categories"),
     CATEGORY_NAME("category_name"),
@@ -26,9 +24,11 @@ public enum RequestParamEnum {
     REMOVE_PRODUCT_ID("remove_id"),
     SEARCH_VALUE("search_value"),
     SEARCH_CATEGORY("search_category"),
+    SEARCH_COMPARING("search_comparing"),
     MIN_PRICE("min_price"),
     MAX_PRICE("max_price"),
-    PAGE_ITEMS("page_items");
+    PAGE_ITEMS("page_items"),
+    PAGE_NUMBER("page_number");
 
     private final String value;
 

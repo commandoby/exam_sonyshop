@@ -11,43 +11,62 @@ import java.util.*;
 public class AdvancedSearch {
     private ProductService productService = new ProductServiceImpl();
     private Logger log = Logger.getLogger(getClass());
+    private final Map<String, Comparator> SORT_MAP = new HashMap<>();
 
-    public List<Product> search(String text, Integer minPrice, Integer maxPrice, String searchCategory) {
-        List<Product> shopProducts = getProducts();
-        List<Product> resultProductsName = new ArrayList<>();
-        List<Product> resultProductsDescription = new ArrayList<>();
-        Set<Product> productSet = new HashSet<>();
-
-        if (shopProducts != null)
-            for (Product product : shopProducts) {
-                if (searchCategory == null || product.getCategory().getTag().equals(searchCategory)) {
-                    if (product.getName().toLowerCase().contains(text.trim().toLowerCase())) {
-                        if (getPriceCap(product, minPrice, maxPrice))
-                            resultProductsName.add(product);
-                    } else {
-                        if (product.getDescription().toLowerCase().contains(text.trim().toLowerCase()))
-                            if (getPriceCap(product, minPrice, maxPrice))
-                                resultProductsDescription.add(product);
-                    }
-                }
-            }
-
-        sort(resultProductsName);
-        sort(resultProductsDescription);
-        productSet.addAll(resultProductsName);
-        productSet.addAll(resultProductsDescription);
-
-        return new ArrayList<>(productSet);
+    {
+        SORT_MAP.put("Price +", Comparator.comparingInt(Product::getPrice));
+        SORT_MAP.put("Price -", Comparator.comparingInt(Product::getPrice).reversed());
+        SORT_MAP.put("Name +", Comparator.comparing(Product::getName));
+        SORT_MAP.put("Name -", Comparator.comparing(Product::getName).reversed());
     }
 
-    private List<Product> getProducts() {
+    public List<Product> search(String text, Integer minPrice, Integer maxPrice,
+                                String searchCategory, String searchComparing) {
+        List<Product> productsName = new ArrayList<>();
+        List<Product> productsDescription = new ArrayList<>();
+        Set<Product> sortProducts = new LinkedHashSet<>();
+
+        productsName = getProductsByName(text);
+        productsDescription = getProductsByDescription(text);
+
+        sort(productsName, searchComparing);
+        sort(productsDescription, searchComparing);
+
+        getSortProducts(sortProducts, productsName, searchCategory, minPrice, maxPrice);
+        getSortProducts(sortProducts, productsDescription, searchCategory, minPrice, maxPrice);
+
+        return new ArrayList<>(sortProducts);
+    }
+
+    private List<Product> getProductsByName(String text) {
+        String searchText = text.trim();
         List<Product> products = null;
         try {
-            products = productService.getAllProducts();
+            products = productService.getProductsByNameLike(searchText);
         } catch (ServiceException e) {
             log.warn(e);
         }
         return products;
+    }
+
+    private List<Product> getProductsByDescription(String text) {
+        String searchText = text.trim();
+        List<Product> products = null;
+        try {
+            products = productService.getProductsByDescriptionLike(searchText);
+        } catch (ServiceException e) {
+            log.warn(e);
+        }
+        return products;
+    }
+
+    private void getSortProducts(Set<Product> sortProducts, List<Product> products, String searchCategory,
+                                 Integer minPrice, Integer maxPrice) {
+        for (Product product : products)
+            if (searchCategory == null || searchCategory.equals("")
+                    || product.getCategory().getTag().equals(searchCategory))
+                if (getPriceCap(product, minPrice, maxPrice))
+                    sortProducts.add(product);
     }
 
     private boolean getPriceCap(Product product, Integer minPrice, Integer maxPrice) {
@@ -55,7 +74,7 @@ public class AdvancedSearch {
                 && (maxPrice == null || product.getPrice() <= maxPrice);
     }
 
-    private void sort(List<Product> products) {
-        if (!products.isEmpty()) products.sort(Comparator.comparing(Product::getPrice));
+    private void sort(List<Product> products, String searchComparing) {
+        if (!products.isEmpty()) products.sort(SORT_MAP.get(searchComparing));
     }
 }
