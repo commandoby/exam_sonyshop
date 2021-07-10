@@ -5,16 +5,24 @@ import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.impl.CategoryDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
-    private CategoryDao categoryDao = new CategoryDaoImpl();
-    private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+    private final CategoryDao categoryDao;
+
+    public CategoryServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        categoryDao = new CategoryDaoImpl(entityManager);
+    }
 
     @Override
+    @Transactional
     public int create(Category category) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(category);
@@ -23,11 +31,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public Category read(int id) throws ServiceException {
         return entityManager.find(Category.class, id);
     }
 
     @Override
+    @Transactional
     public void update(Category category) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(category);
@@ -35,6 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void delete(Category category) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.remove(category);

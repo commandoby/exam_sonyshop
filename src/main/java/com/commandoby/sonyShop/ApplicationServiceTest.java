@@ -13,15 +13,21 @@ import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
 import com.commandoby.sonyShop.service.impl.OrderServiceImpl;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
 import com.commandoby.sonyShop.service.impl.UserServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
+
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
 
 public class ApplicationServiceTest {
+
     public static void main(String[] args) throws ServiceException {
-        UserService userService = new UserServiceImpl();
-        CategoryService categoryService = new CategoryServiceImpl();
-        ProductService productService = new ProductServiceImpl();
-        OrderService orderService = new OrderServiceImpl();
+        EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+        UserService userService = new UserServiceImpl(entityManager);
+        CategoryService categoryService = new CategoryServiceImpl(entityManager);
+        ProductService productService = new ProductServiceImpl(entityManager);
+        OrderService orderService = new OrderServiceImpl(entityManager);
 
         //test userService
         User user = new User("Ivan", "Ivanov", "ivan",

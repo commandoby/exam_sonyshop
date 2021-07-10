@@ -3,16 +3,23 @@ package com.commandoby.sonyShop.dao.impl;
 import com.commandoby.sonyShop.dao.UserDao;
 import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.DAOException;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
 
+@Repository
 public class UserDaoImpl implements UserDao {
-    private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+
+    public UserDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
+    @Transactional
     public List<User> getAllUsers() throws DAOException {
         entityManager.getTransaction().begin();
         List<User> users = entityManager.createQuery("select u from User u").getResultList();
@@ -22,6 +29,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public User getUserByEmail(String email) throws DAOException {
         User user;
         try {
@@ -39,6 +47,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public List<String> getAllUsersEmails() throws DAOException {
         entityManager.getTransaction().begin();
         List<String> emailList = entityManager
@@ -49,6 +58,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public List<User> findUsersByEmailLike(String email) throws DAOException {
         entityManager.getTransaction().begin();
         List<User> users = entityManager

@@ -6,16 +6,22 @@ import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.dao.impl.OrderDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
-    private OrderDao orderDao = new OrderDaoImpl();
-    private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+    private final OrderDao orderDao;
+
+    public OrderServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        orderDao = new OrderDaoImpl(entityManager);
+    }
 
     @Override
+    @Transactional
     public int create(Order order) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(order);
@@ -24,11 +30,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order read(int id) throws ServiceException {
         return entityManager.find(Order.class, id);
     }
 
     @Override
+    @Transactional
     public void update(Order order) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(order);
@@ -36,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void delete(Order order) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.remove(order);

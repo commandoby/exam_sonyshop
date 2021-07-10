@@ -11,17 +11,21 @@ import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class ProductListPageCommandImpl implements BaseCommand {
-    private Logger log = Logger.getLogger(getClass().getName());
-    private CategoryService categoryService = new CategoryServiceImpl();
-    private ProductService productService = new ProductServiceImpl();
+    private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final Logger log = Logger.getLogger(getClass().getName());
+    private final CategoryService categoryService = new CategoryServiceImpl(entityManager);
+    private final ProductService productService = new ProductServiceImpl(entityManager);
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

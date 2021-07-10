@@ -10,8 +10,10 @@ import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.UserService;
 import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
 import com.commandoby.sonyShop.service.impl.UserServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -19,9 +21,11 @@ import java.util.List;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class HomePageCommandImpl implements BaseCommand {
-    private Logger log = Logger.getLogger(getClass());
-    private CategoryService categoryService = new CategoryServiceImpl();
-    private UserService userService = new UserServiceImpl();
+    private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final Logger log = Logger.getLogger(getClass());
+    private final CategoryService categoryService = new CategoryServiceImpl(entityManager);
+    private final UserService userService = new UserServiceImpl(entityManager);
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

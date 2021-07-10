@@ -1,22 +1,29 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.CategoryDao;
 import com.commandoby.sonyShop.dao.ProductDao;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements ProductService {
-    ProductDao productDao = new ProductDaoImpl();
-    EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+    private final ProductDao productDao;
+
+    public ProductServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        productDao = new ProductDaoImpl(entityManager);
+    }
 
     @Override
+    @Transactional
     public int create(Product product) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(product);
@@ -25,11 +32,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product read(int id) throws ServiceException {
         return entityManager.find(Product.class, id);
     }
 
     @Override
+    @Transactional
     public void update(Product product) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(product);
@@ -37,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void delete(Product product) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.remove(product);

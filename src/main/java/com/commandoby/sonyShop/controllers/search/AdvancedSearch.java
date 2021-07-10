@@ -4,13 +4,17 @@ import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 public class AdvancedSearch {
-    private ProductService productService = new ProductServiceImpl();
-    private Logger log = Logger.getLogger(getClass());
+    private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final Logger log = Logger.getLogger(getClass());
+    private final ProductService productService = new ProductServiceImpl(entityManager);
     private final Map<String, Comparator> SORT_MAP = new HashMap<>();
 
     {

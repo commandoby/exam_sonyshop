@@ -3,14 +3,21 @@ package com.commandoby.sonyShop.dao.impl;
 import com.commandoby.sonyShop.dao.CategoryDao;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.exceptions.DAOException;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
 
+@Repository
 public class CategoryDaoImpl implements CategoryDao {
-    private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final EntityManager entityManager;
+
+    public CategoryDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<Category> getAllCategories() throws DAOException {
@@ -23,6 +30,7 @@ public class CategoryDaoImpl implements CategoryDao {
     }
 
     @Override
+    @Transactional
     public Category getCategoryByTag(String tag) throws DAOException {
         Category category;
         try {

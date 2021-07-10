@@ -6,8 +6,10 @@ import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import com.commandoby.sonyShop.service.impl.UserServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -16,8 +18,10 @@ import java.util.List;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class SignInCommandImpl implements BaseCommand {
-    private Logger log = Logger.getLogger(getClass());
-    private UserService userService = new UserServiceImpl();
+    private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final Logger log = Logger.getLogger(getClass());
+    private final UserService userService = new UserServiceImpl(entityManager);
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

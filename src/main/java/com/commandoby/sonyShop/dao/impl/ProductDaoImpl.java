@@ -4,16 +4,23 @@ import com.commandoby.sonyShop.dao.ProductDao;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.exceptions.DAOException;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
 
+@Repository
 public class ProductDaoImpl implements ProductDao {
-    EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+
+    public ProductDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
+    @Transactional
     public List<Product> getAllProducts() throws DAOException {
         entityManager.getTransaction().begin();
         List<Product> products = entityManager.createQuery("select u from Product u").getResultList();
@@ -23,6 +30,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional
     public List<Product> getAllProductsByCategory(Category category) throws DAOException {
         entityManager.getTransaction().begin();
         List<Product> products = entityManager
@@ -34,6 +42,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional
     public Product getProductByName(String name) throws DAOException {
         Product product;
         try {
@@ -51,6 +60,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional
     public List<Product> getProductsByNameLike(String text) throws DAOException {
         entityManager.getTransaction().begin();
         List<Product> products = entityManager
@@ -62,6 +72,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional
     public List<Product> getProductsByDescriptionLike(String text) throws DAOException {
         entityManager.getTransaction().begin();
         List<Product> products = entityManager
@@ -73,6 +84,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional
     public List<Product> getProductsByNotNullQuantity() throws DAOException {
         entityManager.getTransaction().begin();
         List<Product> products = entityManager

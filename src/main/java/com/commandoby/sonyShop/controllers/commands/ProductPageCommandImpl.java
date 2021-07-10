@@ -7,15 +7,19 @@ import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class ProductPageCommandImpl implements BaseCommand{
-    private Logger log = Logger.getLogger(getClass());
-    private ProductService productService = new ProductServiceImpl();
+    private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+
+    private final Logger log = Logger.getLogger(getClass());
+    private final ProductService productService = new ProductServiceImpl(entityManager);
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

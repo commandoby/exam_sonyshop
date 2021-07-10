@@ -5,16 +5,24 @@ import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.dao.impl.UserDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
-    private UserDao userDao = new UserDaoImpl();
-    private EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+    private final EntityManager entityManager;
+    private final UserDao userDao;
+
+    public UserServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        userDao = new UserDaoImpl(entityManager);
+    }
 
     @Override
+    @Transactional
     public int create(User user) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(user);
@@ -23,11 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User read(int id) throws ServiceException {
         return entityManager.find(User.class, id);
     }
 
     @Override
+    @Transactional
     public void update(User user) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.persist(user);
@@ -35,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(User user) throws ServiceException {
         entityManager.getTransaction().begin();
         entityManager.remove(user);

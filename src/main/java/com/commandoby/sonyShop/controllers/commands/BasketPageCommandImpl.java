@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class BasketPageCommandImpl implements BaseCommand {
-    private Logger log = Logger.getLogger(getClass().getName());
+    private final Logger log = Logger.getLogger(getClass().getName());
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
