@@ -1,6 +1,7 @@
 package com.commandoby.sonyShop.controllers.commands;
 
 import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.dao.impl.UserDaoImpl;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ServiceException;
@@ -21,7 +22,7 @@ public class SignInCommandImpl implements BaseCommand {
     private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
 
     private final Logger log = Logger.getLogger(getClass());
-    private final UserService userService = new UserServiceImpl(entityManager);
+    private final UserService userService = new UserServiceImpl(new UserDaoImpl());
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

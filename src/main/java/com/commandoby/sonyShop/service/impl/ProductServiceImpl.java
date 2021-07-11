@@ -10,24 +10,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private final EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     private final ProductDao productDao;
 
-    public ProductServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        productDao = new ProductDaoImpl(entityManager);
+    public ProductServiceImpl(ProductDao productDao) {
+        this.productDao = productDao;
     }
+/*public ProductServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        productDao = new ProductDaoImpl();
+    }*/
 
     @Override
     @Transactional
     public int create(Product product) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(product);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
         return product.getId();
     }
 
@@ -40,17 +46,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void update(Product product) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(product);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override
     @Transactional
     public void delete(Product product) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.remove(product);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override

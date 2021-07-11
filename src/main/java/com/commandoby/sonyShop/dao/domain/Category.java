@@ -1,11 +1,14 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "categories")
+@Component
 public class Category extends BaseEntity implements ShopObject{
     private String name;
     private String tag;

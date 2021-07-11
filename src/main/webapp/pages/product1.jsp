@@ -16,22 +16,19 @@
 <c:set var="product" value="${product}"/>
 <h2 align="center">Product page</h2>
 
-<form method="get">
+<form method="post">
     <div class="container" align="right">
         <div class="btn-group">
-            <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">Home page</button>
+            <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
             <c:if test="${not empty sessionScope.user}">
-                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
-                    Basket (${sessionScope.order.getProductList().size()})</button>
-                <button type="button" class="btn btn-primary"
-                        onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
+                <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
+                </button>
+                <button type="submit" class="btn btn-primary" name="command" value="user">
                         ${sessionScope.user.getEmail()}</button>
-                <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
-                    Escape</button>
+                <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
             </c:if>
             <c:if test="${empty sessionScope.user}">
-                <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
-                    Sign in</button>
+                <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
             </c:if>
         </div>
     </div>

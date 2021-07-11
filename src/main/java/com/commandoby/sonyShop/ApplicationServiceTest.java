@@ -22,10 +22,10 @@ import java.util.List;
 public class ApplicationServiceTest {
 
     public static void main(String[] args) throws ServiceException {
-        EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
+        /*EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
 
         UserService userService = new UserServiceImpl(entityManager);
-        CategoryService categoryService = new CategoryServiceImpl(entityManager);
+        CategoryService categoryService = new CategoryServiceImpl();
         ProductService productService = new ProductServiceImpl(entityManager);
         OrderService orderService = new OrderServiceImpl(entityManager);
 
@@ -134,6 +134,6 @@ public class ApplicationServiceTest {
         productService.delete(productOrder1);
         productService.delete(productOrder2);
         productService.delete(productOrder3);
-        categoryService.delete(categoryOrder);
+        categoryService.delete(categoryOrder);*/
     }
 }

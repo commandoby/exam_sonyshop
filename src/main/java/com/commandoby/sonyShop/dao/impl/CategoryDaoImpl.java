@@ -8,23 +8,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class CategoryDaoImpl implements CategoryDao {
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public CategoryDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+//    public CategoryDaoImpl(EntityManager entityManager) {
+//        this.entityManager = entityManager;
+//    }
 
     @Override
+    @Transactional
     public List<Category> getAllCategories() throws DAOException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         List<Category> categories = entityManager
                 .createQuery("select u from Category u").getResultList();
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
 
         return categories;
     }
@@ -34,15 +37,15 @@ public class CategoryDaoImpl implements CategoryDao {
     public Category getCategoryByTag(String tag) throws DAOException {
         Category category;
         try {
-            entityManager.getTransaction().begin();
+//            entityManager.getTransaction().begin();
             category = (Category) entityManager
                     .createQuery("select u from Category u where u.tag =: tag")
                     .setParameter("tag", tag).getSingleResult();
         } catch (NoResultException e) {
             throw new DAOException("Category not found by tag: " + tag, e);
-        } finally {
+        } /*finally {
             entityManager.getTransaction().commit();
-        }
+        }*/
 
         return category;
     }

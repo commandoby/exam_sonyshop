@@ -9,23 +9,29 @@ import com.commandoby.sonyShop.service.OrderService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
-    private final EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     private final OrderDao orderDao;
 
-    public OrderServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        orderDao = new OrderDaoImpl(entityManager);
+    public OrderServiceImpl(OrderDao orderDao) {
+        this.orderDao = orderDao;
     }
+/*public OrderServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        orderDao = new OrderDaoImpl();
+    }*/
 
     @Override
     @Transactional
     public int create(Order order) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(order);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
         return order.getId();
     }
 
@@ -38,17 +44,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void update(Order order) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(order);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override
     @Transactional
     public void delete(Order order) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.remove(order);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override

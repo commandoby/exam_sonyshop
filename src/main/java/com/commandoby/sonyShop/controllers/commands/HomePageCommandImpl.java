@@ -2,6 +2,8 @@ package com.commandoby.sonyShop.controllers.commands;
 
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.dao.impl.CategoryDaoImpl;
+import com.commandoby.sonyShop.dao.impl.UserDaoImpl;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
 import com.commandoby.sonyShop.controllers.search.SimpleSearch;
@@ -24,8 +26,8 @@ public class HomePageCommandImpl implements BaseCommand {
     private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
 
     private final Logger log = Logger.getLogger(getClass());
-    private final CategoryService categoryService = new CategoryServiceImpl(entityManager);
-    private final UserService userService = new UserServiceImpl(entityManager);
+    private final CategoryService categoryService = new CategoryServiceImpl(new CategoryDaoImpl());
+    private final UserService userService = new UserServiceImpl(new UserDaoImpl());
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

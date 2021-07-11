@@ -32,9 +32,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     //For request params and path variables validation
-    @Bean
+    /*@Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
         return new MethodValidationPostProcessor();
-    }
+    }*/
 }
 

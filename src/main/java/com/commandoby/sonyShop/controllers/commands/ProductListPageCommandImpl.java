@@ -2,6 +2,8 @@ package com.commandoby.sonyShop.controllers.commands;
 
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.dao.impl.CategoryDaoImpl;
+import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
@@ -24,8 +26,8 @@ public class ProductListPageCommandImpl implements BaseCommand {
     private final EntityManager entityManager = DataSourceHolder.getInstance().getEntityManager();
 
     private final Logger log = Logger.getLogger(getClass().getName());
-    private final CategoryService categoryService = new CategoryServiceImpl(entityManager);
-    private final ProductService productService = new ProductServiceImpl(entityManager);
+    private final CategoryService categoryService = new CategoryServiceImpl(new CategoryDaoImpl());
+    private final ProductService productService = new ProductServiceImpl(new ProductDaoImpl());
 
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {

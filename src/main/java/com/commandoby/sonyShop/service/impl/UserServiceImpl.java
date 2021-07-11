@@ -9,24 +9,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     private final UserDao userDao;
 
-    public UserServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        userDao = new UserDaoImpl(entityManager);
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
+/*public UserServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        userDao = new UserDaoImpl();
+    }*/
 
     @Override
     @Transactional
     public int create(User user) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
         return user.getId();
     }
 
@@ -39,17 +45,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void update(User user) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override
     @Transactional
     public void delete(User user) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.remove(user);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override

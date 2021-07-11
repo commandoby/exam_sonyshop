@@ -9,24 +9,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private final EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     private final CategoryDao categoryDao;
 
-    public CategoryServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        categoryDao = new CategoryDaoImpl(entityManager);
+    public CategoryServiceImpl(CategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
     }
+/*public CategoryServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        categoryDao = new CategoryDaoImpl();
+    }*/
 
     @Override
     @Transactional
     public int create(Category category) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(category);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
         return category.getId();
     }
 
@@ -39,17 +45,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void update(Category category) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.persist(category);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override
     @Transactional
     public void delete(Category category) throws ServiceException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         entityManager.remove(category);
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
     }
 
     @Override

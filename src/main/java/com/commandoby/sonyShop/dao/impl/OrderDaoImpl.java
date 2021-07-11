@@ -8,24 +8,27 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class OrderDaoImpl implements OrderDao {
+
+    @PersistenceContext
     private EntityManager entityManager;
 
-    public OrderDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+//    public OrderDaoImpl(EntityManager entityManager) {
+//        this.entityManager = entityManager;
+//    }
 
     @Override
     @Transactional
     public List<Order> readAllOrdersByUser(User user) throws DAOException {
-        entityManager.getTransaction().begin();
+//        entityManager.getTransaction().begin();
         List<Order> orders = entityManager
                 .createQuery("select u from Order u where u.user =: user")
                 .setParameter("user", user).getResultList();
-        entityManager.getTransaction().commit();
+//        entityManager.getTransaction().commit();
 
         return orders;
     }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/sonyshop")
+@WebServlet("/shop")
 public class MainServlet extends HttpServlet {
     private Logger log = Logger.getLogger(getClass().getName());
 

@@ -1,6 +1,7 @@
 package com.commandoby.sonyShop.dao.domain;
 
 import com.commandoby.sonyShop.exceptions.NoFoundException;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
+@Component
 public class Order extends BaseEntity {
     private int orderPrice = 0;
     private String date;

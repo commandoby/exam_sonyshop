@@ -1,5 +1,7 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@Component
 public class User extends BaseEntity {
     private String name;
     private String surname;
