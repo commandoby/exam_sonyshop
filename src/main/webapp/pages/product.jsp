@@ -39,8 +39,7 @@
 
 <form method="post">
     <div class="container">
-        <input type="hidden" name="command" value="product"/>
-        <input type="hidden" name="product_name_out" value="product"/>
+        <input type="hidden" name="product_id" value="product.getId()"/>
         <div class="media">
             <img class="card-img p-3" style="max-width:400px;max-height: 640px"
                  src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
@@ -51,9 +50,8 @@
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
                 <c:if test="${not empty sessionScope.user}">
-                    <button type="submit" class="btn btn-primary" name="product_name"
-                            value="${product.getName()}">Add to basket
-                    </button>
+                    <button type="submit" class="btn btn-primary" name="id"
+                            value="${product.getId()}">Add to basket</button>
                 </c:if>
             </div>
         </div>

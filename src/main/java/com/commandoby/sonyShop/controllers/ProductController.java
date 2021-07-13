@@ -2,6 +2,7 @@ package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.controllers.search.SimpleSearch;
 import com.commandoby.sonyShop.dao.domain.Category;
+import com.commandoby.sonyShop.dao.domain.Order;
 import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
@@ -11,9 +12,7 @@ import com.commandoby.sonyShop.service.ProductService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -22,6 +21,7 @@ import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 @Controller
 @RequestMapping("/sonyshop")
+@SessionAttributes("order")
 public class ProductController {
 
     private final Logger log = Logger.getLogger(getClass().getName());
@@ -43,12 +43,6 @@ public class ProductController {
         try {
             category = searchCategory(category_tag);
             products = getProductList(category, search_value);
-
-            /*String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());
-            if (productAddName != null) {
-                Product product = productService.getProductByName(productAddName);
-                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
-            }*/
         } catch (NoFoundException e) {
             log.error(e);
         }
@@ -56,10 +50,7 @@ public class ProductController {
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
-        if (products != null) {
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-            modelMap.addAttribute(PRODUCT_SIZE.getValue(), products.size());
-        }
+        if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
 
         return new ModelAndView("products", modelMap);
     }
@@ -70,19 +61,69 @@ public class ProductController {
         ModelMap modelMap = new ModelMap();
         try {
             product = productService.read(id);
-//            servletRequest.setAttribute(PRODUCT.getValue(), product);
-            /*if (servletRequest.getParameter(PRODUCT_NAME_OUT_OF_PRODUCT.getValue()) != null) {
-                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
-            }*/
-        } /*catch (NoFoundException e) {
-            log.error(e);
-        }*/ catch (ServiceException e) {
+        } catch (ServiceException e) {
             log.warn(e);
         }
 
         modelMap.addAttribute(PRODUCT.getValue(), product);
 
         return new ModelAndView("product", modelMap);
+    }
+
+    @PostMapping("/products")
+    public ModelAndView addProducts(@RequestParam String category_tag,
+                                    @RequestParam(required = false) String search_value,
+                                    @RequestParam int id,
+                                    @ModelAttribute Order order) throws ControllerException {
+        ModelMap modelMap = new ModelMap();
+        Category category = null;
+        List<Product> products = null;
+
+        addProductToBasket(order, id);
+
+        try {
+            category = searchCategory(category_tag);
+            products = getProductList(category, search_value);
+        } catch (NoFoundException e) {
+            log.error(e);
+        }
+
+        modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
+        modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
+        modelMap.addAttribute(ORDER.getValue(), order);
+        if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
+        if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
+
+        return new ModelAndView("products", modelMap);
+    }
+
+    @PostMapping("/product")
+    public ModelAndView addProduct(@RequestParam int id,
+                                   @ModelAttribute Order order) throws ControllerException {
+        ModelMap modelMap = new ModelMap();
+        Product product = addProductToBasket(order, id);
+
+        modelMap.addAttribute(ORDER.getValue(), order);
+        modelMap.addAttribute(PRODUCT.getValue(), product);
+
+        return new ModelAndView("product", modelMap);
+    }
+
+    private Product addProductToBasket(Order order, int product_id) {
+        Product product = null;
+        try {
+            product = productService.read(product_id);
+            if (order == null) order = new Order();
+            order.getProductList().add(product);
+            order.setOrderPrice(order
+                    .getProductList()
+                    .stream()
+                    .mapToInt(productOrder -> productOrder.getPrice())
+                    .sum());
+        } catch (ServiceException e) {
+            log.warn(e);
+        }
+        return product;
     }
 
     private Category searchCategory(String tag) throws NoFoundException {

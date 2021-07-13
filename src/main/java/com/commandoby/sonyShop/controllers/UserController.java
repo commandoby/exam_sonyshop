@@ -89,7 +89,6 @@ public class UserController {
     public ModelAndView execute(@RequestParam String email,
                                 @ModelAttribute User user) throws CommandException {
 //        ModelMap modelMap = new ModelMap();
-        System.out.println(email + "/" + user.getEmail());
         if (user == null || !email.equals(user.getEmail())) {
             return new ModelAndView("home", new ModelMap());
         }

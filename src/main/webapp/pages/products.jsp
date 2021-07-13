@@ -48,10 +48,12 @@
             </div>
         </div>
     </div>
+</form>
 
+<form>
     <div class="container">
         <br>
-        <p>Found ${product_size} products.</p>
+        <p>Found ${product_list.size()} products.</p>
         <c:if test="${not empty product_list}">
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
@@ -62,13 +64,13 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
-                        <button type="button" class="btn btn-primary"
+                        <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?id=${product.getId()}'">
                             List of product
                         </button>
                         <c:if test="${not empty sessionScope.user}">
-                            <button type="submit" class="btn btn-primary"
-                                    name="command" value="product_list">
+                            <button type="submit" class="btn btn-primary" formmethod="post"
+                                    name="id" value="${product.getId()}">
                                 Add to basket
                             </button>
                         </c:if>

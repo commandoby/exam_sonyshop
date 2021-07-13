@@ -14,6 +14,7 @@ public enum RequestParamEnum {
     CATEGORY_NAME("category_name"),
     CATEGORY_TAG("category_tag"),
     PRODUCT("product"),
+    PRODUCT_ID("product_id"),
     PRODUCT_LIST("product_list"),
     PRODUCT_SIZE("product_size"),
     PRODUCT_NAME("product_name"),

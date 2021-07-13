@@ -13,6 +13,7 @@
 </head>
 <body>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="search_comparing" value="${search_comparing}"/>
 <h2 align="center">Search page</h2>
 
 <form method="get">
@@ -56,7 +57,7 @@
                     <button class="dropdown-item" type="submit" name="search_category"
                             value="">All categories</button>
                 </div>
-                <input type="hidden" name="search_category" value="${search_category}"/>
+<%--                <input type="hidden" name="search_category" value="${search_category}"/>--%>
             </div>
         </div>
         <div class="btn-group">
@@ -74,7 +75,7 @@
                     <button class="dropdown-item" type="submit" name="search_comparing"
                             value="Name-">Name -</button>
                 </div>
-                <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+<%--                <input type="hidden" name="search_comparing" value="${search_comparing}"/>--%>
             </div>
         </div>
         <div class="btn-group col-sm-3">
@@ -105,7 +106,9 @@
     </div>
     <input type="hidden" name="page_items" value="${page_items}"/>
     <input type="hidden" name="page_number" value="${page_number}"/>
+</form>
 
+<form>
     <div class="container">
         <br>
         <p>Found ${product_size} products.</p>
@@ -119,12 +122,12 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
-                        <button type="button" class="btn btn-primary"
+                        <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?id=${product.getId()}'">
                             List of product</button>
                         <c:if test="${not empty sessionScope.user}">
-                            <button type="submit" class="btn btn-primary"
-                                    name="command" value="search">
+                            <button type="submit" class="btn btn-primary" formmethod="post"
+                                    name="id" value="${product.getId()}">
                                 Add to basket</button>
                         </c:if>
                     </div>
@@ -132,15 +135,17 @@
                 <br>
             </c:forEach>
         </c:if>
-        <c:if test="${page_items != '0'}">
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
-                        <c:if test="${page_number == '1'}">disabled</c:if>>Previous</button>
-                <button type="button" class="btn btn-primary">Page ${page_number}</button>
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}">
-                    Next</button>
-            </div>
-        </c:if>
     </div>
+</form>
+<form method="get">
+    <c:if test="${page_items != '0'}">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                    <c:if test="${page_number == '1'}">disabled</c:if>>Previous</button>
+            <button type="button" class="btn btn-primary">Page ${page_number}</button>
+            <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}">
+                Next</button>
+        </div>
+    </c:if>
 </form>
 </body>

@@ -24,7 +24,7 @@ import java.util.List;
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 @Controller
-@RequestMapping
+@RequestMapping("/sonyshop")
 public class AdvancedSearchController {
 
     private final Logger log = Logger.getLogger(getClass());
@@ -39,7 +39,7 @@ public class AdvancedSearchController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("sonyshop/search")
+    @GetMapping("/search")
     public ModelAndView getSearchProducts(@RequestParam(required = false) String search_value,
                                           @RequestParam(required = false) String search_category,
                                           @RequestParam(required = false) String search_comparing,
@@ -113,17 +113,5 @@ public class AdvancedSearchController {
             log.warn(e);
         }
         return categories;
-    }
-
-    private void addBasketProduct(HttpServletRequest servletRequest) {
-        try {
-            String productAddName = servletRequest.getParameter(PRODUCT_NAME.getValue());
-            if (productAddName != null) {
-                Product product = productService.getProductByName(productAddName);
-                BasketPageCommandImpl.addProductToBasket(servletRequest, product);
-            }
-        } catch (NoFoundException | ServiceException e) {
-            log.error(e);
-        }
     }
 }
