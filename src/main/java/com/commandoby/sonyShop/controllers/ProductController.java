@@ -1,6 +1,5 @@
 package com.commandoby.sonyShop.controllers;
 
-import com.commandoby.sonyShop.controllers.search.SimpleSearch;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Order;
 import com.commandoby.sonyShop.dao.domain.Product;
@@ -34,21 +33,19 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ModelAndView getProducts(@RequestParam String category_tag,
-                                    @RequestParam(required = false) String search_value) throws ControllerException {
+    public ModelAndView getProducts(@RequestParam String category_tag) throws ControllerException {
         ModelMap modelMap = new ModelMap();
         Category category = null;
         List<Product> products = null;
 
         try {
             category = searchCategory(category_tag);
-            products = getProductList(category, search_value);
+            products = getProductList(category);
         } catch (NoFoundException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
-        modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
 
@@ -56,11 +53,11 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public ModelAndView getProduct(@RequestParam int id) throws ControllerException {
+    public ModelAndView getProduct(@RequestParam int product_id) throws ControllerException {
         Product product = null;
         ModelMap modelMap = new ModelMap();
         try {
-            product = productService.read(id);
+            product = productService.read(product_id);
         } catch (ServiceException e) {
             log.warn(e);
         }
@@ -72,24 +69,22 @@ public class ProductController {
 
     @PostMapping("/products")
     public ModelAndView addProducts(@RequestParam String category_tag,
-                                    @RequestParam(required = false) String search_value,
-                                    @RequestParam int id,
+                                    @RequestParam int product_id,
                                     @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
         Category category = null;
         List<Product> products = null;
 
-        addProductToBasket(order, id);
+        addProductToBasket(order, product_id);
 
         try {
             category = searchCategory(category_tag);
-            products = getProductList(category, search_value);
+            products = getProductList(category);
         } catch (NoFoundException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
-        modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
         modelMap.addAttribute(ORDER.getValue(), order);
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
@@ -98,10 +93,10 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ModelAndView addProduct(@RequestParam int id,
+    public ModelAndView addProduct(@RequestParam int product_id,
                                    @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Product product = addProductToBasket(order, id);
+        Product product = addProductToBasket(order, product_id);
 
         modelMap.addAttribute(ORDER.getValue(), order);
         modelMap.addAttribute(PRODUCT.getValue(), product);
@@ -136,25 +131,13 @@ public class ProductController {
         return category;
     }
 
-    private List<Product> getProductList(Category category, String searchValue) {
+    private List<Product> getProductList(Category category) {
         List<Product> products = null;
         try {
             products = productService.getAllProductsByCategory(category);
         } catch (ServiceException e) {
             log.warn(e);
         }
-
-        List<Product> newProductList = getSearchProductList(products, searchValue);
-//        servletRequest.setAttribute(PRODUCT_LIST.getValue(), newProductList);
-//        servletRequest.setAttribute(PRODUCT_SIZE.getValue(), newProductList.size());
-        return newProductList;
-    }
-
-    private List<Product> getSearchProductList(List<Product> productList, String searchValue) {
-        if (searchValue != null && !searchValue.equals("")) {
-            SimpleSearch<Product> search = new SimpleSearch<>();
-            return search.searchName(searchValue, productList);
-        }
-        return productList;
+        return products;
     }
 }

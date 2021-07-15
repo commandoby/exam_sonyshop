@@ -21,7 +21,8 @@
 <form method="get">
     <div class="container" align="right">
         <div class="btn-group">
-            <button type="button" class="btn btn-success" name="command" value="pay">&nbsp&nbsp Pay &nbsp&nbsp
+            <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/pay'">
+                &nbsp&nbsp Pay &nbsp&nbsp
             </button>
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
                 Home page

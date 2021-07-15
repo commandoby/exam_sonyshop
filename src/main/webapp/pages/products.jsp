@@ -20,14 +20,11 @@
     <div class="container">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit" class="btn btn-primary" formaction="products">Search</button>
+                    <button type="submit" class="btn btn-primary" formaction="/sonyshop/search">Search</button>
             </div>
             <input type="text" class="form-control" placeholder="Enter text"
                    name="search_value" value="${search_value}">
             <div class="input-group-append">
-                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/search'">
-                    Advanced Search
-                </button>
                 <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
                     Home page
                 </button>
@@ -39,11 +36,13 @@
                             onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                             ${sessionScope.user.getEmail()}</button>
                     <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
-                        Escape</button>
+                        Escape
+                    </button>
                 </c:if>
                 <c:if test="${empty sessionScope.user}">
                     <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
-                        Sign in</button>
+                        Sign in
+                    </button>
                 </c:if>
             </div>
         </div>
@@ -65,12 +64,12 @@
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
-                                onclick="document.location='/sonyshop/product?id=${product.getId()}'">
+                                onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
                         <c:if test="${not empty sessionScope.user}">
                             <button type="submit" class="btn btn-primary" formmethod="post"
-                                    name="id" value="${product.getId()}">
+                                    name="product_id" value="${product.getId()}">
                                 Add to basket
                             </button>
                         </c:if>

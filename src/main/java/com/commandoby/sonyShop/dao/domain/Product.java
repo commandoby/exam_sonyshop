@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "products")
 @Component
-public class Product extends BaseEntity implements ShopObject {
+public class Product extends BaseEntity {
     private String name;
     private String imageName;
     private String description;

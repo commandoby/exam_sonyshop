@@ -50,7 +50,7 @@
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
                 <c:if test="${not empty sessionScope.user}">
-                    <button type="submit" class="btn btn-primary" name="id"
+                    <button type="submit" class="btn btn-primary" name="product_id"
                             value="${product.getId()}">Add to basket</button>
                 </c:if>
             </div>

@@ -22,10 +22,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
-/*public UserServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        userDao = new UserDaoImpl();
-    }*/
 
     @Override
     @Transactional

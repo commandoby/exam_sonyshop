@@ -35,7 +35,7 @@ public class AdvancedSearchPageCommandImpl implements BaseCommand {
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
-        String searchCategory = servletRequest.getParameter(SEARCH_CATEGORY.getValue());
+//        String searchCategory = servletRequest.getParameter(SEARCH_CATEGORY.getValue());
         String searchComparing = servletRequest.getParameter(SEARCH_COMPARING.getValue());
         String pageItems = servletRequest.getParameter(PAGE_ITEMS.getValue());
         String pageNumber = servletRequest.getParameter(PAGE_NUMBER.getValue());
@@ -45,10 +45,10 @@ public class AdvancedSearchPageCommandImpl implements BaseCommand {
         List<Product> products = new ArrayList<>();
         List<List<Product>> productPagesList;
 
-        if (searchCategory == null || searchCategory.equals("")) searchCategory = "";
+//        if (searchCategory == null || searchCategory.equals("")) searchCategory = "";
         if (searchComparing == null || searchComparing.equals("")) searchComparing = "Price +";
         if (!searchValue.equals("") || minPrice != null || maxPrice != null)
-            products = advancedSearch.search(searchValue, minPrice, maxPrice, searchCategory, searchComparing);
+//            products = advancedSearch.search(searchValue, minPrice, maxPrice, searchCategory, searchComparing);
         addBasketProduct(servletRequest);
         int basketSize = BasketPageCommandImpl.getBasketSize(servletRequest);
 
@@ -73,7 +73,7 @@ public class AdvancedSearchPageCommandImpl implements BaseCommand {
         }
 
         servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
-        servletRequest.setAttribute(SEARCH_CATEGORY.getValue(), searchCategory);
+//        servletRequest.setAttribute(SEARCH_CATEGORY.getValue(), searchCategory);
         servletRequest.setAttribute(SEARCH_COMPARING.getValue(), searchComparing);
         servletRequest.setAttribute(CATEGORIES.getValue(), categories);
         servletRequest.setAttribute(PAGE_ITEMS.getValue(), pageItems);

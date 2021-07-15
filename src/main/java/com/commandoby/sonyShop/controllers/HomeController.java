@@ -1,6 +1,5 @@
 package com.commandoby.sonyShop.controllers;
 
-import com.commandoby.sonyShop.controllers.search.SimpleSearch;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Order;
 import com.commandoby.sonyShop.dao.domain.User;
@@ -32,14 +31,15 @@ public class HomeController {
     }
 
     @GetMapping
-    public ModelAndView getCategories(@RequestParam(required = false) String search_value)
-            throws ControllerException {
+    public ModelAndView getCategories() throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
-        List<Category> categoryList = getSearchCategory(search_value);
+        List<Category> categoryList = getCategory();
 
         modelMap.addAttribute(CATEGORIES.getValue(), categoryList);
-        modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
+        if (modelMap.getAttribute(ORDER.getValue()) == null) {
+            modelMap.addAttribute(ORDER.getValue(), new Order());
+        }
 
         return new ModelAndView("home", modelMap);
     }
@@ -54,7 +54,7 @@ public class HomeController {
             return new ModelAndView("login", modelMap);
         }
 
-        List<Category> categoryList = getSearchCategory("");
+        List<Category> categoryList = getCategory();
 
         modelMap.addAttribute(CATEGORIES.getValue(), categoryList);
         modelMap.addAttribute(ORDER.getValue(), new Order());
@@ -62,18 +62,12 @@ public class HomeController {
         return new ModelAndView("home", modelMap);
     }
 
-    private List<Category> getSearchCategory(String searchValue) {
+    private List<Category> getCategory() {
         List<Category> categories = null;
         try {
             categories = categoryService.getAllCategories();
         } catch (ServiceException e) {
             log.warn(e);
-        }
-        if (categories != null) {
-            if (searchValue != null && !searchValue.equals("")) {
-                SimpleSearch<Category> search = new SimpleSearch<>();
-                return search.searchName(searchValue, categories);
-            }
         }
         return categories;
     }

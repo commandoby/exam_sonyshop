@@ -6,7 +6,6 @@ import com.commandoby.sonyShop.dao.impl.CategoryDaoImpl;
 import com.commandoby.sonyShop.dao.impl.UserDaoImpl;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
-import com.commandoby.sonyShop.controllers.search.SimpleSearch;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.UserService;
@@ -40,8 +39,8 @@ public class HomePageCommandImpl implements BaseCommand {
                 && !checkReceivedUser(servletRequest, email, password))
             return PagesPathEnum.SIGN_IN_PAGE.getPath();
 
-        List<Category> categoryList = getSearchCategory(servletRequest);
-        servletRequest.setAttribute(CATEGORIES.getValue(), categoryList);
+//        List<Category> categoryList = getSearchCategory(servletRequest);
+//        servletRequest.setAttribute(CATEGORIES.getValue(), categoryList);
 
         int basketSize = BasketPageCommandImpl.getBasketSize(servletRequest);
         servletRequest.setAttribute(BASKET_SIZE.getValue(), basketSize);
@@ -49,7 +48,7 @@ public class HomePageCommandImpl implements BaseCommand {
         return PagesPathEnum.HOME_PAGE.getPath();
     }
 
-    private List<Category> getSearchCategory(HttpServletRequest servletRequest) {
+    /*private List<Category> getSearchCategory(HttpServletRequest servletRequest) {
         List<Category> categories = null;
         try {
             categories = categoryService.getAllCategories();
@@ -65,7 +64,7 @@ public class HomePageCommandImpl implements BaseCommand {
             }
         }
         return categories;
-    }
+    }*/
 
     private boolean checkReceivedUser(HttpServletRequest servletRequest, String email, String password) {
         HttpSession session = servletRequest.getSession();

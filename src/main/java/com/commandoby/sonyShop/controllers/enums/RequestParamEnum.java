@@ -24,12 +24,12 @@ public enum RequestParamEnum {
     BASKET_PRICE("basket_price"),
     REMOVE_PRODUCT_ID("remove_id"),
     SEARCH_VALUE("search_value"),
-    SEARCH_CATEGORY("search_category"),
     SEARCH_COMPARING("search_comparing"),
     MIN_PRICE("min_price"),
     MAX_PRICE("max_price"),
     PAGE_ITEMS("page_items"),
-    PAGE_NUMBER("page_number");
+    PAGE_NUMBER("page_number"),
+    PAGE_MAX("page_max");
 
     private final String value;
 

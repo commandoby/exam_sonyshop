@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<form method="get">
+<form method="post">
     <div class="container" align="center">
         <br><br><br>
         <h1>Thank you for choosing us!</h1>
@@ -35,9 +35,9 @@
             </c:otherwise>
         </c:choose>
         <br>
-        <button type="submit" class="btn btn-primary" formaction="/sonyshop">Home page</button>
+        <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
         &nbsp&nbsp
-        <button type="submit" class="btn btn-danger" formaction="/sonyshop/signin">Escape</button>
+        <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
     </div>
 </form>
 </body>

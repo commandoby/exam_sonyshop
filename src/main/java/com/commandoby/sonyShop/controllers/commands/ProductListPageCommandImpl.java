@@ -7,7 +7,6 @@ import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
-import com.commandoby.sonyShop.controllers.search.SimpleSearch;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
@@ -73,12 +72,12 @@ public class ProductListPageCommandImpl implements BaseCommand {
             log.warn(e);
         }
 
-        List<Product> newProductList = getSearchProductList(servletRequest, products);
-        servletRequest.setAttribute(PRODUCT_LIST.getValue(), newProductList);
-        servletRequest.setAttribute(PRODUCT_SIZE.getValue(), newProductList.size());
+//        List<Product> newProductList = getSearchProductList(servletRequest, products);
+//        servletRequest.setAttribute(PRODUCT_LIST.getValue(), newProductList);
+//        servletRequest.setAttribute(PRODUCT_SIZE.getValue(), newProductList.size());
     }
 
-    private List<Product> getSearchProductList(HttpServletRequest servletRequest, List<Product> productList) {
+    /*private List<Product> getSearchProductList(HttpServletRequest servletRequest, List<Product> productList) {
         String searchValue = servletRequest.getParameter(SEARCH_VALUE.getValue());
         servletRequest.setAttribute(SEARCH_VALUE.getValue(), searchValue);
         if (searchValue != null && !searchValue.equals("")) {
@@ -86,5 +85,5 @@ public class ProductListPageCommandImpl implements BaseCommand {
             return search.searchName(searchValue, productList);
         }
         return productList;
-    }
+    }*/
 }

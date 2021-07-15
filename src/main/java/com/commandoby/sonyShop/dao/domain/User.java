@@ -31,7 +31,6 @@ public class User extends BaseEntity {
     }
 
     public User(Builder builder) {
-        id = builder.id;
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -123,7 +122,6 @@ public class User extends BaseEntity {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
@@ -139,7 +137,6 @@ public class User extends BaseEntity {
     }
 
     public static final class Builder {
-        private int id;
         private String name;
         private String surname;
         private String email;
@@ -148,11 +145,6 @@ public class User extends BaseEntity {
         private int balance;
 
         private Builder() {}
-
-        public Builder withId(int id) {
-            this.id = id;
-            return this;
-        }
 
         public Builder withName(String name) {
             this.name = name;
