@@ -2,7 +2,6 @@ package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.dao.UserDao;
 import com.commandoby.sonyShop.dao.domain.User;
-import com.commandoby.sonyShop.dao.impl.UserDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int create(User user) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.persist(user);
-//        entityManager.getTransaction().commit();
         return user.getId();
     }
 
@@ -41,17 +38,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void update(User user) throws ServiceException {
-//        entityManager.getTransaction().begin();
-        entityManager.persist(user);
-//        entityManager.getTransaction().commit();
+        entityManager.merge(user);
     }
 
     @Override
     @Transactional
     public void delete(User user) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.remove(user);
-//        entityManager.getTransaction().commit();
     }
 
     @Override

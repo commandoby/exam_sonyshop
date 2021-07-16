@@ -68,7 +68,6 @@ DROP TABLE IF EXISTS sonyshop.orders_products;
 CREATE TABLE IF NOT EXISTS sonyshop.orders_products (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
-    PRIMARY KEY (order_id, product_id),
     CONSTRAINT FK_ORDERS_PRODUCTS_ORDER_ID_ORDERS_ID
     FOREIGN KEY (order_id)
     REFERENCES sonyshop.orders (id)

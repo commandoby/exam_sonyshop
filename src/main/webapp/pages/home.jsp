@@ -24,7 +24,7 @@
             <input type="text" class="form-control" placeholder="Enter text"
                    name="search_value" value="${search_value}">
             <div class="input-group-append">
-                <c:if test="${not empty sessionScope.user}">
+                <c:if test="${not empty sessionScope.user.getEmail()}">
                     <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
                         Basket (${sessionScope.order.getProductList().size()})
                     </button>
@@ -35,7 +35,7 @@
                         Escape
                     </button>
                 </c:if>
-                <c:if test="${empty sessionScope.user}">
+                <c:if test="${empty sessionScope.user.getEmail()}">
                     <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
                         Sign in</button>
                 </c:if>

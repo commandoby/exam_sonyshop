@@ -17,17 +17,11 @@ public class CategoryDaoImpl implements CategoryDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-//    public CategoryDaoImpl(EntityManager entityManager) {
-//        this.entityManager = entityManager;
-//    }
-
     @Override
     @Transactional
     public List<Category> getAllCategories() throws DAOException {
-//        entityManager.getTransaction().begin();
         List<Category> categories = entityManager
                 .createQuery("select u from Category u").getResultList();
-//        entityManager.getTransaction().commit();
 
         return categories;
     }
@@ -37,15 +31,12 @@ public class CategoryDaoImpl implements CategoryDao {
     public Category getCategoryByTag(String tag) throws DAOException {
         Category category;
         try {
-//            entityManager.getTransaction().begin();
             category = (Category) entityManager
                     .createQuery("select u from Category u where u.tag =: tag")
                     .setParameter("tag", tag).getSingleResult();
         } catch (NoResultException e) {
             throw new DAOException("Category not found by tag: " + tag, e);
-        } /*finally {
-            entityManager.getTransaction().commit();
-        }*/
+        }
 
         return category;
     }

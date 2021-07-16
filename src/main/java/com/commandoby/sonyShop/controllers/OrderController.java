@@ -1,76 +1,76 @@
 package com.commandoby.sonyShop.controllers;
 
-import com.commandoby.sonyShop.controllers.commands.BaseCommand;
-import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
+import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.Product;
 import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
+import com.commandoby.sonyShop.service.UseBasket;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 
-import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
-@Controller
+@RestController
 @RequestMapping("/sonyshop")
 @SessionAttributes({"user", "order"})
 public class OrderController {
     private final Logger log = Logger.getLogger(getClass().getName());
     private final UserService userService;
     private final OrderService orderService;
+    private final UseBasket useBasket;
 
-    public OrderController(UserService userService, OrderService orderService) {
+    public OrderController(UserService userService, OrderService orderService,
+                           UseBasket useBasket) {
         this.userService = userService;
         this.orderService = orderService;
+        this.useBasket = useBasket;
     }
 
     @GetMapping("/basket")
-    public ModelAndView getBasket(@ModelAttribute Order order) throws CommandException {
+    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws CommandException {
         ModelMap modelMap = new ModelMap();
 
         if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
 
-        return new ModelAndView("basket", modelMap);
+        return new ModelAndView(PagesPathEnum.BASKET_PAGE.getPath(), modelMap);
     }
 
     @PostMapping("/basket")
     public ModelAndView getBasketAndRemoveProduct(@RequestParam int id,
-                                                  @ModelAttribute Order order) throws CommandException {
+                                                  @ModelAttribute("order") Order order) throws CommandException {
         ModelMap modelMap = new ModelMap();
         if (order == null) order = new Order();
-            try {
-            removeProduct(order, id);
-        } catch (NoFoundException e) {
+        try {
+            useBasket.removeProductWithOfBasket(order, id);
+        } catch (NoFoundException | ServiceException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(ORDER.getValue(), order);
 
-        return new ModelAndView("basket", modelMap);
+        return new ModelAndView(PagesPathEnum.BASKET_PAGE.getPath(), modelMap);
     }
 
     @GetMapping("/pay")
-    public ModelAndView pay(@ModelAttribute Order order,
-                            @ModelAttribute User user) throws CommandException {
+    public ModelAndView pay(@ModelAttribute("order") Order order,
+                            @ModelAttribute("user") User user) throws CommandException {
         ModelMap modelMap = new ModelMap();
         int paySize = order.getProductList().size();
         int payPrice = order.getOrderPrice();
 
         if (paySize != 0 && user != null) {
             try {
+                order.setDate(LocalDate.now().toString());
                 order.setUser(user);
-//                orderService.create(order);
+                orderService.create(order);
                 user.setBalance(user.getBalance() - payPrice);
                 user.addOrder(order);
                 userService.update(user);
@@ -85,19 +85,16 @@ public class OrderController {
         modelMap.addAttribute(BASKET_PRICE.getValue(), payPrice);
         modelMap.addAttribute(ORDER.getValue(), new Order());
 
-        return new ModelAndView("pay", modelMap);
+        return new ModelAndView(PagesPathEnum.PAY_PAGE.getPath(), modelMap);
     }
 
-    private void removeProduct(Order order, int id) throws NoFoundException {
-        if (order.getProductList().get(id) != null) {
-            order.getProductList().remove(id);
-            order.setOrderPrice(order
-                    .getProductList()
-                    .stream()
-                    .mapToInt(productOrder -> productOrder.getPrice())
-                    .sum());
-        } else {
-            throw new NoFoundException("Will not find a product to remove by id: " + id);
-        }
+    @ModelAttribute("user")
+    public User getUser() {
+        return new User();
+    }
+
+    @ModelAttribute("order")
+    public Order getOrder() {
+        return new Order();
     }
 }

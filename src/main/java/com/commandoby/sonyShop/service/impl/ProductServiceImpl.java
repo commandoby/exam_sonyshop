@@ -3,7 +3,6 @@ package com.commandoby.sonyShop.service.impl;
 import com.commandoby.sonyShop.dao.ProductDao;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Product;
-import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import org.springframework.stereotype.Service;
@@ -23,17 +22,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(ProductDao productDao) {
         this.productDao = productDao;
     }
-/*public ProductServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        productDao = new ProductDaoImpl();
-    }*/
 
     @Override
     @Transactional
     public int create(Product product) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.persist(product);
-//        entityManager.getTransaction().commit();
         return product.getId();
     }
 
@@ -46,17 +39,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void update(Product product) throws ServiceException {
-//        entityManager.getTransaction().begin();
-        entityManager.persist(product);
-//        entityManager.getTransaction().commit();
+        entityManager.merge(product);
     }
 
     @Override
     @Transactional
     public void delete(Product product) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.remove(product);
-//        entityManager.getTransaction().commit();
     }
 
     @Override

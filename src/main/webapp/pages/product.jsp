@@ -20,7 +20,7 @@
     <div class="container" align="right">
         <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">Home page</button>
-            <c:if test="${not empty sessionScope.user}">
+            <c:if test="${not empty sessionScope.user.getEmail()}">
                 <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
                     Basket (${sessionScope.order.getProductList().size()})</button>
                 <button type="button" class="btn btn-primary"
@@ -29,7 +29,7 @@
                 <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
                     Escape</button>
             </c:if>
-            <c:if test="${empty sessionScope.user}">
+            <c:if test="${empty sessionScope.user.getEmail()}">
                 <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
                     Sign in</button>
             </c:if>
@@ -49,7 +49,7 @@
                 <p class="card-text">${product.getDescription()}</p>
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
-                <c:if test="${not empty sessionScope.user}">
+                <c:if test="${not empty sessionScope.user.getEmail()}">
                     <button type="submit" class="btn btn-primary" name="product_id"
                             value="${product.getId()}">Add to basket</button>
                 </c:if>

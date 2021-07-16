@@ -17,18 +17,12 @@ public class OrderDaoImpl implements OrderDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-//    public OrderDaoImpl(EntityManager entityManager) {
-//        this.entityManager = entityManager;
-//    }
-
     @Override
     @Transactional
     public List<Order> readAllOrdersByUser(User user) throws DAOException {
-//        entityManager.getTransaction().begin();
         List<Order> orders = entityManager
                 .createQuery("select u from Order u where u.user =: user")
                 .setParameter("user", user).getResultList();
-//        entityManager.getTransaction().commit();
 
         return orders;
     }

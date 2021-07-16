@@ -2,7 +2,6 @@ package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.dao.CategoryDao;
 import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.impl.CategoryDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import org.springframework.stereotype.Service;
@@ -22,17 +21,11 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryServiceImpl(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
     }
-/*public CategoryServiceImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        categoryDao = new CategoryDaoImpl();
-    }*/
 
     @Override
     @Transactional
     public int create(Category category) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.persist(category);
-//        entityManager.getTransaction().commit();
         return category.getId();
     }
 
@@ -45,17 +38,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void update(Category category) throws ServiceException {
-//        entityManager.getTransaction().begin();
-        entityManager.persist(category);
-//        entityManager.getTransaction().commit();
+        entityManager.merge(category);
     }
 
     @Override
     @Transactional
     public void delete(Category category) throws ServiceException {
-//        entityManager.getTransaction().begin();
         entityManager.remove(category);
-//        entityManager.getTransaction().commit();
     }
 
     @Override

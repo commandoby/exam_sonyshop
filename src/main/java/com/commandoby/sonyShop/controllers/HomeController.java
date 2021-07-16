@@ -1,20 +1,23 @@
 package com.commandoby.sonyShop.controllers;
 
+import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Order;
 import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
-import com.commandoby.sonyShop.service.UserService;
+import com.commandoby.sonyShop.service.UserValidate;
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
-import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
 @RestController
 @RequestMapping("/sonyshop")
@@ -23,11 +26,11 @@ public class HomeController {
 
     private final Logger log = Logger.getLogger(getClass());
     private final CategoryService categoryService;
-    private final UserService userService;
+    private final UserValidate userValidate;
 
-    public HomeController(CategoryService categoryService, UserService userService) {
+    public HomeController(CategoryService categoryService, UserValidate userValidate) {
         this.categoryService = categoryService;
-        this.userService = userService;
+        this.userValidate = userValidate;
     }
 
     @GetMapping
@@ -41,25 +44,31 @@ public class HomeController {
             modelMap.addAttribute(ORDER.getValue(), new Order());
         }
 
-        return new ModelAndView("home", modelMap);
+        return new ModelAndView(PagesPathEnum.HOME_PAGE.getPath(), modelMap);
     }
 
     @PostMapping
-    public ModelAndView login(@RequestParam String email, @RequestParam String password)
+    public ModelAndView login(/*@Valid @RequestParam String email, @Valid @RequestParam String password*/
+            @Valid @ModelAttribute("user") User user,
+            BindingResult bindingResult, ModelAndView modelAndView)
             throws ControllerException {
-        ModelMap modelMap = new ModelMap();
+//        User user = User.newBuilder().withEmail(email).withPassword(password).build();
 
-        if (validateParamNotNull(email) && validateParamNotNull(password)
-                && !checkReceivedUser(modelMap, email, password)) {
-            return new ModelAndView("login", modelMap);
+        if (!userValidate.validateUser(modelAndView, bindingResult, user)) {
+            modelAndView.addObject(USER.getValue(), null);
+            modelAndView.setViewName(PagesPathEnum.SIGN_IN_PAGE.getPath());
+            return modelAndView;
         }
+
+        ModelMap modelMap = new ModelMap();
 
         List<Category> categoryList = getCategory();
 
         modelMap.addAttribute(CATEGORIES.getValue(), categoryList);
         modelMap.addAttribute(ORDER.getValue(), new Order());
-
-        return new ModelAndView("home", modelMap);
+        modelAndView.setViewName(PagesPathEnum.HOME_PAGE.getPath());
+        modelAndView.addAllObjects(modelMap);
+        return modelAndView;
     }
 
     private List<Category> getCategory() {
@@ -72,28 +81,8 @@ public class HomeController {
         return categories;
     }
 
-    private boolean checkReceivedUser(ModelMap modelMap, String email, String password) {
-        User user = null;
-        try {
-            user = userService.getUserByEmail(email);
-        } catch (ServiceException e) {
-            log.info(e);
-        }
-        if (user != null) {
-            if (user.getPassword().equals(password)) {
-                modelMap.addAttribute(USER.getValue(), user);
-                return true;
-            } else {
-                modelMap.addAttribute(INFO.getValue(), "Invalid password.");
-            }
-        } else {
-            modelMap.addAttribute(INFO.getValue(), "User is not found.");
-        }
-        modelMap.addAttribute(USER.getValue(), null);
-        return false;
-    }
-
-    private boolean validateParamNotNull(String parameter) {
-        return parameter != null && !parameter.equals("");
+    @ModelAttribute("user")
+    public User getUser() {
+        return new User();
     }
 }

@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.controllers;
 
+import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.controllers.search.AdvancedSearch;
 import com.commandoby.sonyShop.dao.domain.Category;
 import com.commandoby.sonyShop.dao.domain.Order;
@@ -8,6 +9,7 @@ import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
+import com.commandoby.sonyShop.service.UseBasket;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
 @Controller
 @RequestMapping("/sonyshop")
@@ -28,12 +30,14 @@ public class AdvancedSearchController {
     private final AdvancedSearch advancedSearch;
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final UseBasket useBasket;
 
     public AdvancedSearchController(AdvancedSearch advancedSearch, ProductService productService,
-                                    CategoryService categoryService) {
+                                    CategoryService categoryService, UseBasket useBasket) {
         this.advancedSearch = advancedSearch;
         this.productService = productService;
         this.categoryService = categoryService;
+        this.useBasket = useBasket;
     }
 
     @GetMapping("/search")
@@ -50,9 +54,8 @@ public class AdvancedSearchController {
         List<Category> categories = getCategories();
         Category category = getCategory(category_tag);
         List<Product> products = new ArrayList<>();
-        List<List<Product>> productPagesList;
 
-        if (product_id != null) addProductToBasket(order, product_id);
+        if (product_id != null) useBasket.addProductToBasket(order, product_id);
 
         if (search_value == null) search_value = "";
         if (category_tag == null) category_tag = "";
@@ -66,11 +69,11 @@ public class AdvancedSearchController {
         if (page_number == null) page_number = 1;
         if (!page_items.equals(0) && !products.isEmpty()) {
             try {
-                productPagesList = getProductPagesList(products, page_items);
                 int pages = (int) Math.ceil(products.size() / page_items.doubleValue());
                 if (page_number > pages) page_number = pages;
+                List<Product> productPageList = getProductPageList(products, page_items, page_number);
                 modelMap.addAttribute(PAGE_MAX.getValue(), pages);
-                modelMap.addAttribute(PRODUCT_LIST.getValue(), productPagesList.get(page_number - 1));
+                modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList/*productPagesList.get(page_number - 1)*/);
             } catch (NumberFormatException e) {
                 log.error(e);
             }
@@ -90,22 +93,16 @@ public class AdvancedSearchController {
         modelMap.addAttribute(PRODUCT_SIZE.getValue(), products.size());
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
 
-        return new ModelAndView("advancedSearch", modelMap);
+        return new ModelAndView(PagesPathEnum.ADVANCED_SEARCH.getPath(), modelMap);
     }
 
-    private List<List<Product>> getProductPagesList(List<Product> products, Integer pageItemsInt)
-            throws NumberFormatException {
-        List<List<Product>> productPagesList = new ArrayList<>();
-        int pages = (int) Math.ceil(products.size() / pageItemsInt.doubleValue());
-        for (int i = 0; i < pages; i++) {
-            List<Product> products1 = new ArrayList<>();
-            for (int j = 0; j < pageItemsInt; j++) {
-                if (pageItemsInt * i + j < products.size())
-                    products1.add(products.get(pageItemsInt * i + j));
-            }
-            productPagesList.add(products1);
-        }
-        return productPagesList;
+    private List<Product> getProductPageList(List<Product> products, int pageItems, int pageNumber) {
+        List<Product> newProductList = new ArrayList<>();
+        products.stream()
+                .skip((long) pageItems * (pageNumber - 1))
+                .limit(pageItems)
+                .forEach(newProductList::add);
+        return newProductList;
     }
 
     private List<Category> getCategories() {
@@ -126,22 +123,5 @@ public class AdvancedSearchController {
             log.warn(e);
         }
         return category;
-    }
-
-    private Product addProductToBasket(Order order, int product_id) {
-        Product product = null;
-        try {
-            product = productService.read(product_id);
-            if (order == null) order = new Order();
-            order.getProductList().add(product);
-            order.setOrderPrice(order
-                    .getProductList()
-                    .stream()
-                    .mapToInt(productOrder -> productOrder.getPrice())
-                    .sum());
-        } catch (ServiceException e) {
-            log.warn(e);
-        }
-        return product;
     }
 }

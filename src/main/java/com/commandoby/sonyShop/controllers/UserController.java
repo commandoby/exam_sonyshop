@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.controllers;
 
+import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
@@ -13,7 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
+import static com.commandoby.sonyShop.enums.PagesPathEnum.*;
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
 @Controller
 @RequestMapping("/sonyshop")
@@ -31,7 +33,7 @@ public class UserController {
     public ModelAndView signIn(SessionStatus sessionStatus) throws CommandException {
         sessionStatus.setComplete();
 
-        return new ModelAndView("login", new ModelMap());
+        return new ModelAndView(PagesPathEnum.SIGN_IN_PAGE.getPath(), new ModelMap());
     }
 
     @PostMapping("/signin")
@@ -51,12 +53,12 @@ public class UserController {
 
             if (!password.equals(second_password)) {
                 modelMap.addAttribute(INFO.getValue(), "Password mismatch");
-                return new ModelAndView("register", modelMap);
+                return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
 
             if (duplicateCheck(email)) {
                 modelMap.addAttribute(INFO.getValue(), "User exists");
-                return new ModelAndView("register", modelMap);
+                return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
 
             User user = User.newBuilder()
@@ -73,7 +75,7 @@ public class UserController {
             }
         }
 
-        return new ModelAndView("login", modelMap);
+        return new ModelAndView(SIGN_IN_PAGE.getPath(), modelMap);
     }
 
     @GetMapping("/new")
@@ -82,18 +84,17 @@ public class UserController {
 
         modelMap.addAttribute(EMAIL.getValue(), email);
 
-        return new ModelAndView("register", modelMap);
+        return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
     }
 
     @GetMapping("/user")
     public ModelAndView execute(@RequestParam String email,
                                 @ModelAttribute User user) throws CommandException {
-//        ModelMap modelMap = new ModelMap();
         if (user == null || !email.equals(user.getEmail())) {
-            return new ModelAndView("home", new ModelMap());
+            return new ModelAndView(HOME_PAGE.getPath(), new ModelMap());
         }
 
-        return new ModelAndView("user", new ModelMap());
+        return new ModelAndView(USER_PAGE.getPath(), new ModelMap());
     }
 
     private boolean duplicateCheck(String email) {

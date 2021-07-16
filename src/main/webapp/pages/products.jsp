@@ -28,7 +28,7 @@
                 <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
                     Home page
                 </button>
-                <c:if test="${not empty sessionScope.user}">
+                <c:if test="${not empty sessionScope.user.getEmail()}">
                     <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
                         Basket (${sessionScope.order.getProductList().size()})
                     </button>
@@ -39,7 +39,7 @@
                         Escape
                     </button>
                 </c:if>
-                <c:if test="${empty sessionScope.user}">
+                <c:if test="${empty sessionScope.user.getEmail()}">
                     <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
                         Sign in
                     </button>
@@ -67,7 +67,7 @@
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
-                        <c:if test="${not empty sessionScope.user}">
+                        <c:if test="${not empty sessionScope.user.getEmail()}">
                             <button type="submit" class="btn btn-primary" formmethod="post"
                                     name="product_id" value="${product.getId()}">
                                 Add to basket

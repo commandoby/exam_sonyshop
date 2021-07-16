@@ -1,6 +1,5 @@
 package com.commandoby.sonyShop.dao.domain;
 
-import com.commandoby.sonyShop.exceptions.NoFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
