@@ -1,15 +1,11 @@
 package com.commandoby.sonyShop.controllers.search;
 
 import com.commandoby.sonyShop.dao.domain.Product;
-import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
-import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 @Component
