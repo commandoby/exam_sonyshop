@@ -1,80 +1,81 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.ProductDao;
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.ProductRepository;
+import com.commandoby.sonyShop.repository.SearchProductsRepository;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
+    private final SearchProductsRepository searchProductsRepository;
 
-    public ProductServiceImpl(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductServiceImpl(ProductRepository productRepository, SearchProductsRepository searchProductsRepository) {
+        this.productRepository = productRepository;
+        this.searchProductsRepository = searchProductsRepository;
     }
 
     @Override
-    @Transactional
     public int create(Product product) throws ServiceException {
-        entityManager.persist(product);
+        productRepository.save(product);
         return product.getId();
     }
 
     @Override
-    @Transactional
     public Product read(int id) throws ServiceException {
-        return entityManager.find(Product.class, id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
-    @Transactional
     public void update(Product product) throws ServiceException {
-        entityManager.merge(product);
+        productRepository.save(product);
     }
 
     @Override
-    @Transactional
     public void delete(Product product) throws ServiceException {
-        entityManager.remove(product);
+        productRepository.delete(product);
     }
 
     @Override
     public List<Product> getAllProducts() throws ServiceException {
-        return productDao.getAllProducts();
+        return productRepository.findAll();
     }
 
     @Override
     public List<Product> getAllProductsByCategory(Category category) throws ServiceException {
-        return productDao.getAllProductsByCategory(category);
+        return productRepository.getAllByCategory(category);
     }
 
     @Override
     public Product getProductByName(String name) throws ServiceException {
-        return productDao.getProductByName(name);
+        return productRepository.getProductByName(name);
     }
 
     @Override
     public List<Product> getProductsByNameLike(String text) throws ServiceException {
-        return productDao.getProductsByNameLike(text);
+        return productRepository.getAllByNameContains(text);
     }
 
     @Override
     public List<Product> getProductsByDescriptionLike(String text) throws ServiceException {
-        return productDao.getProductsByDescriptionLike(text);
+        return productRepository.getAllByDescriptionContains(text);
     }
 
     @Override
-    public List<Product> getProductsByNotNullQuantity() throws ServiceException {
-        return productDao.getProductsByNotNullQuantity();
+    public List<Product> getProductsByNotEmptyQuantity() throws ServiceException {
+        return productRepository.getAllByQuantityIsNotContaining(0);
+    }
+
+    @Override
+    public List<Product> getSearchProductsByParams(String search_value, String category_tag, String search_comparing,
+                                                   Integer min_price, Integer max_price) throws ServiceException {
+        return searchProductsRepository.searchProductsByParams(search_value, category_tag, search_comparing,
+                min_price, max_price);
     }
 }

@@ -1,6 +1,6 @@
-<%@ page import="com.commandoby.sonyShop.dao.domain.Product" %>
+<%@ page import="com.commandoby.sonyShop.repository.domain.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.commandoby.sonyShop.dao.domain.Order" %>
+<%@ page import="com.commandoby.sonyShop.repository.domain.Order" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>

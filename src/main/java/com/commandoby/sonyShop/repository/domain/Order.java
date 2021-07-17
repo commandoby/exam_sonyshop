@@ -1,5 +1,6 @@
-package com.commandoby.sonyShop.dao.domain;
+package com.commandoby.sonyShop.repository.domain;
 
+import org.hibernate.annotations.Cascade;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -50,7 +51,8 @@ public class Order extends BaseEntity {
         this.user = user;
     }
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     public List<Product> getProductList() {

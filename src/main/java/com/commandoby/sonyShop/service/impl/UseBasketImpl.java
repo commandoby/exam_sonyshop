@@ -1,15 +1,14 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.UseBasket;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UseBasketImpl implements UseBasket {
+public class UseBasketImpl {
 
     private final ProductService productService;
 
@@ -17,7 +16,6 @@ public class UseBasketImpl implements UseBasket {
         this.productService = productService;
     }
 
-    @Override
     public Product addProductToBasket(Order order, int product_id) throws ServiceException {
         Product product = productService.read(product_id);
 
@@ -28,7 +26,6 @@ public class UseBasketImpl implements UseBasket {
         return product;
     }
 
-    @Override
     public void removeProductWithOfBasket(Order order, int id) throws NoFoundException, ServiceException {
         if (order.getProductList().get(id) != null) {
             order.getProductList().remove(id);

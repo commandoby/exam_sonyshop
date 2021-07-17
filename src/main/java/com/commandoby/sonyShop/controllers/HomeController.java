@@ -1,13 +1,13 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
-import com.commandoby.sonyShop.service.UserValidate;
+import com.commandoby.sonyShop.service.impl.UserValidateImpl;
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -26,9 +26,9 @@ public class HomeController {
 
     private final Logger log = Logger.getLogger(getClass());
     private final CategoryService categoryService;
-    private final UserValidate userValidate;
+    private final UserValidateImpl userValidate;
 
-    public HomeController(CategoryService categoryService, UserValidate userValidate) {
+    public HomeController(CategoryService categoryService, UserValidateImpl userValidate) {
         this.categoryService = categoryService;
         this.userValidate = userValidate;
     }
@@ -48,11 +48,9 @@ public class HomeController {
     }
 
     @PostMapping
-    public ModelAndView login(/*@Valid @RequestParam String email, @Valid @RequestParam String password*/
-            @Valid @ModelAttribute("user") User user,
+    public ModelAndView login(@Valid @ModelAttribute("user") User user,
             BindingResult bindingResult, ModelAndView modelAndView)
             throws ControllerException {
-//        User user = User.newBuilder().withEmail(email).withPassword(password).build();
 
         if (!userValidate.validateUser(modelAndView, bindingResult, user)) {
             modelAndView.addObject(USER.getValue(), null);
@@ -74,7 +72,7 @@ public class HomeController {
     private List<Category> getCategory() {
         List<Category> categories = null;
         try {
-            categories = categoryService.getAllCategories();
+            categories = categoryService.gelAllCategorySortByRating();
         } catch (ServiceException e) {
             log.warn(e);
         }

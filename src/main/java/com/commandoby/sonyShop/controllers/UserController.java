@@ -1,7 +1,7 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
@@ -99,8 +99,10 @@ public class UserController {
 
     private boolean duplicateCheck(String email) {
         try {
-            List<String> emails = userService.getAllUsersEmails();
-            for (String s : emails) if (s.equals(email)) return true;
+            /*List<String> emails = userService.getAllUsersEmails();
+            for (String s : emails) if (s.equals(email)) return true;*/
+            User user = userService.getUserByEmail(email);
+            if (user != null) return true;
         } catch (ServiceException e) {
             log.warn(e);
         }

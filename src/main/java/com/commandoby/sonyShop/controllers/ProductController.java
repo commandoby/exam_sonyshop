@@ -1,15 +1,15 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.UseBasket;
+import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,10 +28,10 @@ public class ProductController {
     private final Logger log = Logger.getLogger(getClass().getName());
     private final CategoryService categoryService;
     private final ProductService productService;
-    private final UseBasket useBasket;
+    private final UseBasketImpl useBasket;
 
     public ProductController(CategoryService categoryService, ProductService productService,
-                             UseBasket useBasket) {
+                             UseBasketImpl useBasket) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.useBasket = useBasket;

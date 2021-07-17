@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.dao.domain;
+package com.commandoby.sonyShop.repository.domain;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
