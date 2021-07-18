@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Login</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -29,11 +29,12 @@
                        placeholder="Enter password" name="password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
-            <button type="submit" class="btn btn-primary w-50" name="command" value="home_page">Login</button>
+            <button type="submit" class="btn btn-success w-50" name="command" value="home_page">Login</button>
         </form>
         <br>
         <form method="post">
-            <button type="submit" class="btn btn-primary w-50" name="command" value="register">Register</button>
+            <button type="submit" class="btn btn-primary w-25" name="command" value="register">Register</button>
+            <button type="submit" class="btn btn-info w-25" name="command" value="home_page">Shop</button>
         </form>
     </div>
 </div>

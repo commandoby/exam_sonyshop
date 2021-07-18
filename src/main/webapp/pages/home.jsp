@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Products list</title>
+    <title>Sony shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -13,14 +13,13 @@
 </head>
 <body>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<h2 align="center">List products category: ${category_name}</h2>
+<h2 align="center">Shop products of Sony.</h2>
 
 <form method="post">
-    <input type="hidden" name="category_tag" value="${category_tag}"/>
     <div class="container">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit" class="btn btn-primary" name="command" value="product_list">Search</button>
+                <button type="submit" class="btn btn-primary" name="command" value="home_page">Search</button>
             </div>
             <c:if test="${not empty search}">
                 <input type="text" class="form-control" id="search_value" name="search_value" value="${search}">
@@ -32,7 +31,6 @@
                 <button type="submit" class="btn btn-primary" name="command" value="search">
                     Advanced Search
                 </button>
-                <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
                 <c:if test="${not empty sessionScope.email}">
                     <button type="submit" class="btn btn-primary" name="command" value="basket">
                         Basket (${basket_size})
@@ -47,40 +45,26 @@
             </div>
         </div>
     </div>
-</form>
 
-<div class="container">
-    <br>
-    <p>Found ${product_size} products.</p>
-    <c:if test="${not empty product_list}">
-        <c:forEach items="${product_list}" var="product">
-            <form method="post">
-                <input type="hidden" name="category_tag" value="${category_tag}"/>
-                <input type="hidden" name="product_name" value="${product.getName()}"/>
-                <div class="media border">
-                    <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
-                         alt="Card image">
-                    <div class="media-body">
-                        <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
-                            <b style="color: orangered">${product.getPrice()}</b></h4>
-                        <p class="card-text">${product.getDescription()}</p>
-                        <button type="submit" class="btn btn-primary"
-                                name="command" value="product">
-                            List of product
-                        </button>
-                        <c:if test="${not empty sessionScope.email}">
-                            <button type="submit" class="btn btn-primary"
-                                    name="command" value="product_list">
-                                Add to basket
-                            </button>
-                        </c:if>
-                    </div>
-                </div>
-            </form>
-            <br>
-        </c:forEach>
-    </c:if>
-</div>
+    <div class="container" method="post" align="center">
+        <br>
+        <c:if test="${not empty categories}">
+            <input type="hidden" name="command" value="product_list"/>
+            <div class="row">
+                <c:forEach items="${categories}" var="category">
+                    <button type="submit" class="btn btn-light" style="width:360px;height:260px"
+                            name="category_tag" value="${category.getTag()}">
+                        <div class="card-body">
+                            <h4 class="card-title">${category.getName()}</h4>
+                            <img class="card-img" style="height:160px"
+                                 src="${contextPath}/images/${category.getImageName()}" alt="Card image">
+                        </div>
+                    </button>
+                    &nbsp
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+</form>
 </body>
 </html>

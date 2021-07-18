@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Products list</title>
+    <title>Search</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -13,14 +13,18 @@
 </head>
 <body>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<h2 align="center">List products category: ${category_name}</h2>
+<c:set var="search" value="${search_value}"/>
+<c:set var="pageItems" value="${page_items}"/>
+<c:set var="min" value="${min_price}"/>
+<c:set var="max" value="${max_price}"/>
+<h2 align="center">Search page</h2>
 
 <form method="post">
-    <input type="hidden" name="category_tag" value="${category_tag}"/>
+    <input type="hidden" name="page_items" value="${pageItems}"/>
     <div class="container">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit" class="btn btn-primary" name="command" value="product_list">Search</button>
+                <button type="submit" class="btn btn-primary" name="command" value="search">Search</button>
             </div>
             <c:if test="${not empty search}">
                 <input type="text" class="form-control" id="search_value" name="search_value" value="${search}">
@@ -29,13 +33,9 @@
                 <input type="text" class="form-control" id="search_value" placeholder="Enter text" name="search_value">
             </c:if>
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary" name="command" value="search">
-                    Advanced Search
-                </button>
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
                 <c:if test="${not empty sessionScope.email}">
-                    <button type="submit" class="btn btn-primary" name="command" value="basket">
-                        Basket (${basket_size})
+                    <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
                     </button>
                     <button type="submit" class="btn btn-primary" name="command" value="user">
                             ${sessionScope.email}</button>
@@ -47,6 +47,46 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <div class="btn-group">
+            <div class="dropdown" align="left">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    All categories
+                </button>
+                <div class="dropdown-menu">
+                    <c:forEach items="${categories}" var="category">
+                        <a class="dropdown-item" href="?search_category=${category.getTag()}">
+                                ${category.getName()}</a>
+                    </c:forEach>
+                    <a class="dropdown-item" href="?#">All categories</a>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group col-sm-3">
+            <c:if test="${empty min}">
+                <input type="text" class="form-control" id="min_price" placeholder="Min price" name="min_price">
+            </c:if>
+            <c:if test="${not empty min}">
+                <input type="text" class="form-control" id="min_price" name="min_price" value="${min}">
+            </c:if>
+            <c:if test="${empty max}">
+                <input type="text" class="form-control" id="max_price" placeholder="Max price" name="max_price">
+            </c:if>
+            <c:if test="${not empty max}">
+                <input type="text" class="form-control" id="max_price" name="max_price" value="${max}">
+            </c:if>
+        </div>
+        <div class="btn-group">
+            <c:choose>
+                <c:when test="${pageItems == 'all'}">
+                    <button type="button" class="btn btn-primary">10</button>
+                    <button type="button" class="btn btn-primary">20</button>
+                    <button type="button" class="btn btn-primary">50</button>
+                    <button type="button" class="btn btn-primary" disabled>All</button>
+                </c:when>
+            </c:choose>
+        </div>
+    </div>
 </form>
 
 <div class="container">
@@ -55,7 +95,9 @@
     <c:if test="${not empty product_list}">
         <c:forEach items="${product_list}" var="product">
             <form method="post">
-                <input type="hidden" name="category_tag" value="${category_tag}"/>
+                <input type="hidden" name="search_value" value="${search}"/>
+                <input type="hidden" name="min_price" value="${min}"/>
+                <input type="hidden" name="max_price" value="${max}"/>
                 <input type="hidden" name="product_name" value="${product.getName()}"/>
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
@@ -71,7 +113,7 @@
                         </button>
                         <c:if test="${not empty sessionScope.email}">
                             <button type="submit" class="btn btn-primary"
-                                    name="command" value="product_list">
+                                    name="command" value="search">
                                 Add to basket
                             </button>
                         </c:if>
@@ -82,5 +124,5 @@
         </c:forEach>
     </c:if>
 </div>
+
 </body>
-</html>

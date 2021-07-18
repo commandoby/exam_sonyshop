@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Register page</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -27,8 +27,8 @@
                 <div class="invalid-feedback">Please fill out surname field</div>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control w-50" id="data"
-                       placeholder="Enter data" name="data" required>
+                <input type="text" class="form-control w-50" id="date_of_birth"
+                       placeholder="Enter date of birth" name="date_of_birth" required>
                 <div class="invalid-feedback">Please fill out data field</div>
             </div>
             <div class="form-group">
