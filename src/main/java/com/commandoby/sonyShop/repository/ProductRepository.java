@@ -13,9 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Product getProductByName(String productName) throws RepositoryException;
 
-    List<Product> getAllByNameContains(String text) throws RepositoryException;
-
-    List<Product> getAllByDescriptionContains(String text) throws RepositoryException;
-
-    List<Product> getAllByQuantityIsNotContaining(int quantity) throws RepositoryException;
+    List<Product> getAllByCategoryAndQuantityNotLike(Category category, Integer quantity) throws RepositoryException;
 }

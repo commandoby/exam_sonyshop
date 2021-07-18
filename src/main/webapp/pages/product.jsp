@@ -47,11 +47,14 @@
             <div class="media-body">
                 <h2>${product.getName()}</h2>
                 <p class="card-text">${product.getDescription()}</p>
+                <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
                 <c:if test="${not empty sessionScope.user.getEmail()}">
+                <c:if test="${product.getQuantity() > 0}">
                     <button type="submit" class="btn btn-primary" name="product_id"
                             value="${product.getId()}">Add to basket</button>
+                </c:if>
                 </c:if>
             </div>
         </div>

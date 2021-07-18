@@ -58,24 +58,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByNameLike(String text) throws ServiceException {
-        return productRepository.getAllByNameContains(text);
+    public List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException {
+        return productRepository.getAllByCategoryAndQuantityNotLike(category, 0);
     }
 
     @Override
-    public List<Product> getProductsByDescriptionLike(String text) throws ServiceException {
-        return productRepository.getAllByDescriptionContains(text);
-    }
-
-    @Override
-    public List<Product> getProductsByNotEmptyQuantity() throws ServiceException {
-        return productRepository.getAllByQuantityIsNotContaining(0);
-    }
-
-    @Override
-    public List<Product> getSearchProductsByParams(String search_value, String category_tag, String search_comparing,
-                                                   Integer min_price, Integer max_price) throws ServiceException {
-        return searchProductsRepository.searchProductsByParams(search_value, category_tag, search_comparing,
-                min_price, max_price);
+    public List<Product> getSearchProductsByParams(String searchValue, String categoryTag, String searchComparing,
+                                                   String isQuantity, Integer minPrice, Integer maxPrice) throws ServiceException {
+        return searchProductsRepository.searchProductsByParams(searchValue, categoryTag, searchComparing,
+                isQuantity, minPrice, maxPrice);
     }
 }

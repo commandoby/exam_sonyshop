@@ -5,10 +5,8 @@ import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ControllerException;
-import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.CategoryService;
+import com.commandoby.sonyShop.service.impl.CategoryMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UserValidateImpl;
-import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -24,26 +22,22 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class HomeController {
 
-    private final Logger log = Logger.getLogger(getClass());
-    private final CategoryService categoryService;
     private final UserValidateImpl userValidate;
+    private final CategoryMethodsImpl categoryMethods;
 
-    public HomeController(CategoryService categoryService, UserValidateImpl userValidate) {
-        this.categoryService = categoryService;
+    public HomeController(UserValidateImpl userValidate, CategoryMethodsImpl categoryMethods) {
         this.userValidate = userValidate;
+        this.categoryMethods = categoryMethods;
     }
 
     @GetMapping
-    public ModelAndView getCategories() throws ControllerException {
+    public ModelAndView getCategories(@ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
+        List<Category> categories = categoryMethods.getCategoriesSortByRating();
 
-        List<Category> categoryList = getCategory();
-
-        modelMap.addAttribute(CATEGORIES.getValue(), categoryList);
-        if (modelMap.getAttribute(ORDER.getValue()) == null) {
-            modelMap.addAttribute(ORDER.getValue(), new Order());
-        }
-
+        if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
+        modelMap.addAttribute(CATEGORIES.getValue(), categories);
+        modelMap.addAttribute(CATEGORY_MAX_RATING.getValue(), categories.get(0).getRating());
         return new ModelAndView(PagesPathEnum.HOME_PAGE.getPath(), modelMap);
     }
 
@@ -59,28 +53,23 @@ public class HomeController {
         }
 
         ModelMap modelMap = new ModelMap();
+        List<Category> categories = categoryMethods.getCategoriesSortByRating();
 
-        List<Category> categoryList = getCategory();
-
-        modelMap.addAttribute(CATEGORIES.getValue(), categoryList);
+        modelMap.addAttribute(CATEGORIES.getValue(), categories);
+        modelMap.addAttribute(CATEGORY_MAX_RATING.getValue(), categories.get(0).getRating());
         modelMap.addAttribute(ORDER.getValue(), new Order());
         modelAndView.setViewName(PagesPathEnum.HOME_PAGE.getPath());
         modelAndView.addAllObjects(modelMap);
         return modelAndView;
     }
 
-    private List<Category> getCategory() {
-        List<Category> categories = null;
-        try {
-            categories = categoryService.gelAllCategorySortByRating();
-        } catch (ServiceException e) {
-            log.warn(e);
-        }
-        return categories;
-    }
-
     @ModelAttribute("user")
     public User getUser() {
         return new User();
+    }
+
+    @ModelAttribute("order")
+    public Order getOrder() {
+        return new Order();
     }
 }

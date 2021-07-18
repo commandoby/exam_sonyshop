@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS sonyshop.users (
     surname VARCHAR(45) NOT NULL,
     email VARCHAR(200) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    date_of_birth VARCHAR(20) NOT NULL,
+    date_of_birth DATE NOT NULL,
     balance INT,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_USER_ID_UNIQUE (id ASC),
@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS sonyshop.orders;
 CREATE TABLE IF NOT EXISTS sonyshop.orders (
     id INT NOT NULL AUTO_INCREMENT,
     price INT NOT NULL,
-    date VARCHAR(20) NOT NULL,
+    date DATE NOT NULL,
     user_id INT NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_ID_UNIQUE (id ASC),

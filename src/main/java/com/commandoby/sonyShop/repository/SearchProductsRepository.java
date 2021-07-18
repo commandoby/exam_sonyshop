@@ -6,6 +6,6 @@ import com.commandoby.sonyShop.repository.domain.Product;
 import java.util.List;
 
 public interface SearchProductsRepository {
-    List<Product> searchProductsByParams(String search_value, String category_tag, String search_comparing,
-                                         Integer min_price, Integer max_price) throws RepositoryException;
+    List<Product> searchProductsByParams(String searchValue, String categoryTag, String searchComparing,
+                                         String isQuantity, Integer minPrice, Integer maxPrice) throws RepositoryException;
 }

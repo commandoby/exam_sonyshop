@@ -15,12 +15,12 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h2 align="center">List products category: ${category_name}</h2>
 
-<form method="get">
-    <input type="hidden" name="category_tag" value="${category_tag}"/>
-    <div class="container">
+
+<div class="container">
+    <form method="get">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                    <button type="submit" class="btn btn-primary" formaction="/sonyshop/search">Search</button>
+                <button type="submit" class="btn btn-primary" formaction="/sonyshop/search">Search</button>
             </div>
             <input type="text" class="form-control" placeholder="Enter text"
                    name="search_value" value="${search_value}">
@@ -46,8 +46,57 @@
                 </c:if>
             </div>
         </div>
-    </div>
-</form>
+        <input type="hidden" name="category_tag" value="${category_tag}"/>
+        <input type="hidden" name="page_items" value="${page_items}"/>
+        <input type="hidden" name="page_number" value="${page_number}"/>
+    </form>
+</div>
+
+<div class="container" align="right">
+    <form method="get" style="display: inline">
+        <div class="btn-group" data-toggle="tooltip" title="The number of products per page.">
+            <button type="submit" class="btn btn-primary" name="page_items" value="10"
+                    <c:if test="${page_items == '10'}">disabled</c:if>>10
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="20"
+                    <c:if test="${page_items == '20'}">disabled</c:if>>20
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="50"
+                    <c:if test="${page_items == '50'}">disabled</c:if>>50
+            </button>
+            <button type="submit" class="btn btn-primary" name="page_items" value="0"
+                    <c:if test="${page_items == '0'}">disabled</c:if>>All
+            </button>
+        </div>
+        <input type="hidden" name="category_tag" value="${category_tag}"/>
+        <input type="hidden" name="page_number" value="${page_number}"/>
+    </form>
+
+    <c:if test="${page_items != '0'}">
+        <c:if test="${not empty product_list}">
+            <form method="get" style="display: inline">
+                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
+                        <c:if test="${page_items <= product_list.size()}">
+                            ${page_items * page_number}
+                        </c:if>
+                        <c:if test="${page_items > product_list.size()}">
+                            ${page_items * (page_number - 1) + product_list.size()}
+                        </c:if>
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
+                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
+                    </button>
+                </div>
+                <input type="hidden" name="category_tag" value="${category_tag}"/>
+                <input type="hidden" name="page_items" value="${page_items}"/>
+            </form>
+        </c:if>
+    </c:if>
+</div>
 
 <form>
     <div class="container">
@@ -63,15 +112,18 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
+                        <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
                         <c:if test="${not empty sessionScope.user.getEmail()}">
+                        <c:if test="${product.getQuantity() > 0}">
                             <button type="submit" class="btn btn-primary" formmethod="post"
                                     name="product_id" value="${product.getId()}">
                                 Add to basket
                             </button>
+                        </c:if>
                         </c:if>
                     </div>
                 </div>
@@ -80,5 +132,39 @@
         </c:if>
     </div>
 </form>
+
+<c:if test="${page_items != '0'}">
+    <c:if test="${not empty product_list}">
+        <div class="container" align="right">
+            <form method="get">
+                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
+                        <c:if test="${page_items <= product_list.size()}">
+                            ${page_items * page_number}
+                        </c:if>
+                        <c:if test="${page_items > product_list.size()}">
+                            ${page_items * (page_number - 1) + product_list.size()}
+                        </c:if>
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
+                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
+                    </button>
+                </div>
+                <input type="hidden" name="category_tag" value="${category_tag}"/>
+                <input type="hidden" name="page_items" value="${page_items}"/>
+            </form>
+            <br>
+        </div>
+    </c:if>
+</c:if>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>

@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.INFO;
 import static com.commandoby.sonyShop.enums.RequestParamEnum.USER;
@@ -28,7 +29,7 @@ public class UserValidateImpl {
 
     public boolean validateUser(ModelAndView modelAndView, BindingResult bindingResult,
                                 User user) throws ServiceException {
-        if(Optional.ofNullable(user).isPresent()
+        if (Optional.ofNullable(user).isPresent()
                 && Optional.ofNullable(user.getEmail()).isPresent()
                 && Optional.ofNullable(user.getPassword()).isPresent()) {
 
@@ -38,7 +39,6 @@ public class UserValidateImpl {
 
                 return false;
             }
-
             return checkReceivedUser(modelAndView, user);
         }
         return false;
@@ -50,7 +50,7 @@ public class UserValidateImpl {
         try {
             findUser = userService.getUserByEmail(user.getEmail());
         } catch (ServiceException e) {
-            log.info(e);
+            log.info("Error getting user by email: " + user.getEmail() + ".", e);
         }
         if (findUser != null) {
             if (findUser.getPassword().equals(user.getPassword())) {
@@ -68,10 +68,28 @@ public class UserValidateImpl {
         return false;
     }
 
-    private void populateError (String field, ModelAndView modelAndView, BindingResult bindingResult) {
+    private void populateError(String field, ModelAndView modelAndView, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors(field)) {
             modelAndView.addObject(field + "Error", bindingResult.getFieldError(field)
                     .getDefaultMessage());
         }
+    }
+
+    public boolean duplicateCheck(String email) {
+        try {
+            User user = userService.getUserByEmail(email);
+            if (user != null) return true;
+        } catch (ServiceException e) {
+            log.warn("Error getting user by email: " + email + ".", e);
+        }
+        return false;
+    }
+
+    public boolean validateLocalData(String date) {
+        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+        if (date.matches(pattern.pattern())) {
+            return true;
+        }
+        return false;
     }
 }

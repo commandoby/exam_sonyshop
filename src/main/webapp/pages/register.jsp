@@ -27,7 +27,7 @@
                 <div class="invalid-feedback">Please fill out surname field</div>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control w-50" id="date_of_birth"
+                <input type="date" class="form-control w-50" id="date_of_birth"
                        placeholder="Enter date of birth" name="date_of_birth" value="${date_of_birth}" required>
                 <div class="invalid-feedback">Please fill out data field</div>
             </div>

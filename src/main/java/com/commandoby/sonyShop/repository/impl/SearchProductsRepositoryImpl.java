@@ -18,8 +18,8 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
     public EntityManager entityManager;
 
     @Override
-    public List<Product> searchProductsByParams(String search_value, String category_tag, String search_comparing,
-                                                Integer min_price, Integer max_price) throws RepositoryException {
+    public List<Product> searchProductsByParams(String searchValue, String categoryTag, String searchComparing,
+                                                String isQuantity, Integer minPrice, Integer maxPrice) throws RepositoryException {
         List<Product> products;
         List<Predicate> predicates = new ArrayList<>();
         Map<String, Order> orderMap = new HashMap<>();
@@ -32,27 +32,31 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
         orderMap.put("Price-", builder.desc(root.get("price")));
         orderMap.put("Name+", builder.asc(root.get("name")));
         orderMap.put("Name-", builder.desc(root.get("name")));
-        if (!orderMap.containsKey(search_comparing)) search_comparing = "Price+";
+        if (!orderMap.containsKey(searchComparing)) searchComparing = "Price+";
 
         predicates.add(builder.or(
-                builder.like(root.get("name"), "%" + search_value + "%"),
-                builder.like(root.get("description"), "%" + search_value + "%")));
+                builder.like(root.get("name"), "%" + searchValue + "%"),
+                builder.like(root.get("description"), "%" + searchValue + "%")));
 
-        if (category_tag != null && !category_tag.equals("")) {
+        if (categoryTag != null && !categoryTag.equals("")) {
             Join<Product, Category> categoryJoin = root.join("category");
-            predicates.add(builder.equal(categoryJoin.get("tag"), category_tag));
+            predicates.add(builder.equal(categoryJoin.get("tag"), categoryTag));
         }
 
-        if (min_price != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), min_price));
+        if (isQuantity.equals("on")) {
+            predicates.add(builder.notEqual(root.get("quantity"), 0));
         }
 
-        if (max_price != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("price"), max_price));
+        if (minPrice != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), minPrice));
+        }
+
+        if (maxPrice != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("price"), maxPrice));
         }
 
         criteria.select(root).where(predicates.toArray(new Predicate[]{}))
-        .orderBy(orderMap.get(search_comparing));
+        .orderBy(orderMap.get(searchComparing));
         products = entityManager.createQuery(criteria).getResultList();
 
         return products;

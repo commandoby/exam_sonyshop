@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cascade;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,13 +14,13 @@ import java.util.Objects;
 @Component
 public class Order extends BaseEntity {
     private int orderPrice = 0;
-    private String date;
+    private LocalDate date;
     private User user;
     private List<Product> productList = new ArrayList<>();
 
     public Order() {}
 
-    public Order(String date) {
+    public Order(LocalDate date) {
         this.date = date;
     }
 
@@ -33,11 +34,11 @@ public class Order extends BaseEntity {
     }
 
     @Column(name = "date")
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

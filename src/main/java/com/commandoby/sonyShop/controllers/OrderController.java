@@ -1,20 +1,19 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
+import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.User;
-import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.UserService;
+import com.commandoby.sonyShop.service.impl.PayMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.time.LocalDate;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
@@ -26,16 +25,18 @@ public class OrderController {
     private final UserService userService;
     private final OrderService orderService;
     private final UseBasketImpl useBasket;
+    private final PayMethodsImpl payMethods;
 
     public OrderController(UserService userService, OrderService orderService,
-                           UseBasketImpl useBasket) {
+                           UseBasketImpl useBasket, PayMethodsImpl payMethods) {
         this.userService = userService;
         this.orderService = orderService;
         this.useBasket = useBasket;
+        this.payMethods = payMethods;
     }
 
     @GetMapping("/basket")
-    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws CommandException {
+    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
         if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
@@ -45,7 +46,7 @@ public class OrderController {
 
     @PostMapping("/basket")
     public ModelAndView getBasketAndRemoveProduct(@RequestParam int id,
-                                                  @ModelAttribute("order") Order order) throws CommandException {
+                                                  @ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
         if (order == null) order = new Order();
         try {
@@ -61,19 +62,15 @@ public class OrderController {
 
     @GetMapping("/pay")
     public ModelAndView pay(@ModelAttribute("order") Order order,
-                            @ModelAttribute("user") User user) throws CommandException {
+                            @ModelAttribute("user") User user) throws ControllerException {
         ModelMap modelMap = new ModelMap();
         int paySize = order.getProductList().size();
         int payPrice = order.getOrderPrice();
 
         if (paySize != 0 && user != null) {
             try {
-                order.setDate(LocalDate.now().toString());
-                order.setUser(user);
-                orderService.create(order);
-                user.setBalance(user.getBalance() - payPrice);
-                user.addOrder(order);
-                userService.update(user);
+                payMethods.orderPayMethod(user, order);
+                payMethods.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
                 log.info("Purchased " + paySize + " products.");
             } catch (ServiceException e) {
