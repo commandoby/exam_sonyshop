@@ -62,6 +62,7 @@ public class AdvancedSearchController {
         if (is_quantity == null) is_quantity = "";
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
+        if (min_price != null && max_price != null && max_price < min_price) max_price = min_price;
         if (!search_value.equals("") || min_price != null || max_price != null) {
             products = productService.getSearchProductsByParams(search_value, category_tag, search_comparing,
                     is_quantity, min_price, max_price);

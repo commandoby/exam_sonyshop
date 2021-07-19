@@ -22,15 +22,10 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class OrderController {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private final UserService userService;
-    private final OrderService orderService;
     private final UseBasketImpl useBasket;
     private final PayMethodsImpl payMethods;
 
-    public OrderController(UserService userService, OrderService orderService,
-                           UseBasketImpl useBasket, PayMethodsImpl payMethods) {
-        this.userService = userService;
-        this.orderService = orderService;
+    public OrderController(UseBasketImpl useBasket, PayMethodsImpl payMethods) {
         this.useBasket = useBasket;
         this.payMethods = payMethods;
     }
@@ -50,7 +45,7 @@ public class OrderController {
         ModelMap modelMap = new ModelMap();
         if (order == null) order = new Order();
         try {
-            useBasket.removeProductWithOfBasket(order, id);
+            useBasket.removeProductWithOfBasketByNumber(order, id);
         } catch (NoFoundException | ServiceException e) {
             log.error(e);
         }
@@ -64,22 +59,20 @@ public class OrderController {
     public ModelAndView pay(@ModelAttribute("order") Order order,
                             @ModelAttribute("user") User user) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        int paySize = order.getProductList().size();
-        int payPrice = order.getOrderPrice();
 
-        if (paySize != 0 && user != null) {
+        if (order.getProductList().size() != 0 && user != null) {
             try {
                 payMethods.orderPayMethod(user, order);
                 payMethods.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
-                log.info("Purchased " + paySize + " products.");
+                log.info("Purchased " + order.getProductList().size() + " products.");
             } catch (ServiceException e) {
                 log.error(e);
             }
         }
 
-        modelMap.addAttribute(BASKET_SIZE.getValue(), paySize);
-        modelMap.addAttribute(BASKET_PRICE.getValue(), payPrice);
+        modelMap.addAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
+        modelMap.addAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
         modelMap.addAttribute(ORDER.getValue(), new Order());
 
         return new ModelAndView(PagesPathEnum.PAY_PAGE.getPath(), modelMap);

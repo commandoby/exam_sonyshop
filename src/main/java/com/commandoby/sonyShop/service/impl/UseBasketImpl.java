@@ -26,13 +26,24 @@ public class UseBasketImpl {
         return product;
     }
 
-    public void removeProductWithOfBasket(Order order, int id) throws NoFoundException, ServiceException {
-        if (order.getProductList().get(id) != null) {
-            order.getProductList().remove(id);
+    public void removeProductWithOfBasketByNumber(Order order, int number) throws NoFoundException, ServiceException {
+        if (order.getProductList().get(number) != null) {
+            order.getProductList().remove(number);
             updateOrderPrice(order);
-        } else {
-            throw new NoFoundException("Will not find a product to remove by id: " + id);
+            return;
         }
+        throw new NoFoundException("Will not find a product to remove by number: " + number);
+    }
+
+    public void removeProductWithOfBasketById(Order order, int id) throws NoFoundException, ServiceException {
+        for (int i = 0; i < order.getProductList().size(); i++) {
+            if (order.getProductList().get(i).getId() == id) {
+                order.getProductList().remove(i);
+                updateOrderPrice(order);
+                return;
+            }
+        }
+        throw new NoFoundException("Will not find a product to remove by id: " + id);
     }
 
     private void updateOrderPrice(Order order) {

@@ -43,7 +43,7 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
             predicates.add(builder.equal(categoryJoin.get("tag"), categoryTag));
         }
 
-        if (isQuantity.equals("on")) {
+        if (!isQuantity.equals("on")) {
             predicates.add(builder.notEqual(root.get("quantity"), 0));
         }
 
