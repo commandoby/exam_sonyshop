@@ -11,10 +11,8 @@ public class RegisterPageCommandImpl implements BaseCommand {
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         String email = servletRequest.getParameter(EMAIL.getValue());
-        String password = servletRequest.getParameter(PASSWORD.getValue());
 
         servletRequest.setAttribute(EMAIL.getValue(), email);
-        servletRequest.setAttribute(PASSWORD.getValue(), password);
 
         return PagesPathEnum.REGISTER_PAGE.getPath();
     }

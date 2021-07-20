@@ -1,12 +1,19 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "categories")
 public class Category extends BaseEntity implements ShopObject{
     private String name;
     private String tag;
     private String imageName;
     private int rating;
+    private List<Product> productList;
+
+    public Category() {}
 
     public Category(String name, String tag, String imageName, int rating) {
         this.name = name;
@@ -15,24 +22,49 @@ public class Category extends BaseEntity implements ShopObject{
         this.rating = rating;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "tag")
     public String getTag() {
         return tag;
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    @Column(name = "image_name")
     public String getImageName() {
         return imageName;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    @Column(name = "rating")
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     @Override

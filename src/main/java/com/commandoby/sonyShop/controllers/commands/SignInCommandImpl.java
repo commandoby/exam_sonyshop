@@ -1,23 +1,33 @@
 package com.commandoby.sonyShop.controllers.commands;
 
-import com.commandoby.sonyShop.dao.domain.ShopContent;
 import com.commandoby.sonyShop.dao.domain.User;
 import com.commandoby.sonyShop.exceptions.CommandException;
 import com.commandoby.sonyShop.controllers.enums.PagesPathEnum;
+import com.commandoby.sonyShop.exceptions.ServiceException;
+import com.commandoby.sonyShop.service.UserService;
+import com.commandoby.sonyShop.service.impl.UserServiceImpl;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.List;
+
 import static com.commandoby.sonyShop.controllers.enums.RequestParamEnum.*;
 
 public class SignInCommandImpl implements BaseCommand {
+    private Logger log = Logger.getLogger(getClass());
+    private UserService userService = new UserServiceImpl();
+
     @Override
     public String execute(HttpServletRequest servletRequest) throws CommandException {
         HttpSession session = servletRequest.getSession();
-        session.setAttribute(EMAIL.getValue(), "");
-        session.setAttribute(PASSWORD.getValue(), "");
+        session.setAttribute(USER.getValue(), null);
 
-        if (servletRequest.getParameter(EMAIL.getValue()) != null) {
+        String email = servletRequest.getParameter(EMAIL.getValue());
+        servletRequest.setAttribute(EMAIL.getValue(), email);
+
+        if (email != null) {
             if (!secondPasswordCheck(servletRequest)) {
                 servletRequest.setAttribute(INFO.getValue(), "Password mismatch");
                 return PagesPathEnum.REGISTER_PAGE.getPath();
@@ -28,12 +38,18 @@ public class SignInCommandImpl implements BaseCommand {
                 return PagesPathEnum.REGISTER_PAGE.getPath();
             }
 
-            String name = servletRequest.getParameter(NAME.getValue());
-            String surname = servletRequest.getParameter(SURNAME.getValue());
-            String dateOfBirth = servletRequest.getParameter(DATE_OF_BIRTH.getValue());
-            String email = servletRequest.getParameter(EMAIL.getValue());
-            String password = servletRequest.getParameter(PASSWORD.getValue());
-            ShopContent.setUser(new User(name, surname, email, password, dateOfBirth, 100000));
+            User user = User.newBuilder()
+                    .withName(servletRequest.getParameter(NAME.getValue()))
+                    .withSurname(servletRequest.getParameter(SURNAME.getValue()))
+                    .withDateOfBirth(servletRequest.getParameter(DATE_OF_BIRTH.getValue()))
+                    .withEmail(servletRequest.getParameter(EMAIL.getValue()))
+                    .withPassword(servletRequest.getParameter(PASSWORD.getValue()))
+                    .withBalance(100000).build();
+            try {
+                userService.create(user);
+            } catch (ServiceException e) {
+                log.warn(e);
+            }
         }
 
         return PagesPathEnum.SIGN_IN_PAGE.getPath();
@@ -42,14 +58,16 @@ public class SignInCommandImpl implements BaseCommand {
     private boolean secondPasswordCheck(HttpServletRequest servletRequest) {
         String password = servletRequest.getParameter(PASSWORD.getValue());
         String secondPassword = servletRequest.getParameter(SECOND_PASSWORD.getValue());
-        if (password.equals(secondPassword)) return true;
-        return false;
+        return password.equals(secondPassword);
     }
 
     private boolean duplicateCheck(HttpServletRequest servletRequest) {
         String email = servletRequest.getParameter(EMAIL.getValue());
-        for (User user : ShopContent.getUserList()) {
-            if (user.getEmail().equals(email)) return true;
+        try {
+            List<String> emails = userService.getAllUsersEmails();
+            for (String s : emails) if (s.equals(email)) return true;
+        } catch (ServiceException e) {
+            log.warn(e);
         }
         return false;
     }

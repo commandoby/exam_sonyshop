@@ -8,4 +8,6 @@ import java.util.List;
 public interface CategoryService extends BaseService<Category>{
 
     List<Category> getAllCategories() throws ServiceException;
+
+    Category getCategoryByTag(String tag) throws ServiceException;
 }

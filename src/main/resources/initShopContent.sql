@@ -1,11 +1,280 @@
-
 -- add users
-INSERT INTO users VALUES (NULL, "Admin", "Admin", "admin", "admin", "1980-01-01", 9999999);
+INSERT INTO sonyshop.users VALUES (NULL, "Admin", "Admin", "admin", "admin", "1980-01-01", 9999999);
 
 -- add categories
-INSERT INTO categories VALUES (1, "Phone", "phone", "phone.jpeg", 0);
-INSERT INTO categories VALUES (2, "MP3 player", "player", "player.jpeg", 0);
-INSERT INTO categories VALUES (3, "Headphones", "headphones", "headphones.jpeg", 0);
-INSERT INTO categories VALUES (4, "TV", "tv", "tv.jpeg", 0);
-INSERT INTO categories VALUES (5, "Photo", "photo", "photo.jpeg", 0);
-INSERT INTO categories VALUES (6, "Memory card", "memcard", "memcard.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (1, "Phone", "phone", "phone.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (2, "MP3 player", "player", "player.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (3, "Headphones", "headphones", "headphones.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (4, "TV", "tv", "tv.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (5, "Photo", "photo", "photo.jpeg", 0);
+INSERT INTO sonyshop.categories VALUES (6, "Memory card", "memcard", "memcard.jpeg", 0);
+
+-- add products
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 10 II XQ-AU52 Dual", "10_II_XQ-AU52_Dual.jpeg",
+        "Android, экран 6\" OLED (1080x2520), Qualcomm Snapdragon 665, ОЗУ 4 ГБ, флэш-память 128 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 3600 мАч, 2 SIM",
+        899, 24, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 1 II XQ-AT52", "1_II_XQ-AT52.jpeg",
+        "Android, экран 6.5\" OLED (1644x3840), Qualcomm Snapdragon 865, ОЗУ 12 ГБ, флэш-память 256 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 4000 мАч, 2 SIM",
+        2679, 19, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 5 II Dual", "5_II_Dual.jpeg",
+        "Android, экран 6.1\" OLED (1080x2520), Qualcomm Snapdragon 865, ОЗУ 8 ГБ, флэш-память 128 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 4000 мАч, 2 SIM",
+        2250, 43, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 1", "1.jpeg",
+        "Android, экран 6.5\" OLED (1644x3840), Qualcomm Snapdragon 855, ОЗУ 6 ГБ, флэш-память 64 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 3330 мАч, 1 SIM",
+        1450, 39, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 5 J9210", "5_J9210.jpeg",
+        "Android, экран 6.1\" OLED (1080x2520), Qualcomm Snapdragon 855, ОЗУ 6 ГБ, флэш-память 128 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 3140 мАч, 2 SIM",
+        1699, 28, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 10 I3113 Dual", "10_I3113_Dual.jpeg",
+        "Android, экран 6\" IPS (1080x2520), Qualcomm Snapdragon 630, ОЗУ 3 ГБ, флэш-память 64 ГБ,
+карты памяти, камера 13 Мп, аккумулятор 2870 мАч, 2 SIM",
+        699, 54, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia L3 I4312 Dual", "L3_I4312_Dual.jpeg",
+        "Android, экран 5.7\" IPS (720x1440), Mediatek MT6762 Helio P22, ОЗУ 3 ГБ, флэш-память 32 ГБ,
+карты памяти, камера 13 Мп, аккумулятор 3300 мАч, 2 SIM",
+        499, 38, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia 10 Plus I4293 Dual", "10_Plus_I4293_Dual.jpeg",
+        "Android, экран 6.5\" IPS (1080x2520), Qualcomm Snapdragon 636, ОЗУ 6 ГБ, флэш-память 64 ГБ,
+карты памяти, камера 12 Мп, аккумулятор 3000 мАч, 2 SIM",
+        939, 25, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia XZ2 Dual", "XZ2_Dual.jpeg",
+        "Android, экран 5.7\" IPS (1080x2160), Qualcomm Snapdragon 845, ОЗУ 4 ГБ, флэш-память 64 ГБ,
+карты памяти, камера 19 Мп, аккумулятор 3180 мАч, 2 SIM",
+        1100, 32, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia XA1 Plus Dual", "XA1_Plus_Dual.jpeg",
+        "Android, экран 5.5\" IPS (1080x1920), Mediatek MT6757 Helio P20, ОЗУ 4 ГБ, флэш-память 32 ГБ,
+карты памяти, камера 23 Мп, аккумулятор 3430 мАч, 2 SIM",
+        535, 7, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Xperia L1 Dual", "L1_Dual.jpeg",
+        "Android, экран 5.5\" IPS (720x1280), Mediatek MT6737T, ОЗУ 2 ГБ, флэш-память 16 ГБ,
+карты памяти, камера 13 Мп, аккумулятор 2620 мАч, 2 SIM",
+        294, 22, 1);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Walkman NW-WS623", "NW-WS623.jpeg",
+        "BT, время работы 12 часов",
+        382, 34, 2);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony NW-WS413", "NW-WS413.jpg",
+        "Время работы 12 часов",
+        359, 16, 2);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony NWZ-B183F", "NWZ-B183F.jpeg",
+        "Экран 0.9\" OLED 128 x 36, радио, время работы 20 часов",
+        175, 53, 2);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WH-1000XM4", "WH-1000XM4.jpeg",
+        "Беспроводные наушники с микрофоном, мониторные (охватывающие), портативные, Bluetooth 5.0,
+NFC, 4-40000 Гц, поворотные чашки/складное оголовье, быстрая зарядка, время работы 38 ч, кабель 1.2 м",
+        845, 37, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WF-XB700", "WF-XB700.jpeg",
+        "Беспроводные наушники с микрофоном, внутриканальные, портативные,
+Bluetooth 5.0, 20-20000 Гц, быстрая зарядка, время работы 9 ч",
+        209, 34, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WF-1000XM3", "WF-1000XM3.jpeg",
+        "Беспроводные наушники с микрофоном, внутриканальные, портативные,
+Bluetooth 5.0, NFC, 20-20000 Гц, время работы 8 ч",
+        442, 37, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WI-C200", "WI-C200.jpeg",
+        "Беспроводные наушники с микрофоном, внутриканальные, портативные,
+Bluetooth 5.0, 20-20000 Гц, магниты, быстрая зарядка, время работы 15 ч",
+        63, 45, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony PS5 Pulse 3D", "PS5 Pulse 3D.jpeg",
+        "Беспроводные наушники с микрофоном, мониторные (охватывающие), геймерские, время работы 12 ч",
+        315, 20, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WI-XB400", "WI-XB400.jpeg",
+        "Беспроводные наушники с микрофоном, внутриканальные, портативные,
+Bluetooth 5.0, 20-20000 Гц, магниты, быстрая зарядка, время работы 15 ч",
+        95, 28, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WH-CH510", "WH-CH510.jpeg",
+        "Беспроводные наушники с микрофоном, накладные, портативные, Bluetooth 5.0, 20-20000 Гц,
+поворотные чашки, быстрая зарядка, время работы 35 ч",
+        89, 28, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WI-SP510", "WI-SP510.jpeg",
+        "Беспроводные наушники с микрофоном, внутриканальные, портативные/спортивные,
+Bluetooth 5.0, 20-20000 Гц, магниты, быстрая зарядка, время работы 15 ч",
+        148, 26, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony WH-CH710N", "WH-CH710N.jpeg",
+        "Беспроводные наушники с микрофоном, мониторные (охватывающие), портативные,
+Bluetooth 5.0, NFC, 7-20000 Гц, поворотные чашки, быстрая зарядка, время работы 35 ч, кабель 1.2 м",
+        255, 19, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Gold Wireless", "Gold Wireless.jpeg",
+        "Беспроводные наушники с микрофоном, мониторные (охватывающие),
+геймерские, время работы 7 ч, кабель 1.2 м",
+        230, 23, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony MDR-EX155AP", "MDR-EX155AP.jpeg",
+        "Наушники с микрофоном, внутриканальные, портативные, 5-24000 Гц, кабель 1.2 м",
+        40, 48, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony MDR-EX255AP", "MDR-EX255AP.jpeg",
+        "Наушники с микрофоном, внутриканальные, портативные, 5-25000 Гц, кабель 1.2 м",
+        57, 44, 3);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-55XH9505", "KD-55XH9505.jpeg",
+        "54.6\" 3840x2160 (4K UHD), матрица VA, частота матрицы 120 Гц,
+Smart TV (Android TV), HDR, Wi-Fi",
+        3300, 15, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-55XH9096", "KD-55XH9096.jpeg",
+        "54.6\" 3840x2160 (4K UHD), матрица VA, частота матрицы 120 Гц,
+Smart TV (Android TV), HDR, Wi-Fi",
+        3090, 12, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-65A8", "KD-65A8.jpeg",
+        "65\" 3840x2160 (4K UHD), матрица OLED, частота матрицы 120 Гц,
+Smart TV (Android TV), HDR, Wi-Fi",
+        5999, 8, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-43XH8005", "KD-43XH8005.jpeg",
+        "42.5\" 3840x2160 (4K UHD), частота матрицы 60 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        1800, 13, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-49XH8596", "KD-49XH8596.jpeg",
+        "48.5\" 3840x2160 (4K UHD), частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        2568, 15, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-43XH8096", "KD-43XH8096.jpeg",
+        "48.5\" 3840x2160 (4K UHD), частота матрицы 60 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        1900, 19, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-55XG9505", "KD-55XG9505.jpeg",
+        "54.6\" 3840x2160 (4K UHD), матрица VA, частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        2750, 8, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-75ZH8", "KD-75ZH8.jpeg",
+        "75\" 7680x4320 (8K UHD), частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        14500, 2, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-43XG8096", "KD-43XG8096.jpeg",
+        "42.5\" 3840x2160 (4K UHD), частота матрицы 60 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        1830, 15, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-85ZG9", "KD-85ZG9.jpeg",
+        "84.6\" 7680x4320 (8K UHD), матрица VA, частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        25499, 5, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-65AG9", "KD-65AG9.jpeg",
+        "65\" 3840x2160 (4K UHD), матрица OLED, частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        6999, 10, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony KD-55XF9005", "KD-55XF9005.jpeg",
+        "54.6\" 3840x2160 (4K UHD), матрица VA, частота матрицы 120 Гц, Smart TV (Android TV), HDR, Wi-Fi",
+        2599, 13, 4);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Alpha a7 III Body", "Alpha a7 III Body.jpeg",
+        "Беззеркальная камера, матрица Full frame (полный кадр) 24.2 Мп, без объектива (body), Wi-Fi",
+        4700, 19, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Alpha a6000 Kit 16-50mm", "Alpha a6000 Kit.jpg",
+        "Беззеркальная камера, матрица APS-C (1.5 crop) 24.3 Мп, с объективом F3.5-5.6 16-50 мм, Wi-Fi",
+        1619, 22, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Alpha a6600 Body", "Alpha a6600 Body.jpeg",
+        "Беззеркальная камера, матрица APS-C (1.5 crop) 24.2 Мп, без объектива (body), Wi-Fi",
+        2598, 20, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Alpha a6400 Body", "Alpha a6400 Body.jpeg",
+        "Беззеркальная камера, матрица APS-C (1.5 crop) 24.2 Мп, без объектива (body), Wi-Fi",
+        2580, 19, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Alpha a7C Body", "Alpha a7C Body.jpeg",
+        "Беззеркальная камера, матрица Full frame (полный кадр) 24.2 Мп, без объектива (body), Wi-Fi",
+        5280, 21, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Cyber-shot DSC-RX100", "Cyber-shot DSC-RX100.jpg",
+        "Компакт-камера, матрица 1\" 20.2 Мп, объектив 3.6X F1.8-4.9 28-100 мм",
+        1099, 28, 5);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony SDXC SF-E128 128GB", "SDXC SF-E128.jpeg",
+        "128 ГБ, класс 10, UHS-II (класс U3), V60, чтение: 270 МБ/с, запись: 120 МБ/с",
+        220, 42, 6);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony XQD G Series 64GB", "XQD G Series.jpeg",
+        "64 ГБ, чтение: 440 МБ/с, запись: 400 МБ/с",
+        570, 31, 6);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony SF-M Tough SDXC 256GB", "SF-M Tough SDXC.jpeg",
+        "256 Гб, класс 10, UHS-II (класс U3), V60, чтение: 277 МБ/с, запись: 150 МБ/с",
+        757, 25, 6);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony SDXC SF-M Series UHS-II 128GB", "SDXC SF-M Series UHS-II.jpeg",
+        "128 ГБ, класс 10, UHS-II (класс U3), чтение: 260 МБ/с, запись: 100 МБ/с",
+        237, 34, 6);
+INSERT INTO sonyshop.products
+VALUES (NULL,
+        "Sony Memory Stick PRO Duo MSX-M8GST 8GB", "PRO Duo MSX-M8GST.jpg",
+        "8 ГБ, запись: 4 МБ/с",
+        10, 124, 6);

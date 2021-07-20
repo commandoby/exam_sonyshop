@@ -14,5 +14,9 @@ public interface ProductService extends BaseService<Product> {
 
     Product getProductByName(String name) throws ServiceException;
 
-    int getCategoryId(int productId) throws ServiceException;
+    List<Product> getProductsByNameLike(String text) throws ServiceException;
+
+    List<Product> getProductsByDescriptionLike(String text) throws ServiceException;
+
+    List<Product> getProductsByNotNullQuantity() throws ServiceException;
 }

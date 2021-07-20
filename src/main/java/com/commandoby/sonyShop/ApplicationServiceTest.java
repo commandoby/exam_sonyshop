@@ -13,7 +13,6 @@ import com.commandoby.sonyShop.service.impl.CategoryServiceImpl;
 import com.commandoby.sonyShop.service.impl.OrderServiceImpl;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
 import com.commandoby.sonyShop.service.impl.UserServiceImpl;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,10 +34,15 @@ public class ApplicationServiceTest {
         user1.setBalance(90000);
         userService.update(user1);
 
-        User user2 = userService.read(user1.getId());
+        User user2 = userService.read(user.getId());
         System.out.println(user2);
 
-        userService.delete(user.getId());
+        userService.findUsersByEmailLike("va").forEach(System.out::println);
+
+        List<String> emailList = userService.getAllUsersEmails();
+        System.out.println(emailList);
+
+        userService.delete(user);
         System.out.println();
 
         //test categoryService
@@ -51,75 +55,79 @@ public class ApplicationServiceTest {
         categoryList.get(0).setRating(2);
         categoryService.update(categoryList.get(0));
 
-        Category category1 = categoryService.read(categoryList.get(0).getId());
+        Category category1 = categoryService.read(category.getId());
         System.out.println(category1);
 
-        categoryService.delete(category.getId());
+        Category category2 = categoryService.getCategoryByTag(category.getTag());
+        System.out.println(category2);
+
+        categoryService.delete(category);
         System.out.println();
 
         //test productService
         Category categoryProduct = new Category("Phone2", "phone2", "phone.jpeg", 1);
-        categoryService.create(categoryProduct);
         Product product = new Product("Sony 10 II", "10_II.jpeg",
-                "Android, экран 6\" OLED (1080x2520)", categoryProduct, 899);
+                "Android, экран 6\" OLED (1080x2520)", categoryProduct, 899, 10);
         productService.create(product);
 
         Product product1 = productService.getProductByName(product.getName());
         System.out.println(product1);
 
         product1.setPrice(1399);
+        product1.setQuantity(0);
         productService.update(product1);
 
-        Product product2 = productService.read(product1.getId());
-        System.out.println(product2);
+        productService.getAllProducts().forEach(System.out::println);
 
-        List<Product> productList = productService.getAllProducts();
-        System.out.println(productList);
+        productService.getAllProductsByCategory(categoryProduct).forEach(System.out::println);
 
-        productList = productService.getAllProductsByCategory(categoryProduct);
-        System.out.println(productList);
+        productService.getProductsByNotNullQuantity().forEach(System.out::println);
 
-        categoryService.delete(categoryProduct.getId());
+        productService.getProductsByNameLike("ny").forEach(System.out::println);
+
+        productService.delete(product);
+        categoryService.delete(categoryProduct);
         System.out.println();
 
         //test orderService
         Category categoryOrder = new Category("Phone4", "phone4", "phone.jpeg", 1);
         categoryService.create(categoryOrder);
         Product productOrder1 = new Product("Sony 10 II", "10_II.jpeg",
-                "Android, экран 6\" OLED (1080x2520)", categoryOrder, 899);
+                "Android, экран 6\" OLED (1080x2520)", categoryOrder, 899, 10);
         Product productOrder2 = new Product("Sony 12 I", "12_I.jpeg",
-                "Android, экран 7\" OLED (1500x3020)", categoryOrder, 1599);
+                "Android, экран 7\" OLED (1500x3020)", categoryOrder, 1599, 12);
         productService.create(productOrder1);
         productService.create(productOrder2);
         Order order = new Order(LocalDate.now().toString());
-        order.addProduct(productOrder1);
-        order.addProduct(productOrder2);
+        order.getProductList().add(productOrder1);
+        order.getProductList().add(productOrder2);
         User userOrder = new User("Ivan", "Ivanov", "ivan",
                 "ivanov", "1989-08-14", 100000);
         userService.create(userOrder);
-        orderService.createOrderByUser(order, userOrder.getId());
+        order.setUser(userOrder);
+        orderService.create(order);
 
         Order order1 = orderService.read(order.getId());
         System.out.println(order1);
 
-        List<Product> productListOrder = order1.getProductList();
-        System.out.println(productListOrder);
+        order1.getProductList().forEach(System.out::println);
 
         Product productOrder3 = new Product("Sony 20 III", "20_III.jpeg",
-                "Android, экран 8\" OLED (1080x2520)", categoryOrder, 2899);
+                "Android, экран 8\" OLED (1080x2520)", categoryOrder, 2899, 250);
         productService.create(productOrder3);
-        orderService.addProductByOrder(order.getId(), productOrder3.getId());
+        order.getProductList().add(productOrder3);
+        orderService.update(order);
 
-        List<Order> orderListByUser = orderService.readAllOrdersByUser(userOrder.getId());
-        System.out.println(orderListByUser);
+        orderService.readAllOrdersByUser(userOrder).forEach(System.out::println);
 
         User userOrder1 = userService.read(userOrder.getId());
-        userService.delete(userOrder.getId());
-
-        userService.create(userOrder1);
         System.out.println(userOrder1);
+        userOrder1.getOrders().forEach(System.out::println);
 
-        userService.delete(userOrder1.getId());
-        categoryService.delete(categoryOrder.getId());
+        userService.delete(userOrder1);
+        productService.delete(productOrder1);
+        productService.delete(productOrder2);
+        productService.delete(productOrder3);
+        categoryService.delete(categoryOrder);
     }
 }

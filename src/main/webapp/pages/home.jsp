@@ -21,25 +21,21 @@
             <div class="input-group-prepend">
                 <button type="submit" class="btn btn-primary" name="command" value="home_page">Search</button>
             </div>
-            <c:if test="${not empty search}">
-                <input type="text" class="form-control" id="search_value" name="search_value" value="${search}">
-            </c:if>
-            <c:if test="${empty search}">
-                <input type="text" class="form-control" id="search_value" placeholder="Enter text" name="search_value">
-            </c:if>
+                <input type="text" class="form-control" id="search_value" placeholder="Enter text"
+                       name="search_value" value="${search}">
             <div class="input-group-append">
                 <button type="submit" class="btn btn-primary" name="command" value="search">
                     Advanced Search
                 </button>
-                <c:if test="${not empty sessionScope.email}">
+                <c:if test="${not empty sessionScope.user}">
                     <button type="submit" class="btn btn-primary" name="command" value="basket">
                         Basket (${basket_size})
                     </button>
                     <button type="submit" class="btn btn-primary" name="command" value="user">
-                            ${sessionScope.email}</button>
+                            ${sessionScope.user.getEmail()}</button>
                     <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
                 </c:if>
-                <c:if test="${empty sessionScope.email}">
+                <c:if test="${empty sessionScope.user}">
                     <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
                 </c:if>
             </div>

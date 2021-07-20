@@ -1,17 +1,22 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User extends BaseEntity {
     private String name;
     private String surname;
-    private final String email;
+    private String email;
     private String password;
     private String dateOfBirth;
     private int balance;
     private List<Order> orders = new ArrayList<>();
+
+    public User() {}
 
     public User(String name, String surname, String email, String password, String dateOfBirth, int balance) {
         this.name = name;
@@ -32,6 +37,7 @@ public class User extends BaseEntity {
         balance = builder.balance;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -40,6 +46,7 @@ public class User extends BaseEntity {
         this.name = name;
     }
 
+    @Column(name = "surname")
     public String getSurname() {
         return surname;
     }
@@ -48,10 +55,16 @@ public class User extends BaseEntity {
         this.surname = surname;
     }
 
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -60,6 +73,7 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    @Column(name = "date_of_birth")
     public String getDateOfBirth() {
         return dateOfBirth;
     }
@@ -68,6 +82,7 @@ public class User extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
+    @Column(name = "balance")
     public int getBalance() {
         return balance;
     }
@@ -76,6 +91,7 @@ public class User extends BaseEntity {
         this.balance = balance;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<Order> getOrders() {
         return orders;
     }

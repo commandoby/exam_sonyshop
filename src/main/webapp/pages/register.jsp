@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <input type="text" class="form-control w-50" id="email"
-                       placeholder="Enter email" name="email" required>
+                       placeholder="Enter email/login" name="email" value="${email}" required>
                 <div class="invalid-feedback">Please fill out email field</div>
             </div>
             <div class="form-group">
