@@ -55,7 +55,18 @@ public class ProductMethodsImpl {
         return products;
     }
 
-    public List<Product> pagination(ModelMap modelMap, List<Product> products,
+    public void prePagination(ModelMap modelMap, List<Product> products,
+                              Integer pageItems, Integer pageNumber) {
+        if (!pageItems.equals(0) && !products.isEmpty()) {
+            List<Product> productPageList = pagination(modelMap, products, pageItems, pageNumber);
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList);
+        } else {
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), "1");
+        }
+    }
+
+    private List<Product> pagination(ModelMap modelMap, List<Product> products,
                                     Integer pageItems, Integer pageNumber) {
         List<Product> productPageList = null;
         try {

@@ -9,7 +9,6 @@ import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.CategoryMethodsImpl;
 import com.commandoby.sonyShop.service.impl.ProductMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,6 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes("order")
 public class AdvancedSearchController {
 
-    private final Logger log = Logger.getLogger(getClass());
     private final ProductService productService;
     private final UseBasketImpl useBasketImpl;
     private final CategoryMethodsImpl categoryMethods;
@@ -70,13 +68,7 @@ public class AdvancedSearchController {
             modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
         }
 
-        if (!page_items.equals(0) && !products.isEmpty()) {
-            List<Product> productPageList = productMethods.pagination(modelMap, products, page_items, page_number);
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList);
-        } else {
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), "1");
-        }
+        productMethods.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);

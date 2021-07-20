@@ -25,7 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category read(int id) throws ServiceException {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a category from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override

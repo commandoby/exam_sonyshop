@@ -6,8 +6,6 @@ import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.OrderService;
-import com.commandoby.sonyShop.service.UserService;
 import com.commandoby.sonyShop.service.impl.PayMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.apache.log4j.Logger;

@@ -278,7 +278,7 @@
                     </button>
                 </div>
                 <input type="hidden" name="search_value" value="${search_value}"/>
-                <input type="hidden" name="search_category" value="${search_category}"/>
+                <input type="hidden" name="category_tag" value="${category_tag}"/>
                 <input type="hidden" name="search_comparing" value="${search_comparing}"/>
                 <input type="hidden" name="is_quantity" value="${is_quantity}"/>
                 <input type="hidden" name="min_price" value="${min_price}"/>

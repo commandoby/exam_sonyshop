@@ -86,10 +86,6 @@ public class UserValidateImpl {
     }
 
     public boolean validateLocalData(String date) {
-        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
-        if (date.matches(pattern.pattern())) {
-            return true;
-        }
-        return false;
+        return date.matches(Pattern.compile("\\d{4}-\\d{2}-\\d{2}").pattern());
     }
 }

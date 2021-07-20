@@ -43,13 +43,7 @@ public class ProductController {
 
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
-        if (!page_items.equals(0) && !products.isEmpty()) {
-            List<Product> productPageList = productMethods.pagination(modelMap, products, page_items, page_number);
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList);
-        } else {
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), "1");
-        }
+        productMethods.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
@@ -76,17 +70,10 @@ public class ProductController {
         Category category = categoryMethods.getCategory(category_tag);
         List<Product> products = productMethods.getProductsByCategoryAndQuantityNotNull(category);
 
-        useBasketImpl.addProductToBasket(order, product_id);
-
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
-        if (!page_items.equals(0) && !products.isEmpty()) {
-            List<Product> productPageList = productMethods.pagination(modelMap, products, page_items, page_number);
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList);
-        } else {
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), "1");
-        }
+        useBasketImpl.addProductToBasket(order, product_id);
+        productMethods.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(ORDER.getValue(), order);

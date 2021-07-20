@@ -50,7 +50,7 @@ public class UseBasketImpl {
         order.setOrderPrice(order
                 .getProductList()
                 .stream()
-                .mapToInt(productOrder -> productOrder.getPrice())
+                .mapToInt(Product::getPrice)
                 .sum());
     }
 }

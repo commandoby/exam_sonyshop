@@ -25,7 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User read(int id) throws ServiceException {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a user from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override

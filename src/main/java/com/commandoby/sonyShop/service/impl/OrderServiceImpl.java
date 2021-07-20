@@ -26,7 +26,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order read(int id) throws ServiceException {
-        return orderRepository.findById(id).orElse(null);
+        return orderRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a order from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override

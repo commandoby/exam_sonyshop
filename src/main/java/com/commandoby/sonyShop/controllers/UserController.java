@@ -49,7 +49,6 @@ public class UserController {
         ModelMap modelMap = new ModelMap();
 
         if (email != null) {
-
             if (!password.equals(second_password)) {
                 modelMap.addAttribute(INFO.getValue(), "Password mismatch.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
@@ -94,12 +93,72 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ModelAndView execute(@RequestParam String email,
-                                @ModelAttribute User user) throws ControllerException {
+    public ModelAndView user(@RequestParam String email,
+                             @RequestParam(required = false) String user_edit,
+                             @ModelAttribute User user) throws ControllerException {
         if (user == null || !email.equals(user.getEmail())) {
             return new ModelAndView(HOME_PAGE.getPath(), new ModelMap());
         }
 
-        return new ModelAndView(USER_PAGE.getPath(), new ModelMap());
+        ModelMap modelMap = new ModelMap();
+
+        if (user_edit != null) {
+            if (user_edit.equals("edit")) modelMap.addAttribute(USER_EDIT.getValue(), "edit");
+            if (user_edit.equals("password")) modelMap.addAttribute(USER_EDIT.getValue(), "password");
+        }
+        return new ModelAndView(USER_PAGE.getPath(), modelMap);
+    }
+
+    @PostMapping("/user")
+    public ModelAndView edit(@RequestParam(required = false) String new_name,
+                             @RequestParam(required = false) String new_surname,
+                             @RequestParam(required = false) String new_date_of_birth,
+                             @RequestParam String old_password,
+                             @RequestParam(required = false) String new_password,
+                             @RequestParam(required = false) String second_password,
+                             @RequestParam(required = false) String user_edit,
+                             @ModelAttribute User user) throws ControllerException {
+        ModelMap modelMap = new ModelMap();
+
+        if (user_edit.equals("edit")) {
+            modelMap.addAttribute(USER_EDIT.getValue(), "edit");
+            if (!userValidate.validateLocalData(new_date_of_birth)) {
+                modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
+                return new ModelAndView(USER_PAGE.getPath(), modelMap);
+            }
+            if (user.getPassword().equals(old_password)) {
+                try {
+                    user.setName(new_name);
+                    user.setSurname(new_surname);
+                    user.setDateOfBirth(LocalDate.parse(new_date_of_birth));
+                    userService.update(user);
+                    log.info("User: " + user.getEmail() + " changed the data.");
+                } catch (ServiceException e) {
+                    log.error("Error updating user data. Email" + user.getEmail(), e);
+                }
+            } else {
+                modelMap.addAttribute(INFO.getValue(), "Invalid password.");
+                return new ModelAndView(USER_PAGE.getPath(), modelMap);
+            }
+        }
+
+        if (user_edit.equals("password")) {
+            if (!new_password.equals(second_password)) {
+                modelMap.addAttribute(INFO.getValue(), "Password mismatch.");
+                return new ModelAndView(USER_PAGE.getPath(), modelMap);
+            }
+            if (user.getPassword().equals(old_password)) {
+                try {
+                    user.setPassword(new_password);
+                    userService.update(user);
+                    log.info("User: " + user.getEmail() + " changed the password.");
+                } catch (ServiceException e) {
+                    log.error("Error updating user password. Email" + user.getEmail(), e);
+                }
+            }
+        }
+
+        modelMap.addAttribute(USER_EDIT.getValue(), "");
+        return new ModelAndView(USER_PAGE.getPath(), modelMap);
     }
 }

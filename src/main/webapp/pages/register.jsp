@@ -46,11 +46,12 @@
                        placeholder="Enter your password again" name="second_password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
-            <button type="submit" class="btn btn-primary w-50" formaction="/sonyshop/signin">Register</button>
             <p style="color: red">${info}</p>
+            <button type="submit" class="btn btn-primary w-50" formaction="/sonyshop/signin">Register</button>
         </form>
     </div>
 </div>
+
 <script>
     (function () {
         'use strict';
