@@ -1,6 +1,6 @@
-<%@ page import="com.commandoby.sonyShop.dao.domain.Product" %>
+<%@ page import="com.commandoby.sonyShop.repository.domain.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.commandoby.sonyShop.dao.domain.Order" %>
+<%@ page import="com.commandoby.sonyShop.repository.domain.Order" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
@@ -47,7 +47,6 @@
         <c:if test="${not empty sessionScope.order}">
             <c:forEach items="${sessionScope.order.getProductList()}" var="product">
                 <div class="media border">
-<%--                    <input type="hidden" name="product_name" value="${product.getName()}"/>--%>
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
                          src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
                          alt="Card image">
@@ -55,6 +54,7 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
+                        <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?id=${product.getId()}'">
                             List of product

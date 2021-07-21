@@ -57,6 +57,15 @@
                             <img class="card-img" style="height:160px"
                                  src="${contextPath}/images/${category.getImageName()}" alt="Card image">
                         </div>
+                        <div class="progress" style="height:8px">
+                            <div class="progress-bar bg-light"
+                                 style="width:${50 - (category.getRating() / category_max_rating * 50)}%"></div>
+                            <div class="progress-bar" data-toggle="tooltip" title="Rating"
+                                 style="width:${category.getRating() / category_max_rating * 100}%"></div>
+                            <div class="progress-bar bg-light"
+                                 style="width:${50 - (category.getRating() / category_max_rating * 50)}%"></div>
+                        </div>
+                        &nbsp
                     </button>
                     &nbsp
                 </c:forEach>
@@ -64,5 +73,11 @@
         </c:if>
     </div>
 </form>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>

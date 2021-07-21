@@ -1,69 +1,52 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.UserDao;
-import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.repository.UserRepository;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    @Transactional
     public int create(User user) throws ServiceException {
-        entityManager.persist(user);
+        userRepository.save(user);
         return user.getId();
     }
 
     @Override
-    @Transactional
     public User read(int id) throws ServiceException {
-        return entityManager.find(User.class, id);
+        return userRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a user from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override
-    @Transactional
     public void update(User user) throws ServiceException {
-        entityManager.merge(user);
+        userRepository.save(user);
     }
 
     @Override
-    @Transactional
     public void delete(User user) throws ServiceException {
-        entityManager.remove(user);
-    }
-
-    @Override
-    public List<User> getAllUsers() throws ServiceException {
-        return userDao.getAllUsers();
+        userRepository.delete(user);
     }
 
     @Override
     public User getUserByEmail(String email) throws ServiceException {
-        return userDao.getUserByEmail(email);
-    }
-
-    @Override
-    public List<String> getAllUsersEmails() throws ServiceException {
-        return userDao.getAllUsersEmails();
+        return userRepository.getUserByEmail(email);
     }
 
     @Override
     public List<User> findUsersByEmailLike(String email) throws ServiceException {
-        return userDao.findUsersByEmailLike(email);
+        return userRepository.findAllByEmailIsLike(email);
     }
 }

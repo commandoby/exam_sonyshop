@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.dao.domain;
+package com.commandoby.sonyShop.repository.domain;
 
 import org.springframework.stereotype.Component;
 
@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class User extends BaseEntity {
     @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String password;
 
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private int balance;
 
@@ -35,7 +36,8 @@ public class User extends BaseEntity {
 
     public User() {}
 
-    public User(String name, String surname, String email, String password, String dateOfBirth, int balance) {
+    public User(String name, String surname, String email, String password,
+                LocalDate dateOfBirth, int balance) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -90,11 +92,11 @@ public class User extends BaseEntity {
     }
 
     @Column(name = "date_of_birth")
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -156,7 +158,7 @@ public class User extends BaseEntity {
         private String surname;
         private String email;
         private String password;
-        private String dateOfBirth;
+        private LocalDate dateOfBirth;
         private int balance;
 
         private Builder() {}
@@ -181,7 +183,7 @@ public class User extends BaseEntity {
             return this;
         }
 
-        public Builder withDateOfBirth(String data) {
+        public Builder withDateOfBirth(LocalDate data) {
             this.dateOfBirth = data;
             return this;
         }

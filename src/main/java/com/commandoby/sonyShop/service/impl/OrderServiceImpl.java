@@ -1,55 +1,48 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.OrderDao;
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.repository.OrderRepository;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final OrderDao orderDao;
+    private final OrderRepository orderRepository;
 
-    public OrderServiceImpl(OrderDao orderDao) {
-        this.orderDao = orderDao;
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
-    @Transactional
     public int create(Order order) throws ServiceException {
-        entityManager.persist(order);
+        orderRepository.save(order);
         return order.getId();
     }
 
     @Override
-    @Transactional
     public Order read(int id) throws ServiceException {
-        return entityManager.find(Order.class, id);
+        return orderRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a order from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override
-    @Transactional
     public void update(Order order) throws ServiceException {
-        entityManager.merge(order);
+        orderRepository.save(order);
     }
 
     @Override
-    @Transactional
     public void delete(Order order) throws ServiceException {
-        entityManager.remove(order);
+        orderRepository.delete(order);
     }
 
     @Override
-    public List<Order> readAllOrdersByUser(User user) throws ServiceException {
-        return orderDao.readAllOrdersByUser(user);
+    public List<Order> readOrdersByUser(User user) throws ServiceException {
+        return orderRepository.findAllByUser(user);
     }
 }

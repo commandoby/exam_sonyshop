@@ -1,9 +1,8 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.domain.User;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
-import com.commandoby.sonyShop.service.UserValidate;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -11,15 +10,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.INFO;
 import static com.commandoby.sonyShop.enums.RequestParamEnum.USER;
 
 @Service
 @Validated
-public class UserValidateImpl implements UserValidate {
+public class UserValidateImpl {
 
     private final Logger log = Logger.getLogger(getClass());
     private final UserService userService;
@@ -28,10 +27,9 @@ public class UserValidateImpl implements UserValidate {
         this.userService = userService;
     }
 
-    @Override
     public boolean validateUser(ModelAndView modelAndView, BindingResult bindingResult,
-                                @Valid User user) throws ServiceException {
-        if(Optional.ofNullable(user).isPresent()
+                                User user) throws ServiceException {
+        if (Optional.ofNullable(user).isPresent()
                 && Optional.ofNullable(user.getEmail()).isPresent()
                 && Optional.ofNullable(user.getPassword()).isPresent()) {
 
@@ -41,20 +39,18 @@ public class UserValidateImpl implements UserValidate {
 
                 return false;
             }
-
             return checkReceivedUser(modelAndView, user);
         }
         return false;
     }
 
-    @Override
-    public boolean checkReceivedUser(ModelAndView modelAndView, User user) throws ServiceException {
+    private boolean checkReceivedUser(ModelAndView modelAndView, User user) throws ServiceException {
         User findUser = null;
         ModelMap modelMap = new ModelMap();
         try {
             findUser = userService.getUserByEmail(user.getEmail());
         } catch (ServiceException e) {
-            log.info(e);
+            log.info("Error getting user by email: " + user.getEmail() + ".", e);
         }
         if (findUser != null) {
             if (findUser.getPassword().equals(user.getPassword())) {
@@ -72,10 +68,24 @@ public class UserValidateImpl implements UserValidate {
         return false;
     }
 
-    private void populateError (String field, ModelAndView modelAndView, BindingResult bindingResult) {
+    private void populateError(String field, ModelAndView modelAndView, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors(field)) {
             modelAndView.addObject(field + "Error", bindingResult.getFieldError(field)
                     .getDefaultMessage());
         }
+    }
+
+    public boolean duplicateCheck(String email) {
+        try {
+            User user = userService.getUserByEmail(email);
+            if (user != null) return true;
+        } catch (ServiceException e) {
+            log.warn("Error getting user by email: " + email + ".", e);
+        }
+        return false;
+    }
+
+    public boolean validateLocalData(String date) {
+        return date.matches(Pattern.compile("\\d{4}-\\d{2}-\\d{2}").pattern());
     }
 }

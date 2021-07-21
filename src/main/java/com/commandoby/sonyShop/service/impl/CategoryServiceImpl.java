@@ -1,59 +1,57 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.CategoryDao;
-import com.commandoby.sonyShop.dao.domain.Category;
+import com.commandoby.sonyShop.repository.CategoryRepository;
+import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final CategoryDao categoryDao;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryDao categoryDao) {
-        this.categoryDao = categoryDao;
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    @Transactional
     public int create(Category category) throws ServiceException {
-        entityManager.persist(category);
+        categoryRepository.save(category);
         return category.getId();
     }
 
     @Override
-    @Transactional
     public Category read(int id) throws ServiceException {
-        return entityManager.find(Category.class, id);
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a category from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override
-    @Transactional
     public void update(Category category) throws ServiceException {
-        entityManager.merge(category);
+        categoryRepository.save(category);
     }
 
     @Override
-    @Transactional
     public void delete(Category category) throws ServiceException {
-        entityManager.remove(category);
+        categoryRepository.delete(category);
     }
 
     @Override
     public List<Category> getAllCategories() throws ServiceException {
-        return categoryDao.getAllCategories();
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public List<Category> gelAllCategorySortByRating() throws ServiceException {
+        return categoryRepository.gelAllCategorySortByRating();
     }
 
     @Override
     public Category getCategoryByTag(String tag) throws ServiceException {
-        return categoryDao.getCategoryByTag(tag);
+        return categoryRepository.findCategoryByTag(tag);
     }
 }

@@ -1,16 +1,13 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
-import com.commandoby.sonyShop.exceptions.NoFoundException;
-import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.CategoryService;
-import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.UseBasket;
-import org.apache.log4j.Logger;
+import com.commandoby.sonyShop.service.impl.CategoryMethodsImpl;
+import com.commandoby.sonyShop.service.impl.ProductMethodsImpl;
+import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -25,75 +22,63 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes("order")
 public class ProductController {
 
-    private final Logger log = Logger.getLogger(getClass().getName());
-    private final CategoryService categoryService;
-    private final ProductService productService;
-    private final UseBasket useBasket;
+    private final UseBasketImpl useBasketImpl;
+    private final CategoryMethodsImpl categoryMethods;
+    private final ProductMethodsImpl productMethods;
 
-    public ProductController(CategoryService categoryService, ProductService productService,
-                             UseBasket useBasket) {
-        this.categoryService = categoryService;
-        this.productService = productService;
-        this.useBasket = useBasket;
+    public ProductController(UseBasketImpl useBasket, CategoryMethodsImpl categoryMethods,
+                             ProductMethodsImpl productMethods) {
+        this.useBasketImpl = useBasket;
+        this.categoryMethods = categoryMethods;
+        this.productMethods = productMethods;
     }
 
     @GetMapping("/products")
-    public ModelAndView getProducts(@RequestParam String category_tag) throws ControllerException {
+    public ModelAndView getProductsByCategory(@RequestParam String category_tag,
+                                              @RequestParam(required = false) Integer page_items,
+                                              @RequestParam(required = false) Integer page_number) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Category category = null;
-        List<Product> products = null;
+        Category category = categoryMethods.getCategoryForProducts(category_tag);
+        List<Product> products = productMethods.getProductsByCategoryAndQuantityNotNull(category);
 
-        try {
-            category = searchCategory(category_tag);
-            products = getProductList(category);
-        } catch (NoFoundException e) {
-            log.error(e);
-        }
+        if (page_items == null) page_items = 0;
+        if (page_number == null) page_number = 1;
+        productMethods.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
+        modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
-        if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }
 
     @GetMapping("/product")
     public ModelAndView getProduct(@RequestParam int product_id) throws ControllerException {
-        Product product = null;
         ModelMap modelMap = new ModelMap();
-        try {
-            product = productService.read(product_id);
-        } catch (ServiceException e) {
-            log.warn(e);
-        }
+        Product product = productMethods.getProductById(product_id);
 
         modelMap.addAttribute(PRODUCT.getValue(), product);
-
         return new ModelAndView(PagesPathEnum.PRODUCT_PAGE.getPath(), modelMap);
     }
 
     @PostMapping("/products")
     public ModelAndView addProducts(@RequestParam String category_tag,
                                     @RequestParam int product_id,
+                                    @RequestParam(required = false) Integer page_items,
+                                    @RequestParam(required = false) Integer page_number,
                                     @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Category category = null;
-        List<Product> products = null;
+        Category category = categoryMethods.getCategory(category_tag);
+        List<Product> products = productMethods.getProductsByCategoryAndQuantityNotNull(category);
 
-        useBasket.addProductToBasket(order, product_id);
-
-        try {
-            category = searchCategory(category_tag);
-            products = getProductList(category);
-        } catch (NoFoundException e) {
-            log.error(e);
-        }
+        if (page_items == null) page_items = 0;
+        if (page_number == null) page_number = 1;
+        useBasketImpl.addProductToBasket(order, product_id);
+        productMethods.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(ORDER.getValue(), order);
+        modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
-        if (products != null) modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }
 
@@ -101,31 +86,10 @@ public class ProductController {
     public ModelAndView addProduct(@RequestParam int product_id,
                                    @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Product product = useBasket.addProductToBasket(order, product_id);
+        Product product = useBasketImpl.addProductToBasket(order, product_id);
 
         modelMap.addAttribute(ORDER.getValue(), order);
         modelMap.addAttribute(PRODUCT.getValue(), product);
-
         return new ModelAndView(PagesPathEnum.PRODUCT_PAGE.getPath(), modelMap);
-    }
-
-    private Category searchCategory(String tag) throws NoFoundException {
-        Category category = null;
-        try {
-            category = categoryService.getCategoryByTag(tag);
-        } catch (ServiceException e) {
-            log.warn(e);
-        }
-        return category;
-    }
-
-    private List<Product> getProductList(Category category) {
-        List<Product> products = null;
-        try {
-            products = productService.getAllProductsByCategory(category);
-        } catch (ServiceException e) {
-            log.warn(e);
-        }
-        return products;
     }
 }

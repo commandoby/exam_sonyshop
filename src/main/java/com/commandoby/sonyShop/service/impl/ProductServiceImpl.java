@@ -1,80 +1,73 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.ProductDao;
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.ProductRepository;
+import com.commandoby.sonyShop.repository.SearchProductsRepository;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
+    private final SearchProductsRepository searchProductsRepository;
 
-    public ProductServiceImpl(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductServiceImpl(ProductRepository productRepository, SearchProductsRepository searchProductsRepository) {
+        this.productRepository = productRepository;
+        this.searchProductsRepository = searchProductsRepository;
     }
 
     @Override
-    @Transactional
     public int create(Product product) throws ServiceException {
-        entityManager.persist(product);
+        productRepository.save(product);
         return product.getId();
     }
 
     @Override
-    @Transactional
     public Product read(int id) throws ServiceException {
-        return entityManager.find(Product.class, id);
+        return productRepository.findById(id).orElseThrow(() ->
+                new ServiceException("Error retrieving a product from the database by ID: " + id + ".", new Exception())
+        );
     }
 
     @Override
-    @Transactional
     public void update(Product product) throws ServiceException {
-        entityManager.merge(product);
+        productRepository.save(product);
     }
 
     @Override
-    @Transactional
     public void delete(Product product) throws ServiceException {
-        entityManager.remove(product);
+        productRepository.delete(product);
     }
 
     @Override
     public List<Product> getAllProducts() throws ServiceException {
-        return productDao.getAllProducts();
+        return productRepository.findAll();
     }
 
     @Override
     public List<Product> getAllProductsByCategory(Category category) throws ServiceException {
-        return productDao.getAllProductsByCategory(category);
+        return productRepository.getAllByCategory(category);
     }
 
     @Override
     public Product getProductByName(String name) throws ServiceException {
-        return productDao.getProductByName(name);
+        return productRepository.getProductByName(name);
     }
 
     @Override
-    public List<Product> getProductsByNameLike(String text) throws ServiceException {
-        return productDao.getProductsByNameLike(text);
+    public List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException {
+        return productRepository.getAllByCategoryAndQuantityNotLike(category, 0);
     }
 
     @Override
-    public List<Product> getProductsByDescriptionLike(String text) throws ServiceException {
-        return productDao.getProductsByDescriptionLike(text);
-    }
-
-    @Override
-    public List<Product> getProductsByNotNullQuantity() throws ServiceException {
-        return productDao.getProductsByNotNullQuantity();
+    public List<Product> getSearchProductsByParams(String searchValue, String categoryTag, String searchComparing,
+                                                   String isQuantity, Integer minPrice, Integer maxPrice) throws ServiceException {
+        return searchProductsRepository.searchProductsByParams(searchValue, categoryTag, searchComparing,
+                isQuantity, minPrice, maxPrice);
     }
 }

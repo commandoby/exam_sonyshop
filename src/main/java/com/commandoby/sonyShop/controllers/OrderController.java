@@ -1,20 +1,17 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.User;
-import com.commandoby.sonyShop.exceptions.CommandException;
+import com.commandoby.sonyShop.exceptions.ControllerException;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.OrderService;
-import com.commandoby.sonyShop.service.UseBasket;
-import com.commandoby.sonyShop.service.UserService;
+import com.commandoby.sonyShop.service.impl.PayMethodsImpl;
+import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.time.LocalDate;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
@@ -23,19 +20,16 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class OrderController {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private final UserService userService;
-    private final OrderService orderService;
-    private final UseBasket useBasket;
+    private final UseBasketImpl useBasket;
+    private final PayMethodsImpl payMethods;
 
-    public OrderController(UserService userService, OrderService orderService,
-                           UseBasket useBasket) {
-        this.userService = userService;
-        this.orderService = orderService;
+    public OrderController(UseBasketImpl useBasket, PayMethodsImpl payMethods) {
         this.useBasket = useBasket;
+        this.payMethods = payMethods;
     }
 
     @GetMapping("/basket")
-    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws CommandException {
+    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
         if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
@@ -45,11 +39,11 @@ public class OrderController {
 
     @PostMapping("/basket")
     public ModelAndView getBasketAndRemoveProduct(@RequestParam int id,
-                                                  @ModelAttribute("order") Order order) throws CommandException {
+                                                  @ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
         if (order == null) order = new Order();
         try {
-            useBasket.removeProductWithOfBasket(order, id);
+            useBasket.removeProductWithOfBasketByNumber(order, id);
         } catch (NoFoundException | ServiceException e) {
             log.error(e);
         }
@@ -61,28 +55,22 @@ public class OrderController {
 
     @GetMapping("/pay")
     public ModelAndView pay(@ModelAttribute("order") Order order,
-                            @ModelAttribute("user") User user) throws CommandException {
+                            @ModelAttribute("user") User user) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        int paySize = order.getProductList().size();
-        int payPrice = order.getOrderPrice();
 
-        if (paySize != 0 && user != null) {
+        if (order.getProductList().size() != 0 && user != null) {
             try {
-                order.setDate(LocalDate.now().toString());
-                order.setUser(user);
-                orderService.create(order);
-                user.setBalance(user.getBalance() - payPrice);
-                user.addOrder(order);
-                userService.update(user);
+                payMethods.orderPayMethod(user, order);
+                payMethods.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
-                log.info("Purchased " + paySize + " products.");
+                log.info("Purchased " + order.getProductList().size() + " products.");
             } catch (ServiceException e) {
                 log.error(e);
             }
         }
 
-        modelMap.addAttribute(BASKET_SIZE.getValue(), paySize);
-        modelMap.addAttribute(BASKET_PRICE.getValue(), payPrice);
+        modelMap.addAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
+        modelMap.addAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
         modelMap.addAttribute(ORDER.getValue(), new Order());
 
         return new ModelAndView(PagesPathEnum.PAY_PAGE.getPath(), modelMap);

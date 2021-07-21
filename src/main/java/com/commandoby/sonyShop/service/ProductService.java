@@ -1,7 +1,7 @@
 package com.commandoby.sonyShop.service;
 
-import com.commandoby.sonyShop.dao.domain.Category;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 
 import java.util.List;
@@ -14,9 +14,8 @@ public interface ProductService extends BaseService<Product> {
 
     Product getProductByName(String name) throws ServiceException;
 
-    List<Product> getProductsByNameLike(String text) throws ServiceException;
+    List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException;
 
-    List<Product> getProductsByDescriptionLike(String text) throws ServiceException;
-
-    List<Product> getProductsByNotNullQuantity() throws ServiceException;
+    List<Product> getSearchProductsByParams(String searchValue, String categoryTag, String searchComparing,
+                                            String isQuantity, Integer minPrice, Integer maxPrice) throws ServiceException;
 }

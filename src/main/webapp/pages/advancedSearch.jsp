@@ -46,6 +46,7 @@
         </div>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
         <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+        <input type="hidden" name="is_quantity" value="${is_quantity}"/>
         <input type="hidden" name="min_price" value="${min_price}"/>
         <input type="hidden" name="max_price" value="${max_price}"/>
         <input type="hidden" name="page_items" value="${page_items}"/>
@@ -54,7 +55,7 @@
 </div>
 <div class="container">
     <form method="get" style="display: inline">
-        <div class="btn-group">
+        <div class="btn-group" data-toggle="tooltip" title="Category products.">
             <div class="dropdown" align="left">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     <c:if test="${empty category_tag}">All categories</c:if>
@@ -75,6 +76,7 @@
             </div>
             <input type="hidden" name="search_value" value="${search_value}"/>
             <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+            <input type="hidden" name="is_quantity" value="${is_quantity}"/>
             <input type="hidden" name="min_price" value="${min_price}"/>
             <input type="hidden" name="max_price" value="${max_price}"/>
             <input type="hidden" name="page_items" value="${page_items}"/>
@@ -83,7 +85,7 @@
     </form>
 
     <form method="get" style="display: inline">
-        <div class="btn-group">
+        <div class="btn-group" data-toggle="tooltip" title="Sorting type.">
             <div class="dropdown" align="left">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     ${search_comparing}
@@ -106,6 +108,29 @@
         </div>
         <input type="hidden" name="search_value" value="${search_value}"/>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
+        <input type="hidden" name="is_quantity" value="${is_quantity}"/>
+        <input type="hidden" name="min_price" value="${min_price}"/>
+        <input type="hidden" name="max_price" value="${max_price}"/>
+        <input type="hidden" name="page_items" value="${page_items}"/>
+        <input type="hidden" name="page_number" value="${page_number}"/>
+    </form>
+
+    <form method="get" style="display: inline">
+        <c:if test="${is_quantity != 'on'}">
+            <button type="submit" class="btn btn-primary" name="is_quantity" value="on"
+                    data-toggle="tooltip" title="Display missing items?">
+                Are available.
+            </button>
+        </c:if>
+        <c:if test="${is_quantity == 'on'}">
+            <button type="submit" class="btn btn-light" name="is_quantity" value=""
+                    data-toggle="tooltip" title="Display missing items?">
+                All goods.
+            </button>
+        </c:if>
+        <input type="hidden" name="search_value" value="${search_value}"/>
+        <input type="hidden" name="category_tag" value="${category_tag}"/>
+        <input type="hidden" name="search_comparing" value="${search_comparing}"/>
         <input type="hidden" name="min_price" value="${min_price}"/>
         <input type="hidden" name="max_price" value="${max_price}"/>
         <input type="hidden" name="page_items" value="${page_items}"/>
@@ -124,12 +149,13 @@
         <input type="hidden" name="search_value" value="${search_value}"/>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
         <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+        <input type="hidden" name="is_quantity" value="${is_quantity}"/>
         <input type="hidden" name="page_items" value="${page_items}"/>
         <input type="hidden" name="page_number" value="${page_number}"/>
     </form>
 
     <form method="get" style="display: inline">
-        <div class="btn-group">
+        <div class="btn-group" data-toggle="tooltip" title="The number of products per page.">
             <button type="submit" class="btn btn-primary" name="page_items" value="10"
                     <c:if test="${page_items == '10'}">disabled</c:if>>10
             </button>
@@ -146,43 +172,52 @@
         <input type="hidden" name="search_value" value="${search_value}"/>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
         <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+        <input type="hidden" name="is_quantity" value="${is_quantity}"/>
         <input type="hidden" name="min_price" value="${min_price}"/>
         <input type="hidden" name="max_price" value="${max_price}"/>
         <input type="hidden" name="page_number" value="${page_number}"/>
     </form>
 
     <c:if test="${page_items != '0'}">
-        <form method="get" style="display: inline">
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
-                        <c:if test="${page_number == '1'}">disabled</c:if>>Previous
-                </button>
-                <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
-                    <c:if test="${(page_items * page_number) <= product_size}">
-                        ${page_items * page_number}
-                    </c:if>
-                    <c:if test="${(page_items * page_number) > product_size}">
-                        ${product_size}
-                    </c:if>
-                </button>
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
-                        <c:if test="${page_number >= page_max}">disabled</c:if>>Next
-                </button>
-            </div>
-            <input type="hidden" name="search_value" value="${search_value}"/>
-            <input type="hidden" name="category_tag" value="${category_tag}"/>
-            <input type="hidden" name="search_comparing" value="${search_comparing}"/>
-            <input type="hidden" name="min_price" value="${min_price}"/>
-            <input type="hidden" name="max_price" value="${max_price}"/>
-            <input type="hidden" name="page_items" value="${page_items}"/>
-        </form>
+        <c:if test="${not empty product_list}">
+            <form method="get" style="display: inline">
+                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
+                        <c:if test="${page_items <= product_list.size()}">
+                            ${page_items * page_number}
+                        </c:if>
+                        <c:if test="${page_items > product_list.size()}">
+                            ${page_items * (page_number - 1) + product_list.size()}
+                        </c:if>
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
+                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
+                    </button>
+                </div>
+                <input type="hidden" name="search_value" value="${search_value}"/>
+                <input type="hidden" name="category_tag" value="${category_tag}"/>
+                <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+                <input type="hidden" name="is_quantity" value="${is_quantity}"/>
+                <input type="hidden" name="min_price" value="${min_price}"/>
+                <input type="hidden" name="max_price" value="${max_price}"/>
+                <input type="hidden" name="page_items" value="${page_items}"/>
+            </form>
+        </c:if>
     </c:if>
 </div>
 
 <div class="container">
     <form method="get">
         <br>
-        <p>Found ${product_size} products.</p>
+        <c:if test="${empty info}">
+            <p>Found ${product_size} products.</p>
+        </c:if>
+        <c:if test="${not empty info}">
+            <p style="color: red">${info}</p>
+        </c:if>
         <c:if test="${not empty product_list}">
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
@@ -193,15 +228,18 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
+                        <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary"
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
                         <c:if test="${not empty sessionScope.user.getEmail()}">
-                            <button type="submit" class="btn btn-primary"
-                                    name="product_id" value="${product.getId()}">
-                                Add to basket
-                            </button>
+                            <c:if test="${product.getQuantity() > 0}">
+                                <button type="submit" class="btn btn-primary"
+                                        name="product_id" value="${product.getId()}">
+                                    Add to basket
+                                </button>
+                            </c:if>
                         </c:if>
                     </div>
                 </div>
@@ -211,37 +249,51 @@
         <input type="hidden" name="search_value" value="${search_value}"/>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
         <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+        <input type="hidden" name="is_quantity" value="${is_quantity}"/>
         <input type="hidden" name="min_price" value="${min_price}"/>
         <input type="hidden" name="max_price" value="${max_price}"/>
         <input type="hidden" name="page_items" value="${page_items}"/>
         <input type="hidden" name="page_number" value="${page_number}"/>
     </form>
-
-    <c:if test="${page_items != '0'}">
-        <form method="get">
-            <div class="btn-group" align="right">
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
-                        <c:if test="${page_number == '1'}">disabled</c:if>>Previous
-                </button>
-                <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
-                    <c:if test="${(page_items * page_number) <= product_size}">
-                        ${page_items * page_number}
-                    </c:if>
-                    <c:if test="${(page_items * page_number) > product_size}">
-                        ${product_size}
-                    </c:if>
-                </button>
-                <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
-                        <c:if test="${page_number >= page_max}">disabled</c:if>>Next
-                </button>
-            </div>
-            <input type="hidden" name="search_value" value="${search_value}"/>
-            <input type="hidden" name="search_category" value="${search_category}"/>
-            <input type="hidden" name="search_comparing" value="${search_comparing}"/>
-            <input type="hidden" name="min_price" value="${min_price}"/>
-            <input type="hidden" name="max_price" value="${max_price}"/>
-            <input type="hidden" name="page_items" value="${page_items}"/>
-        </form>
-    </c:if>
 </div>
+
+<c:if test="${page_items != '0'}">
+    <c:if test="${not empty product_list}">
+        <div class="container" align="right">
+            <form method="get">
+                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
+                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
+                        <c:if test="${page_items <= product_list.size()}">
+                            ${page_items * page_number}
+                        </c:if>
+                        <c:if test="${page_items > product_list.size()}">
+                            ${page_items * (page_number - 1) + product_list.size()}
+                        </c:if>
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
+                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
+                    </button>
+                </div>
+                <input type="hidden" name="search_value" value="${search_value}"/>
+                <input type="hidden" name="category_tag" value="${category_tag}"/>
+                <input type="hidden" name="search_comparing" value="${search_comparing}"/>
+                <input type="hidden" name="is_quantity" value="${is_quantity}"/>
+                <input type="hidden" name="min_price" value="${min_price}"/>
+                <input type="hidden" name="max_price" value="${max_price}"/>
+                <input type="hidden" name="page_items" value="${page_items}"/>
+            </form>
+            <br>
+        </div>
+    </c:if>
+</c:if>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
+</html>

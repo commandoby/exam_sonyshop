@@ -20,38 +20,98 @@
     <div class="container" align="right">
         <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
-                Home page</button>
+                Home page
+            </button>
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
-                Basket (${sessionScope.order.getProductList().size()})</button>
+                Basket (${sessionScope.order.getProductList().size()})
+            </button>
             <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
-                Escape</button>
+                Escape
+            </button>
         </div>
     </div>
 </form>
 
-<form method="post">
+<form>
     <div class="container">
-        <input type="hidden" name="command" value="product"/>
-        <input type="hidden" name="product_name_out" value="product"/>
+        <input type="hidden" name="user_edit" value="${user_edit}"/>
         <div class="media">
             <img class="card-img p-3" style="width:320px;height: 320px"
                  src="${contextPath}/images/user.jpeg"
                  alt="Card image">
             <div class="media-body">
                 <br>
-                <h2><small>Name: </small>${sessionScope.user.getName()}</h2>
-                <h2><small>Surname: </small>${sessionScope.user.getSurname()}</h2>
-                <h2><small>Email: </small>${sessionScope.user.getEmail()}</h2>
-                <h2><small>Date of birth: </small>${sessionScope.user.getDateOfBirth()}</h2>
-                <h2><small>Balance: </small><b style="color: orangered">${sessionScope.user.getBalance()}</b></h2>
-                <button type="submit" class="btn btn-primary" disabled>Edit</button>
+                <c:if test="${empty user_edit}">
+                    <h2><small>Email: </small>${sessionScope.user.getEmail()}</h2>
+                    <h2><small>Name: </small>${sessionScope.user.getName()}</h2>
+                    <h2><small>Surname: </small>${sessionScope.user.getSurname()}</h2>
+                    <h2><small>Date of birth: </small>${sessionScope.user.getDateOfBirth()}</h2>
+                    <h2><small>Balance: </small><b style="color: orangered">${sessionScope.user.getBalance()}</b></h2>
+                    <button type="button" class="btn btn-primary" formmethod="get" style="display: inline"
+                            onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}&user_edit=edit'">
+                        Edit data
+                    </button>
+                    <button type="button" class="btn btn-primary" formmethod="get" style="display: inline"
+                            onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}&user_edit=password'">
+                        Edit password
+                    </button>
+                </c:if>
+                <c:if test="${user_edit == 'edit'}">
+                    <h2><small>Email: </small>${sessionScope.user.getEmail()}</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-control w-50" id="new_name"
+                               placeholder="Enter name" name="new_name"
+                               value="${sessionScope.user.getName()}" required>
+                        <div class="invalid-feedback">Please fill out name field</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control w-50" id="new_surname"
+                               placeholder="Enter surname" name="new_surname"
+                               value="${sessionScope.user.getSurname()}" required>
+                        <div class="invalid-feedback">Please fill out surname field</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control w-50" id="new_date_of_birth"
+                               placeholder="Enter date of birth" name="new_date_of_birth"
+                               value="${sessionScope.user.getDateOfBirth()}" required>
+                        <div class="invalid-feedback">Please fill out data field</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control w-50" id="password"
+                               placeholder="Enter password" name="old_password" required>
+                        <div class="invalid-feedback">Please fill out password field</div>
+                    </div>
+                    <p style="color: red">${info}</p>
+                    <button type="submit" class="btn btn-primary w-50" formmethod="post"
+                            formaction="/sonyshop/user?email=${sessionScope.user.getEmail()}">Save</button>
+                </c:if>
+                <c:if test="${user_edit == 'password'}">
+                    <h2><small>Email: </small>${sessionScope.user.getEmail()}</h2>
+                    <div class="form-group">
+                        <input type="password" class="form-control w-50" id="old_password"
+                               placeholder="Enter old password" name="old_password" required>
+                        <div class="invalid-feedback">Please fill out password field</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control w-50" id="new_password"
+                               placeholder="Enter new password" name="new_password" required>
+                        <div class="invalid-feedback">Please fill out password field</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control w-50" id="second_password"
+                               placeholder="Enter your password again" name="second_password" required>
+                        <div class="invalid-feedback">Please fill out password field</div>
+                    </div>
+                    <p style="color: red">${info}</p>
+                    <button type="submit" class="btn btn-primary w-50" formmethod="post"
+                            formaction="/sonyshop/user?email=${sessionScope.user.getEmail()}">Save</button>
+                </c:if>
             </div>
         </div>
     </div>
 </form>
 <% int id_order = 0; %>
 <form method="post">
-    <input type="hidden" name="command" value="product"/>
     <div class="container">
         <c:if test="${not empty sessionScope.user.getOrders()}">
             <h3>Purchases list</h3>
@@ -80,5 +140,23 @@
         </c:if>
     </div>
 </form>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 </body>
 </html>

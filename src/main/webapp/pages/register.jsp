@@ -27,7 +27,7 @@
                 <div class="invalid-feedback">Please fill out surname field</div>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control w-50" id="date_of_birth"
+                <input type="date" class="form-control w-50" id="date_of_birth"
                        placeholder="Enter date of birth" name="date_of_birth" value="${date_of_birth}" required>
                 <div class="invalid-feedback">Please fill out data field</div>
             </div>
@@ -46,11 +46,12 @@
                        placeholder="Enter your password again" name="second_password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
-            <button type="submit" class="btn btn-primary w-50" formaction="/sonyshop/signin">Register</button>
             <p style="color: red">${info}</p>
+            <button type="submit" class="btn btn-primary w-50" formaction="/sonyshop/signin">Register</button>
         </form>
     </div>
 </div>
+
 <script>
     (function () {
         'use strict';

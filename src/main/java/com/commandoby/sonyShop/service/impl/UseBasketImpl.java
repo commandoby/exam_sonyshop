@@ -1,15 +1,14 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.dao.domain.Order;
-import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.repository.domain.Order;
+import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.NoFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.UseBasket;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UseBasketImpl implements UseBasket {
+public class UseBasketImpl {
 
     private final ProductService productService;
 
@@ -17,7 +16,6 @@ public class UseBasketImpl implements UseBasket {
         this.productService = productService;
     }
 
-    @Override
     public Product addProductToBasket(Order order, int product_id) throws ServiceException {
         Product product = productService.read(product_id);
 
@@ -28,21 +26,31 @@ public class UseBasketImpl implements UseBasket {
         return product;
     }
 
-    @Override
-    public void removeProductWithOfBasket(Order order, int id) throws NoFoundException, ServiceException {
-        if (order.getProductList().get(id) != null) {
-            order.getProductList().remove(id);
+    public void removeProductWithOfBasketByNumber(Order order, int number) throws NoFoundException, ServiceException {
+        if (order.getProductList().get(number) != null) {
+            order.getProductList().remove(number);
             updateOrderPrice(order);
-        } else {
-            throw new NoFoundException("Will not find a product to remove by id: " + id);
+            return;
         }
+        throw new NoFoundException("Will not find a product to remove by number: " + number);
+    }
+
+    public void removeProductWithOfBasketById(Order order, int id) throws NoFoundException, ServiceException {
+        for (int i = 0; i < order.getProductList().size(); i++) {
+            if (order.getProductList().get(i).getId() == id) {
+                order.getProductList().remove(i);
+                updateOrderPrice(order);
+                return;
+            }
+        }
+        throw new NoFoundException("Will not find a product to remove by id: " + id);
     }
 
     private void updateOrderPrice(Order order) {
         order.setOrderPrice(order
                 .getProductList()
                 .stream()
-                .mapToInt(productOrder -> productOrder.getPrice())
+                .mapToInt(Product::getPrice)
                 .sum());
     }
 }
