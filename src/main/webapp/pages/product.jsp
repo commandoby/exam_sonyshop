@@ -16,19 +16,22 @@
 <c:set var="product" value="${product}"/>
 <h2 align="center">Product page</h2>
 
-<form method="post">
+<form method="get">
     <div class="container" align="right">
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-            <c:if test="${not empty sessionScope.user}">
-                <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
-                </button>
-                <button type="submit" class="btn btn-primary" name="command" value="user">
+            <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">Home page</button>
+            <c:if test="${not empty sessionScope.user.getEmail()}">
+                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
+                    Basket (${sessionScope.order.getProductList().size()})</button>
+                <button type="button" class="btn btn-primary"
+                        onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                         ${sessionScope.user.getEmail()}</button>
-                <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
+                <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
+                    Escape</button>
             </c:if>
-            <c:if test="${empty sessionScope.user}">
-                <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
+            <c:if test="${empty sessionScope.user.getEmail()}">
+                <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
+                    Sign in</button>
             </c:if>
         </div>
     </div>
@@ -36,8 +39,7 @@
 
 <form method="post">
     <div class="container">
-        <input type="hidden" name="command" value="product"/>
-        <input type="hidden" name="product_name_out" value="product"/>
+        <input type="hidden" name="product_id" value="product.getId()"/>
         <div class="media">
             <img class="card-img p-3" style="max-width:400px;max-height: 640px"
                  src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
@@ -47,10 +49,9 @@
                 <p class="card-text">${product.getDescription()}</p>
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
-                <c:if test="${not empty sessionScope.user}">
-                    <button type="submit" class="btn btn-primary" name="product_name"
-                            value="${product.getName()}">Add to basket
-                    </button>
+                <c:if test="${not empty sessionScope.user.getEmail()}">
+                    <button type="submit" class="btn btn-primary" name="product_id"
+                            value="${product.getId()}">Add to basket</button>
                 </c:if>
             </div>
         </div>

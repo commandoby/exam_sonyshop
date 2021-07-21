@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.controllers.enums;
+package com.commandoby.sonyShop.enums;
 
 public enum RequestParamEnum {
     INFO("info"),
@@ -14,6 +14,7 @@ public enum RequestParamEnum {
     CATEGORY_NAME("category_name"),
     CATEGORY_TAG("category_tag"),
     PRODUCT("product"),
+    PRODUCT_ID("product_id"),
     PRODUCT_LIST("product_list"),
     PRODUCT_SIZE("product_size"),
     PRODUCT_NAME("product_name"),
@@ -23,12 +24,12 @@ public enum RequestParamEnum {
     BASKET_PRICE("basket_price"),
     REMOVE_PRODUCT_ID("remove_id"),
     SEARCH_VALUE("search_value"),
-    SEARCH_CATEGORY("search_category"),
     SEARCH_COMPARING("search_comparing"),
     MIN_PRICE("min_price"),
     MAX_PRICE("max_price"),
     PAGE_ITEMS("page_items"),
-    PAGE_NUMBER("page_number");
+    PAGE_NUMBER("page_number"),
+    PAGE_MAX("page_max");
 
     private final String value;
 

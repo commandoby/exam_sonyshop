@@ -1,12 +1,15 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "products")
-public class Product extends BaseEntity implements ShopObject {
+@Component
+public class Product extends BaseEntity {
     private String name;
     private String imageName;
     private String description;

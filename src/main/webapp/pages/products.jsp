@@ -15,44 +15,46 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h2 align="center">List products category: ${category_name}</h2>
 
-<form method="post">
+<form method="get">
     <input type="hidden" name="category_tag" value="${category_tag}"/>
     <div class="container">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit" class="btn btn-primary" name="command" value="product_list">Search</button>
+                    <button type="submit" class="btn btn-primary" formaction="/sonyshop/search">Search</button>
             </div>
-                <input type="text" class="form-control" id="search_value" placeholder="Enter text"
-                       name="search_value" value="${search}">
+            <input type="text" class="form-control" placeholder="Enter text"
+                   name="search_value" value="${search_value}">
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary" name="command" value="search">
-                    Advanced Search
+                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
+                    Home page
                 </button>
-                <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-                <c:if test="${not empty sessionScope.user}">
-                    <button type="submit" class="btn btn-primary" name="command" value="basket">
-                        Basket (${basket_size})
+                <c:if test="${not empty sessionScope.user.getEmail()}">
+                    <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
+                        Basket (${sessionScope.order.getProductList().size()})
                     </button>
-                    <button type="submit" class="btn btn-primary" name="command" value="user">
+                    <button type="button" class="btn btn-primary"
+                            onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                             ${sessionScope.user.getEmail()}</button>
-                    <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
+                    <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
+                        Escape
+                    </button>
                 </c:if>
-                <c:if test="${empty sessionScope.user}">
-                    <button type="submit" class="btn btn-success" name="command" value="sign-in">Sign in</button>
+                <c:if test="${empty sessionScope.user.getEmail()}">
+                    <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/signin'">
+                        Sign in
+                    </button>
                 </c:if>
             </div>
         </div>
     </div>
 </form>
 
-<div class="container">
-    <br>
-    <p>Found ${product_size} products.</p>
-    <c:if test="${not empty product_list}">
-        <c:forEach items="${product_list}" var="product">
-            <form method="post">
-                <input type="hidden" name="category_tag" value="${category_tag}"/>
-                <input type="hidden" name="product_name" value="${product.getName()}"/>
+<form>
+    <div class="container">
+        <br>
+        <p>Found ${product_list.size()} products.</p>
+        <c:if test="${not empty product_list}">
+            <c:forEach items="${product_list}" var="product">
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
                          src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
@@ -61,22 +63,22 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
-                        <button type="submit" class="btn btn-primary"
-                                name="command" value="product">
+                        <button type="button" class="btn btn-primary" formmethod="get"
+                                onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
-                        <c:if test="${not empty sessionScope.user}">
-                            <button type="submit" class="btn btn-primary"
-                                    name="command" value="product_list">
+                        <c:if test="${not empty sessionScope.user.getEmail()}">
+                            <button type="submit" class="btn btn-primary" formmethod="post"
+                                    name="product_id" value="${product.getId()}">
                                 Add to basket
                             </button>
                         </c:if>
                     </div>
                 </div>
-            </form>
-            <br>
-        </c:forEach>
-    </c:if>
-</div>
+                <br>
+            </c:forEach>
+        </c:if>
+    </div>
+</form>
 </body>
 </html>

@@ -18,17 +18,17 @@
         <form method="post" class="needs-validation" novalidate>
             <div class="form-group">
                 <input type="text" class="form-control w-50" id="name"
-                       placeholder="Enter name" name="name" required>
+                       placeholder="Enter name" name="name" value="${name}" required>
                 <div class="invalid-feedback">Please fill out name field</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control w-50" id="surname"
-                       placeholder="Enter surname" name="surname" required>
+                       placeholder="Enter surname" name="surname" value="${surname}" required>
                 <div class="invalid-feedback">Please fill out surname field</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control w-50" id="date_of_birth"
-                       placeholder="Enter date of birth" name="date_of_birth" required>
+                       placeholder="Enter date of birth" name="date_of_birth" value="${date_of_birth}" required>
                 <div class="invalid-feedback">Please fill out data field</div>
             </div>
             <div class="form-group">
@@ -46,7 +46,7 @@
                        placeholder="Enter your password again" name="second_password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
             </div>
-            <button type="submit" class="btn btn-primary w-50" name="command" value="sign-in">Register</button>
+            <button type="submit" class="btn btn-primary w-50" formaction="/sonyshop/signin">Register</button>
             <p style="color: red">${info}</p>
         </form>
     </div>

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>User</title>
+    <title>${sessionScope.user.getEmail()}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -19,10 +19,12 @@
 <form method="post">
     <div class="container" align="right">
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary" name="command" value="home_page">Home page</button>
-            <button type="submit" class="btn btn-primary" name="command" value="basket">Basket (${basket_size})
-            </button>
-            <button type="submit" class="btn btn-danger" name="command" value="sign-in">Escape</button>
+            <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
+                Home page</button>
+            <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
+                Basket (${sessionScope.order.getProductList().size()})</button>
+            <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
+                Escape</button>
         </div>
     </div>
 </form>
@@ -37,11 +39,11 @@
                  alt="Card image">
             <div class="media-body">
                 <br>
-                <h2><small>Name: </small>${user.getName()}</h2>
-                <h2><small>Surname: </small>${user.getSurname()}</h2>
-                <h2><small>Email: </small>${user.getEmail()}</h2>
-                <h2><small>Date of birth: </small>${user.getDateOfBirth()}</h2>
-                <h2><small>Balance: </small><b style="color: orangered">${user.getBalance()}</b></h2>
+                <h2><small>Name: </small>${sessionScope.user.getName()}</h2>
+                <h2><small>Surname: </small>${sessionScope.user.getSurname()}</h2>
+                <h2><small>Email: </small>${sessionScope.user.getEmail()}</h2>
+                <h2><small>Date of birth: </small>${sessionScope.user.getDateOfBirth()}</h2>
+                <h2><small>Balance: </small><b style="color: orangered">${sessionScope.user.getBalance()}</b></h2>
                 <button type="submit" class="btn btn-primary" disabled>Edit</button>
             </div>
         </div>
@@ -51,16 +53,16 @@
 <form method="post">
     <input type="hidden" name="command" value="product"/>
     <div class="container">
-        <c:if test="${not empty user.getOrders()}">
+        <c:if test="${not empty sessionScope.user.getOrders()}">
             <h3>Purchases list</h3>
-            <c:forEach items="${user.getOrders()}" var="order">
+            <c:forEach items="${sessionScope.user.getOrders()}" var="order">
                 <div class="container p-3 my-3 border">
                     <h4>Order number <%=++id_order%>.
                         Order price: ${order.getOrderPrice()}.
                         Order date: ${order.getDate()}</h4>
                     <c:forEach items="${order.getProductList()}" var="product">
-                        <button type="submit" class="btn btn-light" style="width:340px;height:200px"
-                                name="product_name" value="${product.getName()}">
+                        <button type="button" class="btn btn-light" style="width:340px;height:200px"
+                                onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             <div class="media" style="word-break: break-word">
                                 <img class="card-img p-3" style="max-width:160px;max-height: 180px"
                                      src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"

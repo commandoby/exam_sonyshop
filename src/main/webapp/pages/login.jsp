@@ -22,20 +22,24 @@
                 <input type="text" class="form-control w-50" id="email"
                        placeholder="Enter email" name="email" value="${email}" required>
                 <div class="invalid-feedback">Please fill out email field</div>
+                <span class="error">${emailError}</span>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" class="form-control w-50" id="password"
                        placeholder="Enter password" name="password" required>
                 <div class="invalid-feedback">Please fill out password field</div>
+                <span class="error">${passwordError}</span>
             </div>
             <p style="color: red">${info}</p>
-            <button type="submit" class="btn btn-success w-50" name="command" value="home_page">Login</button>
+            <button type="submit" class="btn btn-success w-50" formaction="/sonyshop">Login</button>
         </form>
         <br>
-        <form method="post">
-            <button type="submit" class="btn btn-primary w-25" name="command" value="register">Register</button>
-            <button type="submit" class="btn btn-info w-25" name="command" value="home_page">Shop</button>
+        <form method="get">
+            <button type="button" class="btn btn-primary w-25" onclick="document.location='/sonyshop/new'">
+                Register</button>
+            <button type="button" class="btn btn-info w-25" onclick="document.location='/sonyshop'">
+                Shop</button>
         </form>
     </div>
 </div>

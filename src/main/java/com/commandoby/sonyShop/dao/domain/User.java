@@ -1,19 +1,36 @@
 package com.commandoby.sonyShop.dao.domain;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@Component
 public class User extends BaseEntity {
+
     private String name;
+
     private String surname;
+
+    @NotEmpty(message = "Email/login must not be empty")
+    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String email;
+
+    @Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
+    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String password;
+
     private String dateOfBirth;
+
     private int balance;
+
     private List<Order> orders = new ArrayList<>();
 
     public User() {}
@@ -28,7 +45,6 @@ public class User extends BaseEntity {
     }
 
     public User(Builder builder) {
-        id = builder.id;
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -136,7 +152,6 @@ public class User extends BaseEntity {
     }
 
     public static final class Builder {
-        private int id;
         private String name;
         private String surname;
         private String email;
@@ -145,11 +160,6 @@ public class User extends BaseEntity {
         private int balance;
 
         private Builder() {}
-
-        public Builder withId(int id) {
-            this.id = id;
-            return this;
-        }
 
         public Builder withName(String name) {
             this.name = name;

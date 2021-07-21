@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.controllers.enums;
+package com.commandoby.sonyShop.enums;
 
 public enum CommandsEnum {
     SIGN_IN_COMMAND("sign-in"),

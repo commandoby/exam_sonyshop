@@ -1,23 +1,33 @@
 package com.commandoby.sonyShop.controllers.search;
 
 import com.commandoby.sonyShop.dao.domain.Product;
+import com.commandoby.sonyShop.dao.impl.ProductDaoImpl;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.ProductServiceImpl;
+import com.commandoby.sonyShop.utills.DataSourceHolder;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
+@Component
 public class AdvancedSearch {
-    private ProductService productService = new ProductServiceImpl();
-    private Logger log = Logger.getLogger(getClass());
+
+    private final Logger log = Logger.getLogger(getClass());
     private final Map<String, Comparator> SORT_MAP = new HashMap<>();
+    private final ProductService productService;
+
+    public AdvancedSearch(ProductService productService) {
+        this.productService = productService;
+    }
 
     {
-        SORT_MAP.put("Price +", Comparator.comparingInt(Product::getPrice));
-        SORT_MAP.put("Price -", Comparator.comparingInt(Product::getPrice).reversed());
-        SORT_MAP.put("Name +", Comparator.comparing(Product::getName));
-        SORT_MAP.put("Name -", Comparator.comparing(Product::getName).reversed());
+        SORT_MAP.put("Price+", Comparator.comparingInt(Product::getPrice));
+        SORT_MAP.put("Price-", Comparator.comparingInt(Product::getPrice).reversed());
+        SORT_MAP.put("Name+", Comparator.comparing(Product::getName));
+        SORT_MAP.put("Name-", Comparator.comparing(Product::getName).reversed());
     }
 
     public List<Product> search(String text, Integer minPrice, Integer maxPrice,
