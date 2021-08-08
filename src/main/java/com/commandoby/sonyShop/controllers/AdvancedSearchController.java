@@ -5,9 +5,8 @@ import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
+import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.impl.CategoryMethodsImpl;
-import com.commandoby.sonyShop.service.impl.ProductMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,15 +25,13 @@ public class AdvancedSearchController {
 
     private final ProductService productService;
     private final UseBasketImpl useBasketImpl;
-    private final CategoryMethodsImpl categoryMethods;
-    private final ProductMethodsImpl productMethods;
+    private final CategoryService categoryService;
 
     public AdvancedSearchController(ProductService productService, UseBasketImpl useBasketImpl,
-                                    CategoryMethodsImpl categoryMethods, ProductMethodsImpl productMethods) {
+                                    CategoryService categoryService) {
         this.productService = productService;
         this.useBasketImpl = useBasketImpl;
-        this.categoryMethods = categoryMethods;
-        this.productMethods = productMethods;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/search")
@@ -49,7 +46,6 @@ public class AdvancedSearchController {
                                           @RequestParam(required = false) Integer page_number,
                                           @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Category category = categoryMethods.getCategory(category_tag);
         List<Product> products = new ArrayList<>();
 
         if (product_id != null) useBasketImpl.addProductToBasket(order, product_id);
@@ -68,18 +64,21 @@ public class AdvancedSearchController {
             modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
         }
 
-        productMethods.prePagination(modelMap, products, page_items, page_number);
+        productService.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(SEARCH_COMPARING.getValue(), search_comparing);
         modelMap.addAttribute(IS_QUANTITY.getValue(), is_quantity);
-        modelMap.addAttribute(CATEGORIES.getValue(), categoryMethods.getCategories());
+        modelMap.addAttribute(CATEGORIES.getValue(), categoryService.getCategories());
         modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         modelMap.addAttribute(MIN_PRICE.getValue(), min_price);
         modelMap.addAttribute(MAX_PRICE.getValue(), max_price);
         modelMap.addAttribute(PRODUCT_SIZE.getValue(), products.size());
-        if (category != null) modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
+        if (!category_tag.equals("")) {
+            Category category = categoryService.getCategoryByTag(category_tag);
+            modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
+        }
 
         return new ModelAndView(PagesPathEnum.ADVANCED_SEARCH.getPath(), modelMap);
     }

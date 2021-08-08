@@ -5,7 +5,6 @@ import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.repository.domain.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
-import com.commandoby.sonyShop.service.impl.UserValidateImpl;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,11 +24,9 @@ public class UserController {
 
     private final Logger log = Logger.getLogger(getClass());
     private final UserService userService;
-    private final UserValidateImpl userValidate;
 
-    public UserController(UserService userService, UserValidateImpl userValidate) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userValidate = userValidate;
     }
 
     @GetMapping("/signin")
@@ -53,11 +50,11 @@ public class UserController {
                 modelMap.addAttribute(INFO.getValue(), "Password mismatch.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
-            if (userValidate.duplicateCheck(email)) {
+            if (userService.duplicateCheck(email)) {
                 modelMap.addAttribute(INFO.getValue(), "User exists.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
-            if (!userValidate.validateLocalData(date_of_birth)) {
+            if (!userService.validateLocalData(date_of_birth)) {
                 modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
@@ -122,7 +119,7 @@ public class UserController {
 
         if (user_edit.equals("edit")) {
             modelMap.addAttribute(USER_EDIT.getValue(), "edit");
-            if (!userValidate.validateLocalData(new_date_of_birth)) {
+            if (!userService.validateLocalData(new_date_of_birth)) {
                 modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
                 return new ModelAndView(USER_PAGE.getPath(), modelMap);
             }

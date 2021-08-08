@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface CategoryService extends BaseService<Category>{
 
-    List<Category> getAllCategories() throws ServiceException;
+    List<Category> getCategories() throws ServiceException;
 
-    List<Category> gelAllCategorySortByRating() throws ServiceException;
+    List<Category> getCategoriesSortByRating() throws ServiceException;
 
     Category getCategoryByTag(String tag) throws ServiceException;
+
+    Category getCategoryForProducts(String categoryTag) throws ServiceException;
 }

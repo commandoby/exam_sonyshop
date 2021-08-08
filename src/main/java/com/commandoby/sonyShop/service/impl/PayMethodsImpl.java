@@ -1,6 +1,6 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.exceptions.NoFoundException;
+import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.Product;
@@ -92,7 +92,7 @@ public class PayMethodsImpl {
         } else {
             try {
                 useBasket.removeProductWithOfBasketById(order, product.getId());
-            } catch (NoFoundException | ServiceException e) {
+            } catch (NotFoundException | ServiceException e) {
                 throw new ServiceException("Error deleting a product from the cart from the ID: "
                         + product.getId() + ".", e);
             }
@@ -114,7 +114,7 @@ public class PayMethodsImpl {
                 for (int i = 0; i < doubleProduct.size(); i++) {
                     useBasket.removeProductWithOfBasketById(order, product.getId());
                 }
-            } catch (NoFoundException | ServiceException e) {
+            } catch (NotFoundException | ServiceException e) {
                 throw new ServiceException("Error removing duplicate product from cart from id: "
                         + product.getId() + ".", e);
             }

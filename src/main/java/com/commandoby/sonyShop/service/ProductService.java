@@ -3,6 +3,7 @@ package com.commandoby.sonyShop.service;
 import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface ProductService extends BaseService<Product> {
 
     List<Product> getSearchProductsByParams(String searchValue, String categoryTag, String searchComparing,
                                             String isQuantity, Integer minPrice, Integer maxPrice) throws ServiceException;
+
+
+    void prePagination(ModelMap modelMap, List<Product> products,
+                              Integer pageItems, Integer pageNumber) throws ServiceException;
 }

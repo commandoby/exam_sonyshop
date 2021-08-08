@@ -4,13 +4,16 @@ import com.commandoby.sonyShop.repository.CategoryRepository;
 import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private final Logger log = Logger.getLogger(getClass());
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -41,17 +44,35 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() throws ServiceException {
-        return categoryRepository.findAll();
+    public List<Category> getCategories() throws ServiceException {
+        Optional<List<Category>> categories = Optional.of(categoryRepository.findAll());
+        return categories.orElseThrow(() ->
+                new ServiceException("Error getting a list of all categories.", new Exception()));
     }
 
     @Override
-    public List<Category> gelAllCategorySortByRating() throws ServiceException {
-        return categoryRepository.gelAllCategorySortByRating();
+    public List<Category> getCategoriesSortByRating() throws ServiceException {
+        Optional<List<Category>> categories = Optional.of(categoryRepository.gelAllCategorySortByRating());
+        return categories.orElseThrow(() ->
+                new ServiceException("Error getting categories sort by rating.", new Exception()));
     }
 
     @Override
     public Category getCategoryByTag(String tag) throws ServiceException {
-        return categoryRepository.findCategoryByTag(tag);
+        Optional<Category> categories = Optional.of(categoryRepository.findCategoryByTag(tag));
+        return categories.orElseThrow(() ->
+                new ServiceException("Error retrieving category by tag: " + tag + ".", new Exception()));
+    }
+
+    @Override
+    public Category getCategoryForProducts(String categoryTag) throws ServiceException {
+        Category category = getCategoryByTag(categoryTag);
+        category.setRating(category.getRating() + 1);
+        try {
+            update(category);
+        } catch (ServiceException e) {
+            log.error("Category rating update failed.", e);
+        }
+        return category;
     }
 }

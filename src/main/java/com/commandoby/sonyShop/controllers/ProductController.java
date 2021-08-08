@@ -5,8 +5,8 @@ import com.commandoby.sonyShop.repository.domain.Category;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
-import com.commandoby.sonyShop.service.impl.CategoryMethodsImpl;
-import com.commandoby.sonyShop.service.impl.ProductMethodsImpl;
+import com.commandoby.sonyShop.service.CategoryService;
+import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,14 +23,14 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 public class ProductController {
 
     private final UseBasketImpl useBasketImpl;
-    private final CategoryMethodsImpl categoryMethods;
-    private final ProductMethodsImpl productMethods;
+    private final CategoryService categoryService;
+    private final ProductService productService;
 
-    public ProductController(UseBasketImpl useBasket, CategoryMethodsImpl categoryMethods,
-                             ProductMethodsImpl productMethods) {
+    public ProductController(UseBasketImpl useBasket, CategoryService categoryService,
+                             ProductService productService) {
         this.useBasketImpl = useBasket;
-        this.categoryMethods = categoryMethods;
-        this.productMethods = productMethods;
+        this.categoryService = categoryService;
+        this.productService = productService;
     }
 
     @GetMapping("/products")
@@ -38,12 +38,12 @@ public class ProductController {
                                               @RequestParam(required = false) Integer page_items,
                                               @RequestParam(required = false) Integer page_number) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Category category = categoryMethods.getCategoryForProducts(category_tag);
-        List<Product> products = productMethods.getProductsByCategoryAndQuantityNotNull(category);
+        Category category = categoryService.getCategoryForProducts(category_tag);
+        List<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category);
 
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
-        productMethods.prePagination(modelMap, products, page_items, page_number);
+        productService.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
@@ -54,7 +54,7 @@ public class ProductController {
     @GetMapping("/product")
     public ModelAndView getProduct(@RequestParam int product_id) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Product product = productMethods.getProductById(product_id);
+        Product product = productService.read(product_id);
 
         modelMap.addAttribute(PRODUCT.getValue(), product);
         return new ModelAndView(PagesPathEnum.PRODUCT_PAGE.getPath(), modelMap);
@@ -67,13 +67,13 @@ public class ProductController {
                                     @RequestParam(required = false) Integer page_number,
                                     @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Category category = categoryMethods.getCategory(category_tag);
-        List<Product> products = productMethods.getProductsByCategoryAndQuantityNotNull(category);
+        Category category = categoryService.getCategoryByTag(category_tag);
+        List<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category);
 
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
         useBasketImpl.addProductToBasket(order, product_id);
-        productMethods.prePagination(modelMap, products, page_items, page_number);
+        productService.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(ORDER.getValue(), order);

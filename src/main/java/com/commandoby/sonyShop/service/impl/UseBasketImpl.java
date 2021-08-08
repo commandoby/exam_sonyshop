@@ -2,7 +2,7 @@ package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.Product;
-import com.commandoby.sonyShop.exceptions.NoFoundException;
+import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 import org.springframework.stereotype.Service;
@@ -26,16 +26,16 @@ public class UseBasketImpl {
         return product;
     }
 
-    public void removeProductWithOfBasketByNumber(Order order, int number) throws NoFoundException, ServiceException {
+    public void removeProductWithOfBasketByNumber(Order order, int number) throws NotFoundException, ServiceException {
         if (order.getProductList().get(number) != null) {
             order.getProductList().remove(number);
             updateOrderPrice(order);
             return;
         }
-        throw new NoFoundException("Will not find a product to remove by number: " + number);
+        throw new NotFoundException("Will not find a product to remove by number: " + number);
     }
 
-    public void removeProductWithOfBasketById(Order order, int id) throws NoFoundException, ServiceException {
+    public void removeProductWithOfBasketById(Order order, int id) throws NotFoundException, ServiceException {
         for (int i = 0; i < order.getProductList().size(); i++) {
             if (order.getProductList().get(i).getId() == id) {
                 order.getProductList().remove(i);
@@ -43,7 +43,7 @@ public class UseBasketImpl {
                 return;
             }
         }
-        throw new NoFoundException("Will not find a product to remove by id: " + id);
+        throw new NotFoundException("Will not find a product to remove by id: " + id);
     }
 
     private void updateOrderPrice(Order order) {

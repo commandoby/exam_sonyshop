@@ -4,7 +4,7 @@ import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.repository.domain.Order;
 import com.commandoby.sonyShop.repository.domain.User;
-import com.commandoby.sonyShop.exceptions.NoFoundException;
+import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.impl.PayMethodsImpl;
 import com.commandoby.sonyShop.service.impl.UseBasketImpl;
@@ -44,7 +44,7 @@ public class OrderController {
         if (order == null) order = new Order();
         try {
             useBasket.removeProductWithOfBasketByNumber(order, id);
-        } catch (NoFoundException | ServiceException e) {
+        } catch (NotFoundException | ServiceException e) {
             log.error(e);
         }
 
