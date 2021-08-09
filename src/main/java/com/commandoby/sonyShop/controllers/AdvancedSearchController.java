@@ -1,9 +1,9 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.repository.domain.Category;
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.Product;
+import com.commandoby.sonyShop.components.Category;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;
@@ -13,8 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
@@ -48,35 +47,43 @@ public class AdvancedSearchController {
         ModelMap modelMap = new ModelMap();
         List<Product> products = new ArrayList<>();
 
+        Map<String, Optional<String>> paramsStringMap = new HashMap<>();
+        paramsStringMap.put(SEARCH_VALUE.getValue(), Optional.ofNullable(search_value));
+        paramsStringMap.put(CATEGORY_TAG.getValue(), Optional.ofNullable(category_tag));
+        paramsStringMap.put(SEARCH_COMPARING.getValue(), Optional.ofNullable(search_comparing));
+        paramsStringMap.put(IS_QUANTITY.getValue(), Optional.ofNullable(is_quantity));
+        productService.defaultParamsStringMap(paramsStringMap);
+
+        Map<String, Optional<Integer>> paramsIntegerMap = new HashMap<>();
+        paramsIntegerMap.put(MIN_PRICE.getValue(), Optional.ofNullable(min_price));
+        paramsIntegerMap.put(MAX_PRICE.getValue(), Optional.ofNullable(max_price));
+        paramsIntegerMap.put(PAGE_ITEMS.getValue(), Optional.ofNullable(page_items));
+        paramsIntegerMap.put(PAGE_NUMBER.getValue(), Optional.ofNullable(page_number));
+        productService.defaultParamsIntegerMap(paramsIntegerMap);
+
         if (product_id != null) useBasketImpl.addProductToBasket(order, product_id);
 
-        if (search_value == null) search_value = "";
-        if (category_tag == null) category_tag = "";
-        if (search_comparing == null || search_comparing.equals("")) search_comparing = "Price+";
-        if (is_quantity == null) is_quantity = "";
-        if (page_items == null) page_items = 0;
-        if (page_number == null) page_number = 1;
-        if (min_price != null && max_price != null && max_price < min_price) max_price = min_price;
         if (!search_value.equals("") || min_price != null || max_price != null) {
-            products = productService.getSearchProductsByParams(search_value, category_tag, search_comparing,
-                    is_quantity, min_price, max_price);
+            products = productService.getSearchProductsByParams(paramsStringMap, paramsIntegerMap);
         } else {
             modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
         }
 
-        productService.prePagination(modelMap, products, page_items, page_number);
+        productService.prePagination(modelMap, products,
+                paramsIntegerMap.get(PAGE_ITEMS.getValue()).get(),
+                paramsIntegerMap.get(PAGE_NUMBER.getValue()).get());
 
-        modelMap.addAttribute(SEARCH_VALUE.getValue(), search_value);
-        modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
-        modelMap.addAttribute(SEARCH_COMPARING.getValue(), search_comparing);
-        modelMap.addAttribute(IS_QUANTITY.getValue(), is_quantity);
+        modelMap.addAttribute(SEARCH_VALUE.getValue(), paramsStringMap.get(SEARCH_VALUE.getValue()).get());
+        modelMap.addAttribute(CATEGORY_TAG.getValue(), paramsStringMap.get(CATEGORY_TAG.getValue()).get());
+        modelMap.addAttribute(SEARCH_COMPARING.getValue(), paramsStringMap.get(SEARCH_COMPARING.getValue()).get());
+        modelMap.addAttribute(IS_QUANTITY.getValue(), paramsStringMap.get(IS_QUANTITY.getValue()).get());
         modelMap.addAttribute(CATEGORIES.getValue(), categoryService.getCategories());
-        modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
-        modelMap.addAttribute(MIN_PRICE.getValue(), min_price);
-        modelMap.addAttribute(MAX_PRICE.getValue(), max_price);
+        modelMap.addAttribute(PAGE_ITEMS.getValue(), paramsIntegerMap.get(PAGE_ITEMS.getValue()).get());
+        modelMap.addAttribute(MIN_PRICE.getValue(), paramsIntegerMap.get(MIN_PRICE.getValue()).orElse(null));
+        modelMap.addAttribute(MAX_PRICE.getValue(), paramsIntegerMap.get(MAX_PRICE.getValue()).orElse(null));
         modelMap.addAttribute(PRODUCT_SIZE.getValue(), products.size());
-        if (!category_tag.equals("")) {
-            Category category = categoryService.getCategoryByTag(category_tag);
+        if (!paramsStringMap.get(CATEGORY_TAG.getValue()).get().equals("")) {
+            Category category = categoryService.getCategoryByTag(paramsStringMap.get(CATEGORY_TAG.getValue()).get());
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         }
 

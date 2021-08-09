@@ -1,9 +1,9 @@
 package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
-import com.commandoby.sonyShop.repository.domain.Category;
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.Product;
+import com.commandoby.sonyShop.components.Category;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.service.CategoryService;
 import com.commandoby.sonyShop.service.ProductService;

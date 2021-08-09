@@ -1,8 +1,8 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.repository.OrderRepository;
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
 import org.springframework.stereotype.Service;

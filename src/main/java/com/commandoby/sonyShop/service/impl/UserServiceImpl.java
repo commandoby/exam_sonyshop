@@ -1,7 +1,7 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.repository.UserRepository;
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.log4j.Logger;

@@ -1,7 +1,7 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.repository.CategoryRepository;
-import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import org.apache.log4j.Logger;
@@ -45,21 +45,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getCategories() throws ServiceException {
-        Optional<List<Category>> categories = Optional.of(categoryRepository.findAll());
+        Optional<List<Category>> categories = Optional.ofNullable(categoryRepository.findAll());
         return categories.orElseThrow(() ->
                 new ServiceException("Error getting a list of all categories.", new Exception()));
     }
 
     @Override
     public List<Category> getCategoriesSortByRating() throws ServiceException {
-        Optional<List<Category>> categories = Optional.of(categoryRepository.gelAllCategorySortByRating());
+        Optional<List<Category>> categories = Optional.ofNullable(categoryRepository.gelAllCategorySortByRating());
         return categories.orElseThrow(() ->
                 new ServiceException("Error getting categories sort by rating.", new Exception()));
     }
 
     @Override
     public Category getCategoryByTag(String tag) throws ServiceException {
-        Optional<Category> categories = Optional.of(categoryRepository.findCategoryByTag(tag));
+        Optional<Category> categories = Optional.ofNullable(categoryRepository.findCategoryByTag(tag));
         return categories.orElseThrow(() ->
                 new ServiceException("Error retrieving category by tag: " + tag + ".", new Exception()));
     }

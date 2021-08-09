@@ -1,6 +1,6 @@
 package com.commandoby.sonyShop.service;
 
-import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 
 import java.util.List;

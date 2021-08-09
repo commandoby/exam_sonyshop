@@ -2,8 +2,8 @@ package com.commandoby.sonyShop.controllers;
 
 import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ControllerException;
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.impl.PayMethodsImpl;

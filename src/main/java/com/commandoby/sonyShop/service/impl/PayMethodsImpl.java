@@ -2,9 +2,9 @@ package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.Product;
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.Product;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
 import com.commandoby.sonyShop.service.UserService;

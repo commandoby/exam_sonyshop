@@ -1,6 +1,6 @@
 package com.commandoby.sonyShop.service;
 
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;

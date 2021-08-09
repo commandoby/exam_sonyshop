@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.repository.domain;
+package com.commandoby.sonyShop.components;
 
 import org.hibernate.annotations.Cascade;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.commandoby.sonyShop.service;
 
-import com.commandoby.sonyShop.repository.domain.Order;
-import com.commandoby.sonyShop.repository.domain.User;
+import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 
 import java.util.List;
