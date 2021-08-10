@@ -19,16 +19,14 @@ public interface ProductService extends BaseService<Product> {
 
     List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException;
 
-    List<Product> getSearchProductsByParams(Map<String, Optional<String>> paramsStringMap,
-                                            Map<String, Optional<Integer>> paramsIntegerMap) throws ServiceException;
+    List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
+                                            Map<String, Integer> paramsIntegerMap) throws ServiceException;
 
 
     void prePagination(ModelMap modelMap, List<Product> products,
                               Integer pageItems, Integer pageNumber) throws ServiceException;
 
-    Map<String, Optional<String>> defaultParamsStringMap(
-            Map<String, Optional<String>> paramsStringMap) throws ServiceException;
+    Map<String, String> defaultParamsStringMap(Map<String, String> paramsStringMap) throws ServiceException;
 
-    Map<String, Optional<Integer>> defaultParamsIntegerMap(
-            Map<String, Optional<Integer>> paramsIntegerMap) throws ServiceException;
+    Map<String, Integer> defaultParamsIntegerMap(Map<String, Integer> paramsIntegerMap) throws ServiceException;
 }

@@ -20,8 +20,8 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
     public EntityManager entityManager;
 
     @Override
-    public List<Product> searchProductsByParams(Map<String, Optional<String>> paramsStringMap,
-                                                Map<String, Optional<Integer>> paramsIntegerMap) throws RepositoryException {
+    public List<Product> searchProductsByParams(Map<String, String> paramsStringMap,
+                                                Map<String, Integer> paramsIntegerMap) throws RepositoryException {
         List<Product> products = null;
         List<Predicate> predicates = new ArrayList<>();
         Map<String, Order> orderMap = new HashMap<>();
@@ -35,34 +35,34 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
         orderMap.put("Name+", builder.asc(root.get("name")));
         orderMap.put("Name-", builder.desc(root.get("name")));
 
-        if (paramsStringMap.get(SEARCH_VALUE.getValue()).isPresent()) {
+        if (paramsStringMap.get(SEARCH_VALUE.getValue()) != null
+                && !paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")) {
             predicates.add(builder.or(
-                    builder.like(root.get("name"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()).get() + "%"),
-                    builder.like(root.get("description"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()).get() + "%")));
+                    builder.like(root.get("name"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%"),
+                    builder.like(root.get("description"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%")));
         }
 
-        if (paramsStringMap.get(CATEGORY_TAG.getValue()).isPresent()
-                && !paramsStringMap.get(CATEGORY_TAG.getValue()).get().equals("")) {
+        if (paramsStringMap.get(CATEGORY_TAG.getValue()) != null
+                && !paramsStringMap.get(CATEGORY_TAG.getValue()).equals("")) {
             Join<Product, Category> categoryJoin = root.join("category");
-            predicates.add(builder.equal(categoryJoin.get("tag"), paramsStringMap.get(CATEGORY_TAG.getValue()).get()));
+            predicates.add(builder.equal(categoryJoin.get("tag"), paramsStringMap.get(CATEGORY_TAG.getValue())));
         }
 
-        if (paramsStringMap.get(IS_QUANTITY.getValue()).isPresent()
-                && !paramsStringMap.get(IS_QUANTITY.getValue()).get().equals("on")) {
+        if (!paramsStringMap.get(IS_QUANTITY.getValue()).equals("on")) {
             predicates.add(builder.notEqual(root.get("quantity"), 0));
         }
 
-        if (paramsIntegerMap.get(MIN_PRICE.getValue()).isPresent()) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MIN_PRICE.getValue()).get()));
+        if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MIN_PRICE.getValue())));
         }
 
-        if (paramsIntegerMap.get(MAX_PRICE.getValue()).isPresent()) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MAX_PRICE.getValue()).get()));
+        if (paramsIntegerMap.get(MAX_PRICE.getValue()) != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MAX_PRICE.getValue())));
         }
 
-        if (paramsStringMap.get(SEARCH_COMPARING.getValue()).isPresent()) {
+        if (paramsStringMap.get(SEARCH_COMPARING.getValue()) != null) {
             criteria.select(root).where(predicates.toArray(new Predicate[]{}))
-                    .orderBy(orderMap.get(paramsStringMap.get(SEARCH_COMPARING.getValue()).get()));
+                    .orderBy(orderMap.get(paramsStringMap.get(SEARCH_COMPARING.getValue())));
             products = entityManager.createQuery(criteria).getResultList();
         }
 

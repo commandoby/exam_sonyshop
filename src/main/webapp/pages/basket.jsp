@@ -56,7 +56,7 @@
                         <p class="card-text">${product.getDescription()}</p>
                         <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
-                                onclick="document.location='/sonyshop/product?id=${product.getId()}'">
+                                onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
                         <button type="submit" class="btn btn-primary" formmethod="post"

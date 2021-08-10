@@ -6,8 +6,8 @@ import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.service.CategoryService;
+import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
-import com.commandoby.sonyShop.service.impl.UseBasketImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +22,15 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes("order")
 public class ProductController {
 
-    private final UseBasketImpl useBasketImpl;
     private final CategoryService categoryService;
     private final ProductService productService;
+    private final OrderService orderService;
 
-    public ProductController(UseBasketImpl useBasket, CategoryService categoryService,
-                             ProductService productService) {
-        this.useBasketImpl = useBasket;
+    public ProductController(CategoryService categoryService,
+                             ProductService productService, OrderService orderService) {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/products")
@@ -72,7 +72,7 @@ public class ProductController {
 
         if (page_items == null) page_items = 0;
         if (page_number == null) page_number = 1;
-        useBasketImpl.addProductToBasket(order, product_id);
+        orderService.addProductToBasket(order, product_id);
         productService.prePagination(modelMap, products, page_items, page_number);
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
@@ -86,7 +86,7 @@ public class ProductController {
     public ModelAndView addProduct(@RequestParam int product_id,
                                    @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
-        Product product = useBasketImpl.addProductToBasket(order, product_id);
+        Product product = orderService.addProductToBasket(order, product_id);
 
         modelMap.addAttribute(ORDER.getValue(), order);
         modelMap.addAttribute(PRODUCT.getValue(), product);

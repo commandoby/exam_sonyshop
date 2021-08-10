@@ -6,8 +6,8 @@ import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
-import com.commandoby.sonyShop.service.impl.PayMethodsImpl;
-import com.commandoby.sonyShop.service.impl.UseBasketImpl;
+import com.commandoby.sonyShop.service.OrderService;
+import com.commandoby.sonyShop.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +20,12 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class OrderController {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private final UseBasketImpl useBasket;
-    private final PayMethodsImpl payMethods;
+    private final UserService userService;
+    private final OrderService orderService;
 
-    public OrderController(UseBasketImpl useBasket, PayMethodsImpl payMethods) {
-        this.useBasket = useBasket;
-        this.payMethods = payMethods;
+    public OrderController(UserService userService, OrderService orderService) {
+        this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/basket")
@@ -43,7 +43,7 @@ public class OrderController {
         ModelMap modelMap = new ModelMap();
         if (order == null) order = new Order();
         try {
-            useBasket.removeProductWithOfBasketByNumber(order, id);
+            orderService.removeProductWithOfBasketByNumber(order, id);
         } catch (NotFoundException | ServiceException e) {
             log.error(e);
         }
@@ -60,8 +60,8 @@ public class OrderController {
 
         if (order.getProductList().size() != 0 && user != null) {
             try {
-                payMethods.orderPayMethod(user, order);
-                payMethods.userPayMethod(user, order);
+                orderService.orderPayMethod(user, order);
+                userService.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
                 log.info("Purchased " + order.getProductList().size() + " products.");
             } catch (ServiceException e) {

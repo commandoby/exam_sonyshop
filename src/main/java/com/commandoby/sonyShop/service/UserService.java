@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.service;
 
+import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import org.springframework.validation.BindingResult;
@@ -14,8 +15,9 @@ public interface UserService extends BaseService<User> {
     List<User> findUsersByEmailLike(String email) throws ServiceException;
 
 
-    boolean validateUser(ModelAndView modelAndView, BindingResult bindingResult,
-                         User user) throws ServiceException;
+    void userPayMethod(User user, Order order) throws ServiceException;
+
+    boolean validateUser(ModelAndView modelAndView, BindingResult bindingResult, User user) throws ServiceException;
 
     boolean duplicateCheck(String email);
 

@@ -8,6 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface SearchProductsRepository {
-    List<Product> searchProductsByParams(Map<String, Optional<String>> paramsStringMap,
-                                         Map<String, Optional<Integer>> paramsIntegerMap) throws RepositoryException;
+    List<Product> searchProductsByParams(Map<String, String> paramsStringMap,
+                                         Map<String, Integer> paramsIntegerMap) throws RepositoryException;
 }

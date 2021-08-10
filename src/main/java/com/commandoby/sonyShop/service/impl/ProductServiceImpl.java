@@ -86,8 +86,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getSearchProductsByParams(Map<String, Optional<String>> paramsStringMap,
-                                                   Map<String, Optional<Integer>> paramsIntegerMap) throws ServiceException {
+    public List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
+                                                   Map<String, Integer> paramsIntegerMap) throws ServiceException {
         return searchProductsRepository.searchProductsByParams(paramsStringMap, paramsIntegerMap);
     }
 
@@ -129,24 +129,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Optional<String>> defaultParamsStringMap(
-            Map<String, Optional<String>> paramsStringMap) throws ServiceException {
-        if (paramsStringMap.get(SEARCH_VALUE.getValue()).isEmpty()) paramsStringMap.put(SEARCH_VALUE.getValue(), Optional.of(""));
-        if (paramsStringMap.get(CATEGORY_TAG.getValue()).isEmpty()) paramsStringMap.put(CATEGORY_TAG.getValue(), Optional.of(""));
-        if (paramsStringMap.get(IS_QUANTITY.getValue()).isEmpty()) paramsStringMap.put(IS_QUANTITY.getValue(), Optional.of(""));
-        if (paramsStringMap.get(SEARCH_COMPARING.getValue()).isEmpty() || paramsStringMap.get(SEARCH_COMPARING.getValue()).get().equals("")) {
-            paramsStringMap.put(SEARCH_COMPARING.getValue(), Optional.of("Price+"));
+    public Map<String, String> defaultParamsStringMap(
+            Map<String, String> paramsStringMap) throws ServiceException {
+        paramsStringMap.putIfAbsent(SEARCH_VALUE.getValue(), "");
+        paramsStringMap.putIfAbsent(CATEGORY_TAG.getValue(), "");
+        paramsStringMap.putIfAbsent(IS_QUANTITY.getValue(), "");
+        if (paramsStringMap.get(SEARCH_COMPARING.getValue()) == null
+                || paramsStringMap.get(SEARCH_COMPARING.getValue()).equals("")) {
+            paramsStringMap.put(SEARCH_COMPARING.getValue(), "Price+");
         }
         return paramsStringMap;
     }
 
     @Override
-    public Map<String, Optional<Integer>> defaultParamsIntegerMap(
-            Map<String, Optional<Integer>> paramsIntegerMap) throws ServiceException {
-        if (paramsIntegerMap.get(PAGE_ITEMS.getValue()).isEmpty()) paramsIntegerMap.put(PAGE_ITEMS.getValue(), Optional.of(0));
-        if (paramsIntegerMap.get(PAGE_NUMBER.getValue()).isEmpty()) paramsIntegerMap.put(PAGE_NUMBER.getValue(), Optional.of(1));
-        if (paramsIntegerMap.get(MIN_PRICE.getValue()).isPresent() && paramsIntegerMap.get(MAX_PRICE.getValue()).isPresent()
-        && paramsIntegerMap.get(MAX_PRICE.getValue()).get() < paramsIntegerMap.get(MIN_PRICE.getValue()).get()) {
+    public Map<String, Integer> defaultParamsIntegerMap(
+            Map<String, Integer> paramsIntegerMap) throws ServiceException {
+        paramsIntegerMap.putIfAbsent(PAGE_ITEMS.getValue(), 0);
+        paramsIntegerMap.putIfAbsent(PAGE_NUMBER.getValue(), 1);
+        if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null
+                && paramsIntegerMap.get(MAX_PRICE.getValue()) != null
+                && paramsIntegerMap.get(MAX_PRICE.getValue()) < paramsIntegerMap.get(MIN_PRICE.getValue())) {
             paramsIntegerMap.put(MAX_PRICE.getValue(), paramsIntegerMap.get(MIN_PRICE.getValue()));
         }
         return paramsIntegerMap;

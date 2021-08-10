@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.service.impl;
 
+import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.repository.UserRepository;
 import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
@@ -60,6 +61,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByEmailIsLike(email);
     }
 
+
+    @Override
+    public void userPayMethod(User user, Order order) throws ServiceException {
+        try {
+            user.setBalance(user.getBalance() - order.getOrderPrice());
+            user.addOrder(order);
+            update(user);
+        } catch (ServiceException e) {
+            throw new ServiceException("User update failed during purchase.", e);
+        }
+    }
 
     @Override
     public boolean validateUser(ModelAndView modelAndView, BindingResult bindingResult,
