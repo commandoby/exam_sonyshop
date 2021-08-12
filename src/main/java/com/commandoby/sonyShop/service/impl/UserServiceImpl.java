@@ -5,7 +5,8 @@ import com.commandoby.sonyShop.repository.UserRepository;
 import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.USER;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -37,8 +38,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User read(int id) throws ServiceException {
         return userRepository.findById(id).orElseThrow(() ->
-                new ServiceException("Error retrieving a user from the database by ID: " + id + ".", new Exception())
-        );
+                new ServiceException("Error retrieving a user from the database by ID: "
+                        + id + ".", new Exception()));
     }
 
     @Override
@@ -53,12 +54,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) throws ServiceException {
-        return userRepository.getUserByEmail(email);
+        Optional<User> user = Optional.ofNullable(userRepository.getUserByEmail(email));
+        return user.orElseThrow(() ->
+                new ServiceException("Error retrieving a user from the database by email: "
+                        + email + ".", new Exception()));
     }
 
     @Override
     public List<User> findUsersByEmailLike(String email) throws ServiceException {
-        return userRepository.findAllByEmailIsLike(email);
+        Optional<List<User>> users = Optional.ofNullable(userRepository.findAllByEmailIsLike(email));
+        return users.orElseThrow(() ->
+                new ServiceException("Error retrieving users from the database by email like: "
+                        + email + ".", new Exception()));
     }
 
 

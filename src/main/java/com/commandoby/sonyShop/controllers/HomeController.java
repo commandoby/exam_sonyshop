@@ -58,7 +58,9 @@ public class HomeController {
         modelMap.addAttribute(CATEGORIES.getValue(), categories);
         modelMap.addAttribute(CATEGORY_MAX_RATING.getValue(), categories.get(0).getRating());
         modelMap.addAttribute(ORDER.getValue(), new Order());
-        return new ModelAndView(PagesPathEnum.HOME_PAGE.getPath(), modelMap);
+        modelAndView.addAllObjects(modelMap);
+        modelAndView.setViewName(PagesPathEnum.HOME_PAGE.getPath());
+        return modelAndView;
     }
 
     @ModelAttribute("user")

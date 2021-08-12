@@ -1,12 +1,14 @@
 package com.commandoby.sonyShop.service.impl;
 
+import com.commandoby.sonyShop.controllers.UserController;
 import com.commandoby.sonyShop.repository.ProductRepository;
 import com.commandoby.sonyShop.repository.SearchProductsRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -21,7 +23,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.PAGE_NUMBER;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(ProductServiceImpl.class);
     private final ProductRepository productRepository;
     private final SearchProductsRepository searchProductsRepository;
 

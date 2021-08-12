@@ -8,7 +8,8 @@ import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.UserService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,7 +20,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @RequestMapping("/sonyshop")
 @SessionAttributes({"user", "order"})
 public class OrderController {
-    private final Logger log = Logger.getLogger(getClass().getName());
+    private final Logger log = LogManager.getLogger(OrderController.class);
     private final UserService userService;
     private final OrderService orderService;
 
