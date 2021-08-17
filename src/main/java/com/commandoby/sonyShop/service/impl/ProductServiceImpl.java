@@ -149,6 +149,10 @@ public class ProductServiceImpl implements ProductService {
         paramsIntegerMap.putIfAbsent(PAGE_ITEMS.getValue(), 0);
         paramsIntegerMap.putIfAbsent(PAGE_NUMBER.getValue(), 1);
         if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null
+                && paramsIntegerMap.get(MIN_PRICE.getValue()) < 0) {
+            paramsIntegerMap.put(MIN_PRICE.getValue(), 0);
+        }
+        if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null
                 && paramsIntegerMap.get(MAX_PRICE.getValue()) != null
                 && paramsIntegerMap.get(MAX_PRICE.getValue()) < paramsIntegerMap.get(MIN_PRICE.getValue())) {
             paramsIntegerMap.put(MAX_PRICE.getValue(), paramsIntegerMap.get(MIN_PRICE.getValue()));

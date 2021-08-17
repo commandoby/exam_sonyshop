@@ -20,6 +20,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @RequestMapping("/sonyshop")
 @SessionAttributes({"user", "order"})
 public class OrderController {
+
     private final Logger log = LogManager.getLogger(OrderController.class);
     private final UserService userService;
     private final OrderService orderService;
@@ -42,7 +43,9 @@ public class OrderController {
     public ModelAndView getBasketAndRemoveProduct(@RequestParam int id,
                                                   @ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
+
         if (order == null) order = new Order();
+
         try {
             orderService.removeProductWithOfBasketByNumber(order, id);
         } catch (NotFoundException | ServiceException e) {

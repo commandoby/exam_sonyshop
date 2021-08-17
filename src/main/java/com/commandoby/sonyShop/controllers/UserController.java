@@ -86,15 +86,20 @@ public class UserController {
                              @RequestParam(required = false) String second_password,
                              @RequestParam(required = false) String user_edit,
                              @ModelAttribute User user) throws ControllerException {
+        ModelAndView modelAndView = new ModelAndView(USER_PAGE.getPath(), new ModelMap());
 
-        if (user_edit.equals("edit")) {
-            return userService.editUserData(user, new_name, new_surname, new_date_of_birth, old_password);
+        try {
+            if (user_edit.equals("edit")) {
+                modelAndView = userService.editUserData(user, new_name, new_surname, new_date_of_birth, old_password);
+            }
+
+            if (user_edit.equals("password")) {
+                modelAndView = userService.editUserPassword(user, new_password, old_password, second_password);
+            }
+        } catch (ServiceException e) {
+            log.error(e);
         }
 
-        if (user_edit.equals("password")) {
-            return userService.editUserPassword(user, new_password, old_password, second_password);
-        }
-
-        return new ModelAndView(USER_PAGE.getPath(), new ModelMap());
+        return modelAndView;
     }
 }

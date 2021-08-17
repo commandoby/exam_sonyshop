@@ -1,21 +1,20 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.controllers.UserController;
 import com.commandoby.sonyShop.repository.CategoryRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final Logger log = LogManager.getLogger(CategoryServiceImpl.class);
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -70,11 +69,18 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryForProducts(String categoryTag) throws ServiceException {
         Category category = getCategoryByTag(categoryTag);
         category.setRating(category.getRating() + 1);
-        try {
-            update(category);
-        } catch (ServiceException e) {
-            log.error("Category rating update failed.", e);
-        }
+        update(category);
         return category;
+    }
+
+    @Override
+    public ModelMap getHomePageModelMap(ModelMap modelMap) throws ServiceException {
+        List<Category> categories = getCategoriesSortByRating();
+
+        if (categories != null) {
+            modelMap.addAttribute(CATEGORIES.getValue(), categories);
+            modelMap.addAttribute(CATEGORY_MAX_RATING.getValue(), categories.get(0).getRating());
+        }
+        return modelMap;
     }
 }
