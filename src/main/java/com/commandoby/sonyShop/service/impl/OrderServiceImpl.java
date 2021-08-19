@@ -8,16 +8,19 @@ import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final Logger log = LogManager.getLogger(OrderServiceImpl.class);
     private final OrderRepository orderRepository;
     private final ProductService productService;
 
@@ -35,8 +38,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order read(int id) throws ServiceException {
         return orderRepository.findById(id).orElseThrow(() ->
-                new ServiceException("Error retrieving a order from the database by ID: " + id + ".", new Exception())
-        );
+                new ServiceException("Error retrieving a order from the database by ID: "
+                        + id + ".", new Exception()));
     }
 
     @Override
@@ -56,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Product addProductToBasket(Order order, int product_id) throws ServiceException {
+    public Product addProductToBasketById(Order order, int product_id) throws ServiceException {
         Product product = productService.read(product_id);
 
         if (order == null) order = new Order();
@@ -98,68 +101,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void orderPayMethod(User user, Order order) throws ServiceException {
-        try {
-            updateProductQuantity(order);
-            if (order.getProductList().size() != 0) {
-                order.setDate(LocalDate.now());
-                order.setUser(user);
-                create(order);
-            }
-        } catch (ServiceException e) {
-            throw new ServiceException("Order update error during purchase.", e);
+        updateProductQuantity(order);
+        if (order.getProductList().size() != 0) {
+            order.setDate(LocalDate.now());
+            order.setUser(user);
+            create(order);
         }
     }
 
     private void updateProductQuantity(Order order) throws ServiceException {
-        List<Product> products = order.getProductList();
-        products.sort(Comparator.comparingInt(Product::getId));
-        List<List<Product>> doubleProducts = new ArrayList<>();
-        for (int i = 0; i < products.size(); i++) {
-            if (i + 1 < products.size() && products.get(i).getId() == products.get(i + 1).getId()) {
-                List<Product> doubleProduct = new ArrayList<>();
-                while (i + 1 < products.size() && products.get(i).getId() == products.get(i + 1).getId()) {
-                    doubleProduct.add(products.get(i));
-                    i++;
-                }
-                doubleProduct.add(products.get(i));
-                doubleProducts.add(doubleProduct);
-            } else {
-                Product product = products.get(i);
-                updateQuantityOneProduct(order, product);
-            }
-        }
+        Map<Integer, List<Product>> groupedProducts = order.getProductList()
+                .stream().collect(Collectors.groupingBy(Product::getId));
 
-        if (doubleProducts.size() != 0) {
-            for (List<Product> doubleProduct : doubleProducts) {
-                updateQuantitySomeProducts(order, doubleProduct);
-            }
+        for (Map.Entry<Integer, List<Product>> entry : groupedProducts.entrySet()) {
+            updateQuantityProducts(order, entry.getValue());
         }
     }
 
-    private void updateQuantityOneProduct(Order order, Product product) throws ServiceException {
-        if (product.getQuantity() > 0) {
+    private void updateQuantityProducts(Order order, List<Product> products) throws ServiceException {
+        Product product = products.get(0);
+        if (product.getQuantity() >= products.size()) {
             try {
-                product.setQuantity(product.getQuantity() - 1);
-                productService.update(product);
-            } catch (ServiceException e) {
-                throw new ServiceException("Product update error during purchase from ID: "
-                        + product.getId() + ".", e);
-            }
-        } else {
-            try {
-                removeProductWithOfBasketById(order, product.getId());
-            } catch (NotFoundException | ServiceException e) {
-                throw new ServiceException("Error deleting a product from the cart from the ID: "
-                        + product.getId() + ".", e);
-            }
-        }
-    }
-
-    private void updateQuantitySomeProducts(Order order, List<Product> doubleProduct) throws ServiceException {
-        Product product = doubleProduct.get(0);
-        if (product.getQuantity() >= doubleProduct.size()) {
-            try {
-                product.setQuantity(product.getQuantity() - doubleProduct.size());
+                product.setQuantity(product.getQuantity() - products.size());
                 productService.update(product);
             } catch (ServiceException e) {
                 throw new ServiceException("Duplicate product update error during purchase from ID: "
@@ -167,11 +130,14 @@ public class OrderServiceImpl implements OrderService {
             }
         } else {
             try {
-                for (int i = 0; i < doubleProduct.size(); i++) {
+                log.info("Trying to purchase " + products.size()
+                        + " products. In stock: " + product.getQuantity() + ".");
+
+                for (int i = 0; i < products.size(); i++) {
                     removeProductWithOfBasketById(order, product.getId());
                 }
             } catch (NotFoundException | ServiceException e) {
-                throw new ServiceException("Error removing duplicate product from cart from id: "
+                throw new ServiceException("Error removing duplicate product from cart from ID: "
                         + product.getId() + ".", e);
             }
         }

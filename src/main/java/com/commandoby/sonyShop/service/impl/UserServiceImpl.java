@@ -136,14 +136,16 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    private boolean checkReceivedUser(ModelAndView modelAndView, User user) throws ServiceException {
-        User findUser = null;
-        ModelMap modelMap = new ModelMap();
-        try {
-            findUser = getUserByEmail(user.getEmail());
-        } catch (ServiceException e) {
-            log.info("Error getting user by email: " + user.getEmail() + ".", e);
+    private void populateError(String field, ModelAndView modelAndView, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors(field)) {
+            modelAndView.addObject(field + "Error", bindingResult.getFieldError(field)
+                    .getDefaultMessage());
         }
+    }
+
+    private boolean checkReceivedUser(ModelAndView modelAndView, User user) throws ServiceException {
+        ModelMap modelMap = new ModelMap();
+        User findUser = getUserByEmail(user.getEmail());
         if (findUser != null) {
             if (findUser.getPassword().equals(user.getPassword())) {
                 modelMap.addAttribute(USER.getValue(), findUser);
@@ -160,22 +162,10 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    private void populateError(String field, ModelAndView modelAndView, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors(field)) {
-            modelAndView.addObject(field + "Error", bindingResult.getFieldError(field)
-                    .getDefaultMessage());
-        }
-    }
-
     @Override
     public boolean duplicateCheck(String email) throws ServiceException {
-        try {
-            User user = getUserByEmail(email);
-            if (user != null) return true;
-        } catch (ServiceException e) {
-            log.warn("Error getting user by email: " + email + ".", e);
-        }
-        return false;
+        User user = getUserByEmail(email);
+        return user != null;
     }
 
     @Override

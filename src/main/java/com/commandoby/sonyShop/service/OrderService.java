@@ -13,7 +13,7 @@ public interface OrderService extends BaseService<Order> {
     List<Order> readOrdersByUser(User user) throws ServiceException;
 
 
-    Product addProductToBasket(Order order, int product_id) throws ServiceException;
+    Product addProductToBasketById(Order order, int product_id) throws ServiceException;
 
     void removeProductWithOfBasketByNumber(Order order, int number) throws NotFoundException, ServiceException;
 

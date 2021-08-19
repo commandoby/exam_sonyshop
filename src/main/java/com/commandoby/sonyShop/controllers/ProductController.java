@@ -85,7 +85,7 @@ public class ProductController {
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
             List<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category);
-            orderService.addProductToBasket(order, product_id);
+            orderService.addProductToBasketById(order, product_id);
 
             if (page_items == null) page_items = 0;
             if (page_number == null) page_number = 1;
@@ -109,7 +109,7 @@ public class ProductController {
         ModelMap modelMap = new ModelMap();
 
         try {
-            Product product = orderService.addProductToBasket(order, product_id);
+            Product product = orderService.addProductToBasketById(order, product_id);
             modelMap.addAttribute(PRODUCT.getValue(), product);
         } catch (ServiceException e) {
             log.error(e);

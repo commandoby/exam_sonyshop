@@ -1,14 +1,11 @@
 package com.commandoby.sonyShop.service.impl;
 
-import com.commandoby.sonyShop.controllers.UserController;
 import com.commandoby.sonyShop.repository.ProductRepository;
 import com.commandoby.sonyShop.repository.SearchProductsRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -23,7 +20,6 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.PAGE_NUMBER;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final Logger log = LogManager.getLogger(ProductServiceImpl.class);
     private final ProductRepository productRepository;
     private final SearchProductsRepository searchProductsRepository;
 
@@ -107,27 +103,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<Product> pagination(ModelMap modelMap, List<Product> products,
-                                     Integer pageItems, Integer pageNumber) {
-        List<Product> productPageList = null;
-        try {
-            int pages = (int) Math.ceil(products.size() / pageItems.doubleValue());
-            if (pageNumber > pages) pageNumber = pages;
-            productPageList = getProductsPage(products, pageItems, pageNumber);
-            modelMap.addAttribute(PAGE_MAX.getValue(), pages);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), pageNumber);
-        } catch (NumberFormatException e) {
-            log.error(e);
-        }
-        return productPageList;
-    }
+                                     Integer pageItems, Integer pageNumber) throws ServiceException {
+        int pages = (int) Math.ceil(products.size() / pageItems.doubleValue());
+        if (pageNumber > pages) pageNumber = pages;
 
-    private List<Product> getProductsPage(List<Product> products, int pageItems, int pageNumber) {
-        List<Product> newProductList = new ArrayList<>();
+        List<Product> productPageList = new ArrayList<>();
         products.stream()
                 .skip((long) pageItems * (pageNumber - 1))
                 .limit(pageItems)
-                .forEach(newProductList::add);
-        return newProductList;
+                .forEach(productPageList::add);
+
+        if (productPageList.isEmpty()) throw new ServiceException(
+                "Page " + pageNumber + " was suddenly blank.", new Exception());
+
+        modelMap.addAttribute(PAGE_MAX.getValue(), pages);
+        modelMap.addAttribute(PAGE_NUMBER.getValue(), pageNumber);
+        return productPageList;
     }
 
     @Override
