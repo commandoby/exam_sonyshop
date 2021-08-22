@@ -6,14 +6,7 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
-public interface UserService extends BaseService<User> {
-
-    User getUserByEmail(String email) throws ServiceException;
-
-    List<User> findUsersByEmailLike(String email) throws ServiceException;
-
+public interface UserService extends UserDataService {
 
     ModelAndView register(String name, String surname, String date_of_birth,
                           String email, String password, String second_password) throws ServiceException;

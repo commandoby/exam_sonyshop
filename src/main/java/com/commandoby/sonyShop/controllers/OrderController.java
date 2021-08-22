@@ -68,15 +68,14 @@ public class OrderController {
                 userService.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
                 log.info("Purchased " + order.getProductList().size() + " products.");
+
+                modelMap.addAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
+                modelMap.addAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
+                modelMap.addAttribute(ORDER.getValue(), new Order());
             } catch (ServiceException e) {
                 log.error(e);
             }
         }
-
-        modelMap.addAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
-        modelMap.addAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
-        modelMap.addAttribute(ORDER.getValue(), new Order());
-
         return new ModelAndView(PagesPathEnum.PAY_PAGE.getPath(), modelMap);
     }
 

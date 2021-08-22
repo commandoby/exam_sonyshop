@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 modelMap.addAttribute(INFO.getValue(), "User exists.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
-            if (!validateLocalData(date_of_birth)) {
+            if (validateLocalData(date_of_birth)) {
                 modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean validateLocalData(String date) throws ServiceException {
-        return date.matches(Pattern.compile("\\d{4}-\\d{2}-\\d{2}").pattern());
+        return !date.matches(Pattern.compile("\\d{4}-\\d{2}-\\d{2}").pattern());
     }
 
     @Override
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
                                      String new_date_of_birth, String old_password) throws ServiceException {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute(USER_EDIT.getValue(), "edit");
-        if (!validateLocalData(new_date_of_birth)) {
+        if (validateLocalData(new_date_of_birth)) {
             modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
             return new ModelAndView(USER_PAGE.getPath(), modelMap);
         }

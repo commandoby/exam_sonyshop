@@ -6,12 +6,7 @@ import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.NotFoundException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 
-import java.util.List;
-
-public interface OrderService extends BaseService<Order> {
-
-    List<Order> readOrdersByUser(User user) throws ServiceException;
-
+public interface OrderService extends OrderDataService {
 
     Product addProductToBasketById(Order order, int product_id) throws ServiceException;
 

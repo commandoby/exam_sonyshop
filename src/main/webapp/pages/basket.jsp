@@ -20,10 +20,17 @@
 
 <form method="get">
     <div class="container" align="right">
-        <div class="btn-group">
+        <c:if test="${sessionScope.user.getBalance() >= sessionScope.order.getOrderPrice()}">
             <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/pay'">
                 &nbsp&nbsp Pay &nbsp&nbsp
             </button>
+        </c:if>
+        <c:if test="${sessionScope.user.getBalance() < sessionScope.order.getOrderPrice()}">
+            <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/pay'" disabled>
+                &nbsp&nbsp Not enough money &nbsp&nbsp
+            </button>
+        </c:if>
+        <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
                 Home page
             </button>
