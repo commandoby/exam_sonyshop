@@ -1,4 +1,4 @@
-package com.commandoby.sonyShop.repository.domain;
+package com.commandoby.sonyShop.components;
 
 import org.springframework.stereotype.Component;
 

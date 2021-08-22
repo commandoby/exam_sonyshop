@@ -1,6 +1,6 @@
-<%@ page import="com.commandoby.sonyShop.repository.domain.Product" %>
+<%@ page import="com.commandoby.sonyShop.components.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.commandoby.sonyShop.repository.domain.Order" %>
+<%@ page import="com.commandoby.sonyShop.components.Order" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
@@ -20,10 +20,17 @@
 
 <form method="get">
     <div class="container" align="right">
-        <div class="btn-group">
+        <c:if test="${sessionScope.user.getBalance() >= sessionScope.order.getOrderPrice()}">
             <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/pay'">
                 &nbsp&nbsp Pay &nbsp&nbsp
             </button>
+        </c:if>
+        <c:if test="${sessionScope.user.getBalance() < sessionScope.order.getOrderPrice()}">
+            <button type="button" class="btn btn-success" onclick="document.location='/sonyshop/pay'" disabled>
+                &nbsp&nbsp Not enough money &nbsp&nbsp
+            </button>
+        </c:if>
+        <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">
                 Home page
             </button>
@@ -56,7 +63,7 @@
                         <p class="card-text">${product.getDescription()}</p>
                         <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
-                                onclick="document.location='/sonyshop/product?id=${product.getId()}'">
+                                onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
                         </button>
                         <button type="submit" class="btn btn-primary" formmethod="post"

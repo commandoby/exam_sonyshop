@@ -1,21 +1,18 @@
 package com.commandoby.sonyShop.service;
 
-import com.commandoby.sonyShop.repository.domain.Category;
-import com.commandoby.sonyShop.repository.domain.Product;
+import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
+import java.util.Map;
 
-public interface ProductService extends BaseService<Product> {
+public interface ProductService extends ProductDataService {
 
-    List<Product> getAllProducts() throws ServiceException;
+    void prePagination(ModelMap modelMap, List<Product> products,
+                              Integer pageItems, Integer pageNumber) throws ServiceException;
 
-    List<Product> getAllProductsByCategory(Category category) throws ServiceException;
+    Map<String, String> defaultParamsStringMap(Map<String, String> paramsStringMap) throws ServiceException;
 
-    Product getProductByName(String name) throws ServiceException;
-
-    List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException;
-
-    List<Product> getSearchProductsByParams(String searchValue, String categoryTag, String searchComparing,
-                                            String isQuantity, Integer minPrice, Integer maxPrice) throws ServiceException;
+    Map<String, Integer> defaultParamsIntegerMap(Map<String, Integer> paramsIntegerMap) throws ServiceException;
 }

@@ -1,12 +1,16 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.repository.CategoryRepository;
-import com.commandoby.sonyShop.repository.domain.Category;
+import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -41,17 +45,42 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() throws ServiceException {
-        return categoryRepository.findAll();
+    public List<Category> getCategories() throws ServiceException {
+        Optional<List<Category>> categories = Optional.ofNullable(categoryRepository.findAll());
+        return categories.orElseThrow(() ->
+                new ServiceException("Error getting a list of all categories.", new Exception()));
     }
 
     @Override
-    public List<Category> gelAllCategorySortByRating() throws ServiceException {
-        return categoryRepository.gelAllCategorySortByRating();
+    public List<Category> getCategoriesSortByRating() throws ServiceException {
+        Optional<List<Category>> categories = Optional.ofNullable(categoryRepository.gelAllCategorySortByRating());
+        return categories.orElseThrow(() ->
+                new ServiceException("Error getting categories sort by rating.", new Exception()));
     }
 
     @Override
     public Category getCategoryByTag(String tag) throws ServiceException {
-        return categoryRepository.findCategoryByTag(tag);
+        Optional<Category> categories = Optional.ofNullable(categoryRepository.findCategoryByTag(tag));
+        return categories.orElseThrow(() ->
+                new ServiceException("Error retrieving category by tag: " + tag + ".", new Exception()));
+    }
+
+    @Override
+    public Category getCategoryForProducts(String categoryTag) throws ServiceException {
+        Category category = getCategoryByTag(categoryTag);
+        category.setRating(category.getRating() + 1);
+        update(category);
+        return category;
+    }
+
+    @Override
+    public ModelMap getHomePageModelMap(ModelMap modelMap) throws ServiceException {
+        List<Category> categories = getCategoriesSortByRating();
+
+        if (categories != null) {
+            modelMap.addAttribute(CATEGORIES.getValue(), categories);
+            modelMap.addAttribute(CATEGORY_MAX_RATING.getValue(), categories.get(0).getRating());
+        }
+        return modelMap;
     }
 }

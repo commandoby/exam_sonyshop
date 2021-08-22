@@ -1,11 +1,13 @@
 package com.commandoby.sonyShop.repository;
 
 import com.commandoby.sonyShop.exceptions.RepositoryException;
-import com.commandoby.sonyShop.repository.domain.Product;
+import com.commandoby.sonyShop.components.Product;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface SearchProductsRepository {
-    List<Product> searchProductsByParams(String searchValue, String categoryTag, String searchComparing,
-                                         String isQuantity, Integer minPrice, Integer maxPrice) throws RepositoryException;
+    List<Product> searchProductsByParams(Map<String, String> paramsStringMap,
+                                         Map<String, Integer> paramsIntegerMap) throws RepositoryException;
 }

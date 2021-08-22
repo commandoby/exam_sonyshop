@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group">
                         <input type="password" class="form-control w-50" id="second_password"
-                               placeholder="Enter your password again" name="second_password" required>
+                               placeholder="Enter new password again" name="second_password" required>
                         <div class="invalid-feedback">Please fill out password field</div>
                     </div>
                     <p style="color: red">${info}</p>

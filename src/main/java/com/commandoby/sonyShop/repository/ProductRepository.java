@@ -1,8 +1,8 @@
 package com.commandoby.sonyShop.repository;
 
 import com.commandoby.sonyShop.exceptions.RepositoryException;
-import com.commandoby.sonyShop.repository.domain.Category;
-import com.commandoby.sonyShop.repository.domain.Product;
+import com.commandoby.sonyShop.components.Category;
+import com.commandoby.sonyShop.components.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
