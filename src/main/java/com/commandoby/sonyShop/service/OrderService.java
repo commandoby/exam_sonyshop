@@ -8,11 +8,11 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 
 public interface OrderService extends OrderDataService {
 
-    Product addProductToBasketById(Order order, int product_id) throws ServiceException;
+    void addProductToBasket(Order order, Product product) throws ServiceException;
 
     void removeProductWithOfBasketByNumber(Order order, int number) throws NotFoundException, ServiceException;
 
-    void removeProductWithOfBasketById(Order order, int id) throws NotFoundException, ServiceException;
+    void removeProductWithOfBasket(Order order, Product product) throws NotFoundException, ServiceException;
 
     void orderPayMethod(User user, Order order) throws ServiceException;
 }

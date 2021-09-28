@@ -150,6 +150,7 @@ public class UserServiceImpl implements UserService {
             if (findUser.getPassword().equals(user.getPassword())) {
                 modelMap.addAttribute(USER.getValue(), findUser);
                 modelAndView.addAllObjects(modelMap);
+                log.info("User " + user.getEmail() + " entered the store.");
                 return true;
             } else {
                 modelMap.addAttribute(INFO.getValue(), "Invalid password.");

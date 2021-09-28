@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>exam_sonyshop</artifactId>
-    <version>1.01-SNAPSHOT</version>
+    <version>1.02-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -47,6 +47,12 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>9.0.44</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
         </dependency>
 
         <!--Spring-->
