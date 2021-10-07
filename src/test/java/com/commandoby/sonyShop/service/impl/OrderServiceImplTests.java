@@ -10,11 +10,14 @@ import com.commandoby.sonyShop.repository.OrderRepository;
 import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
 import org.junit.jupiter.api.AfterAll;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderServiceImplTests {
     private static OrderRepository orderRepositoryMock;
@@ -33,24 +36,23 @@ public class OrderServiceImplTests {
         productServiceMock = Mockito.mock(ProductService.class);
 
         orderService = new OrderServiceImpl(orderRepositoryMock, productServiceMock);
-
-        user = User.newBuilder().withName("User").withEmail("user").withBalance(10000).build();
-
-        Category category = new Category("Phone", "phone", "phone.jpeg", 1);
-
-        product1 = new Product("Sony Xperia 10 II XQ-AU52 Dual", "10_II_XQ-AU52_Dual.jpeg",
-                "Android, экран 6\" OLED (1080x2520), Qualcomm Snapdragon 665, ОЗУ 4 ГБ, флэш-память 128 ГБ, " +
-                        "карты памяти, камера 12 Мп, аккумулятор 3600 мАч, 2 SIM", category, 1000, 5);
-        product2 = new Product("Sony Xperia 1 II XQ-AT52", "1_II_XQ-AT52.jpeg",
-                "Android, экран 6.5\" OLED (1644x3840), Qualcomm Snapdragon 865, ОЗУ 12 ГБ, флэш-память 256 ГБ, " +
-                        "карты памяти, камера 12 Мп, аккумулятор 4000 мАч, 2 SIM", category,2500, 1);
-        product1.setId(1);
-        product2.setId(2);
     }
 
     @BeforeEach
     public void blank() throws ServiceException {
+        Category category = new Category("Phone", "phone", "phone.jpeg", 1);
+
+        product1 = Product.newBuilder().withName("Sony Xperia 10 II")
+                .withCategory(category).withPrice(1000).withQuantity(5).build();
+        product1.setId(1);
+        product2 = Product.newBuilder().withName("Sony Xperia 1 II")
+                .withCategory(category).withPrice(2500).withQuantity(1).build();
+        product2.setId(2);
+
         order = new Order();
+
+        user = User.newBuilder().withName("User").withEmail("user").withBalance(10000).build();
+
         orderService.addProductToBasket(order, product1);
         orderService.addProductToBasket(order, product2);
     }
@@ -95,11 +97,51 @@ public class OrderServiceImplTests {
         orderService.removeProductWithOfBasket(order, product1);
         Throwable exception = assertThrows(NotFoundException.class,
                 () -> orderService.removeProductWithOfBasket(order, product1));
-        assertEquals("Will not find a product to remove: " + product1.getName(), exception.getMessage());
+        assertEquals("Will not find a product to remove: Sony Xperia 10 II", exception.getMessage());
+    }
+
+    @Test
+    public void orderPayMethod_DataTest() throws ServiceException {
+        orderService.orderPayMethod(user, order);
+        assertEquals(LocalDate.now(), order.getDate());
+    }
+
+    @Test
+    public void orderPayMethod_DataNotNullTest() throws ServiceException {
+        orderService.orderPayMethod(user, order);
+        assertNotNull(order.getDate());
+    }
+
+    @Test
+    public void orderPayMethod_SetUserTest() throws ServiceException {
+        orderService.orderPayMethod(user, order);
+        assertEquals(user, order.getUser());
+    }
+
+    @Test
+    public void orderPayMethod_UpdateQuantityProductsTest() throws ServiceException {
+        orderService.addProductToBasket(order, product1);
+        orderService.orderPayMethod(user, order);
+        assertEquals(3, product1.getQuantity());
+    }
+
+    @Test
+    public void orderPayMethod_NotEnoughProductsTest() throws ServiceException {
+        orderService.addProductToBasket(order, product2);
+        orderService.orderPayMethod(user, order);
+        assertEquals(1, order.getProductList().size());
+    }
+
+    @Test
+    public void orderPayMethod_NotEnoughBalanceExceptionTest() throws ServiceException {
+        user.setBalance(500);
+        Throwable exception = assertThrows(ServiceException.class,
+                () -> orderService.orderPayMethod(user, order));
+        assertEquals("User has insufficient funds: user", exception.getMessage());
     }
 
     @AfterAll
-    public static void tearDown(){
-        System.out.println("All tests are finished!");
+    public static void tearDown() {
+        System.out.println("All OrderServiceImpl tests are finished!");
     }
 }

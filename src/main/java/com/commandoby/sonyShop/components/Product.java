@@ -31,7 +31,6 @@ public class Product extends BaseEntity {
     }
 
     public Product(Builder builder) {
-        id = builder.id;
         name = builder.name;
         imageName = builder.imageName;
         description = builder.description;
@@ -139,8 +138,7 @@ public class Product extends BaseEntity {
         return new Builder();
     }
 
-    private static final class Builder {
-        private int id;
+    public static final class Builder {
         private String name;
         private String imageName;
         private String description;
@@ -149,11 +147,6 @@ public class Product extends BaseEntity {
         private int quantity;
 
         private Builder() {}
-
-        public Builder withId(int id) {
-            this.id = id;
-            return this;
-        }
 
         public Builder withName(String name) {
             this.name = name;

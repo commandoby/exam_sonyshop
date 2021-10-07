@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
     public void orderPayMethod(User user, Order order) throws ServiceException {
         if (user.getBalance() < order.getOrderPrice()) {
             throw new ServiceException("User has insufficient funds: "
-                    + user.getEmail() + ".", new Exception());
+                    + user.getEmail(), new Exception());
         }
 
         updateProductQuantity(order);
