@@ -13,9 +13,11 @@ import org.mockito.Mockito;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.commandoby.sonyShop.enums.RequestParamEnum.PRODUCT_LIST;
 
 public class ProductServiceImplTests {
     private static ProductRepository productRepositoryMock;
@@ -93,6 +95,54 @@ public class ProductServiceImplTests {
         ModelMap modelMap = new ModelMap();
         productService.prePagination(modelMap, productList, 5, 3);
         assertEquals(expectedProductList, modelMap.get(PRODUCT_LIST.getValue()));
+    }
+
+    @Test
+    public void prePagination_Test4() throws ServiceException {
+        ModelMap modelMap = new ModelMap();
+        productService.prePagination(modelMap, productList, 0, 1);
+        assertEquals(productList, modelMap.get(PRODUCT_LIST.getValue()));
+    }
+
+    @Test
+    public void prePagination_OutPageNumberTest1() throws ServiceException {
+        ArrayList<Product> expectedProductList = new ArrayList<>();
+        expectedProductList.add(product2);
+        expectedProductList.add(product2);
+        expectedProductList.add(product1);
+        ModelMap modelMap = new ModelMap();
+        productService.prePagination(modelMap, productList, 5, 4);
+        assertEquals(expectedProductList, modelMap.get(PRODUCT_LIST.getValue()));
+    }
+
+    @Test
+    public void prePagination_OutPageNumberTest2() throws ServiceException {
+        ModelMap modelMap = new ModelMap();
+        productService.prePagination(modelMap, productList, 5, 5);
+        assertEquals(3, modelMap.get(PAGE_NUMBER.getValue()));
+    }
+
+    @Test
+    public void prePagination_MaxPagesTest() throws ServiceException {
+        ModelMap modelMap = new ModelMap();
+        productService.prePagination(modelMap, productList, 3, 1);
+        assertEquals(5, modelMap.get(PAGE_MAX.getValue()));
+    }
+
+    @Test
+    public void defaultParamsStringMap_Test() throws ServiceException {
+        Map<String, String> map = new HashMap<>();
+        productService.defaultParamsStringMap(map);
+        assertEquals("Price+", map.get(SEARCH_COMPARING.getValue()));
+    }
+
+    @Test
+    public void defaultParamsIntegerMap_Test() throws ServiceException {
+        Map<String, Integer> map = new HashMap<>();
+        map.put(MIN_PRICE.getValue(), 1000);
+        map.put(MAX_PRICE.getValue(), 500);
+        productService.defaultParamsIntegerMap(map);
+        assertEquals(1000, map.get(MAX_PRICE.getValue()));
     }
 
     @AfterAll
