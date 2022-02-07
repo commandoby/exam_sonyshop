@@ -59,14 +59,10 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Product addProductToBasketById(Order order, int product_id) throws ServiceException {
-        Product product = productService.read(product_id);
-
+    public void addProductToBasket(Order order, Product product) throws ServiceException {
         if (order == null) order = new Order();
         order.getProductList().add(product);
         updateOrderPrice(order);
-
-        return product;
     }
 
     @Override
@@ -80,15 +76,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void removeProductWithOfBasketById(Order order, int id) throws NotFoundException, ServiceException {
+    public void removeProductWithOfBasket(Order order, Product product) throws NotFoundException, ServiceException {
         for (int i = 0; i < order.getProductList().size(); i++) {
-            if (order.getProductList().get(i).getId() == id) {
+            if (order.getProductList().get(i).getId() == product.getId()) {
                 order.getProductList().remove(i);
                 updateOrderPrice(order);
                 return;
             }
         }
-        throw new NotFoundException("Will not find a product to remove by id: " + id);
+        throw new NotFoundException("Will not find a product to remove: " + product.getName());
     }
 
     private void updateOrderPrice(Order order) {
@@ -103,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
     public void orderPayMethod(User user, Order order) throws ServiceException {
         if (user.getBalance() < order.getOrderPrice()) {
             throw new ServiceException("User has insufficient funds: "
-                    + user.getEmail() + ".", new Exception());
+                    + user.getEmail(), new Exception());
         }
 
         updateProductQuantity(order);
@@ -139,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
                         + " products. In stock: " + product.getQuantity() + ".");
 
                 for (int i = 0; i < products.size(); i++) {
-                    removeProductWithOfBasketById(order, product.getId());
+                    removeProductWithOfBasket(order, product);
                 }
             } catch (NotFoundException | ServiceException e) {
                 throw new ServiceException("Error removing duplicate product from cart from ID: "

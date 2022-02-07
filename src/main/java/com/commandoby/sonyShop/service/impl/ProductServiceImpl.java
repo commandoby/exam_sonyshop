@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
-import static com.commandoby.sonyShop.enums.RequestParamEnum.PAGE_NUMBER;
 
 @Service
 public class ProductServiceImpl implements ProductService {

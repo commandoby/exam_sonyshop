@@ -66,7 +66,10 @@ public class AdvancedSearchController {
 
         List<Product> products = new ArrayList<>();
         try {
-            if (product_id != null) orderService.addProductToBasketById(order, product_id);
+            if (product_id != null) {
+                Product product = productService.read(product_id);
+                orderService.addProductToBasket(order, product);
+            }
 
             if (!paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")
                     || paramsIntegerMap.get(MIN_PRICE.getValue()) != null

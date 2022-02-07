@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.controllers;
 
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
@@ -28,7 +29,9 @@ public class SignInController {
     }
 
     @GetMapping("/signin")
-    public ModelAndView signIn(SessionStatus sessionStatus) throws ControllerException {
+    public ModelAndView signIn(SessionStatus sessionStatus,
+                               @ModelAttribute("user") User user) throws ControllerException {
+        log.info("User " + user.getEmail() + " left the store.");
         sessionStatus.setComplete();
 
         return new ModelAndView(PagesPathEnum.SIGN_IN_PAGE.getPath(), new ModelMap());
