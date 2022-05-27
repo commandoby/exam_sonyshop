@@ -18,7 +18,7 @@ DELETE FROM sonyshop.products WHERE id >= 0;
 INSERT INTO sonyshop.products(name, image_name, description, price, quantity, category_id)
 VALUES ("Sony Xperia 10 II XQ-AU52 Dual", "10_II_XQ-AU52_Dual.jpeg",
         "Android, экран 6\" OLED (1080x2520), Qualcomm Snapdragon 665, ОЗУ 4 ГБ, флэш-память 128 ГБ,
-карты памяти, камера 12 Мп, аккумулятор 3600 мАч, 2 SIM", 899, 24, 1);
+карты памяти, камера 12 Мп, аккумулятор 3600 мАч, 2 SIM", 899, 24, 1),
 ("Sony Xperia 1 II XQ-AT52", "1_II_XQ-AT52.jpeg",
     "Android, экран 6.5\" OLED (1644x3840), Qualcomm Snapdragon 865, ОЗУ 12 ГБ, флэш-память 256 ГБ,
 карты памяти, камера 12 Мп, аккумулятор 4000 мАч, 2 SIM",

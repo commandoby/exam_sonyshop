@@ -1,7 +1,9 @@
 .idea/
+.settings/
+bin/
 out/
-target/
 sample/
+target/
 
   
 # Compiled class file
@@ -17,4 +19,5 @@ sample/
 *.jpeg
 *.jpg
 *.png
-/bin/
+.classpath
+.project

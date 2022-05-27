@@ -31,7 +31,8 @@
                     <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
                         Basket (${sessionScope.order.getProductList().size()})
                     </button>
-                    <button type="button" class="btn btn-primary" name="command" value="user">
+                    <button type="button" class="btn btn-primary" name="command" value="user"
+                    onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                             ${sessionScope.user.getEmail()}</button>
                     <button type="button" class="btn btn-danger" onclick="document.location='/sonyshop/signin'">
                         Escape
