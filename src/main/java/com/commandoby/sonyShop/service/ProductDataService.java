@@ -7,6 +7,9 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface ProductDataService extends BaseService<Product> {
 
     List<Product> getAllProducts() throws ServiceException;
@@ -15,7 +18,7 @@ public interface ProductDataService extends BaseService<Product> {
 
     Product getProductByName(String name) throws ServiceException;
 
-    List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException;
+    Page<Product> getProductsByCategoryAndQuantityNotNull(Category category, Pageable pageable) throws ServiceException;
 
     List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
                                             Map<String, Integer> paramsIntegerMap) throws ServiceException;

@@ -11,6 +11,9 @@ import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +48,17 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
-            List<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category);
-
-            if (page_items == null) page_items = 0;
+            
+            if (page_items == null) page_items = 10;
+            if (page_number == null) page_number = 0;
+            Page<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category, PageRequest.of(page_number, page_items));
+            
+            /*if (page_items == null) page_items = 0;
             if (page_number == null) page_number = 1;
-            productService.prePagination(modelMap, products, page_items, page_number);
+            productService.prePagination(modelMap, products, page_items, page_number);*/
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
+            modelMap.addAttribute(PAGE_MAX.getValue(), products.getNumberOfElements());
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber());
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         } catch (ServiceException e) {
@@ -84,13 +93,20 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
-            List<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category);
+            
+            if (page_items == null) page_items = 10;
+            if (page_number == null) page_number = 0;
+            Page<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category, PageRequest.of(page_number, page_items));
+            
             Product product = productService.read(product_id);
             orderService.addProductToBasket(order, product);
 
-            if (page_items == null) page_items = 0;
+            /*if (page_items == null) page_items = 0;
             if (page_number == null) page_number = 1;
-            productService.prePagination(modelMap, products, page_items, page_number);
+            productService.prePagination(modelMap, products, page_items, page_number);*/
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
+            modelMap.addAttribute(PAGE_MAX.getValue(), products.getNumberOfElements());
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber());
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         } catch (ServiceException e) {

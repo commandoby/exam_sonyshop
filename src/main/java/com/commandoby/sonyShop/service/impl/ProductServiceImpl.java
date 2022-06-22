@@ -6,6 +6,9 @@ import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -50,12 +53,14 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
-    @Override
-    public List<Product> getAllProducts() throws ServiceException {
-        Optional<List<Product>> products = Optional.ofNullable(productRepository.findAll());
-        return products.orElseThrow(() ->
-                new ServiceException("Error getting a list of all products.", new Exception()));
-    }
+	@Override
+	public List<Product> getAllProducts() throws ServiceException {
+		List<Product> products = new ArrayList<>();
+		Optional.ofNullable(productRepository.findAll())
+				.orElseThrow(() -> new ServiceException("Error getting a list of all products.", new Exception()))
+				.forEach(products::add);
+		return products;
+	}
 
     @Override
     public List<Product> getAllProductsByCategory(Category category) throws ServiceException {
@@ -74,9 +79,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategoryAndQuantityNotNull(Category category) throws ServiceException {
-        Optional<List<Product>> products = Optional.ofNullable(
-                productRepository.getAllByCategoryAndQuantityNotLike(category, 0));
+    public Page<Product> getProductsByCategoryAndQuantityNotNull(Category category, Pageable pageable) throws ServiceException {
+        Optional<Page<Product>> products = Optional.ofNullable(
+                productRepository.getAllByCategoryAndQuantityNotLike(category, 0, pageable));
         return products.orElseThrow(() ->
                 new ServiceException("Error retrieving the list of products for category: "
                         + category.getName() + ".", new Exception()));
