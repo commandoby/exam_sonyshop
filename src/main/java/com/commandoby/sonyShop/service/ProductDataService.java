@@ -11,6 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProductDataService extends BaseService<Product> {
+	
+	long countAllProducts() throws ServiceException;
+
+	long countAllProductsByCategory(Category category) throws ServiceException;
 
     List<Product> getAllProducts() throws ServiceException;
 
@@ -18,7 +22,7 @@ public interface ProductDataService extends BaseService<Product> {
 
     Product getProductByName(String name) throws ServiceException;
 
-    Page<Product> getProductsByCategoryAndQuantityNotNull(Category category, Pageable pageable) throws ServiceException;
+    Page<Product> getProductsByCategoryNotNull(Category category, Pageable pageable) throws ServiceException;
 
     List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
                                             Map<String, Integer> paramsIntegerMap) throws ServiceException;

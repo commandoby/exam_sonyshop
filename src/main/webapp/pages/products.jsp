@@ -55,6 +55,9 @@
 <div class="container" align="right">
     <form method="get" style="display: inline">
         <div class="btn-group" data-toggle="tooltip" title="The number of products per page.">
+            <button type="submit" class="btn btn-primary" name="page_items" value="5"
+                    <c:if test="${page_items == '5'}">disabled</c:if>>5
+            </button>
             <button type="submit" class="btn btn-primary" name="page_items" value="10"
                     <c:if test="${page_items == '10'}">disabled</c:if>>10
             </button>
@@ -64,44 +67,41 @@
             <button type="submit" class="btn btn-primary" name="page_items" value="50"
                     <c:if test="${page_items == '50'}">disabled</c:if>>50
             </button>
-            <button type="submit" class="btn btn-primary" name="page_items" value="0"
-                    <c:if test="${page_items == '0'}">disabled</c:if>>All
-            </button>
         </div>
         <input type="hidden" name="category_tag" value="${category_tag}"/>
         <input type="hidden" name="page_number" value="${page_number}"/>
     </form>
 
-    <c:if test="${page_items != '0'}">
-        <c:if test="${not empty product_list}">
-            <form method="get" style="display: inline">
-                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
-                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
-                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
-                    </button>
-                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
-                        <c:if test="${page_items <= product_list.size()}">
+		<c:if test="${not empty product_list}">
+			<form method="get" style="display: inline">
+				<div class="btn-group" data-toggle="tooltip" title="Product pages.">
+					<button type="submit" class="btn btn-primary" name="page_number"
+						value="${page_number - 1}"
+						<c:if test="${page_number == '1'}">disabled</c:if>>Previous
+					</button>
+					<button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} - 
+						<c:if test="${page_items * page_number < found_items}">
                             ${page_items * page_number}
                         </c:if>
-                        <c:if test="${page_items > product_list.size()}">
-                            ${page_items * (page_number - 1) + product_list.size()}
+						<c:if test="${page_items * page_number >= found_items}">
+                            ${found_items}
                         </c:if>
-                    </button>
-                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
-                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
-                    </button>
-                </div>
-                <input type="hidden" name="category_tag" value="${category_tag}"/>
-                <input type="hidden" name="page_items" value="${page_items}"/>
-            </form>
-        </c:if>
-    </c:if>
-</div>
+					</button>
+					<button type="submit" class="btn btn-primary" name="page_number"
+						value="${page_number + 1}"
+						<c:if test="${page_items * page_number >= found_items}">disabled</c:if>>Next
+					</button>
+				</div>
+				<input type="hidden" name="category_tag" value="${category_tag}" />
+				<input type="hidden" name="page_items" value="${page_items}" />
+			</form>
+		</c:if>
+	</div>
 
 <form>
     <div class="container">
         <br>
-        <p>Found ${product_list.size()} products.</p>
+        <p>Found ${found_items} products.</p>
         <c:if test="${not empty product_list}">
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
@@ -133,38 +133,38 @@
     </div>
 </form>
 
-<c:if test="${page_items != '0'}">
-    <c:if test="${not empty product_list}">
-        <div class="container" align="right">
-            <form method="get">
-                <div class="btn-group" data-toggle="tooltip" title="Product pages.">
-                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number - 1}"
-                            <c:if test="${page_number == '1'}">disabled</c:if>>Previous
-                    </button>
-                    <button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} -
-                        <c:if test="${page_items <= product_list.size()}">
+	<c:if test="${not empty product_list}">
+		<div class="container" align="right">
+			<form method="get">
+				<div class="btn-group" data-toggle="tooltip" title="Product pages.">
+					<button type="submit" class="btn btn-primary" name="page_number"
+						value="${page_number - 1}"
+						<c:if test="${page_number == '1'}">disabled</c:if>>Previous
+					</button>
+					<button type="button" class="btn btn-primary" disabled>${page_items * (page_number - 1) + 1} - 
+						<c:if test="${page_items * page_number < found_items}">
                             ${page_items * page_number}
                         </c:if>
-                        <c:if test="${page_items > product_list.size()}">
-                            ${page_items * (page_number - 1) + product_list.size()}
+						<c:if test="${page_items * page_number >= found_items}">
+                            ${found_items}
                         </c:if>
-                    </button>
-                    <button type="submit" class="btn btn-primary" name="page_number" value="${page_number + 1}"
-                            <c:if test="${page_number >= page_max}">disabled</c:if>>Next
-                    </button>
-                </div>
-                <input type="hidden" name="category_tag" value="${category_tag}"/>
-                <input type="hidden" name="page_items" value="${page_items}"/>
-            </form>
-            <br>
-        </div>
-    </c:if>
-</c:if>
+					</button>
+					<button type="submit" class="btn btn-primary" name="page_number"
+						value="${page_number + 1}"
+						<c:if test="${page_items * page_number >= found_items}">disabled</c:if>>Next
+					</button>
+				</div>
+				<input type="hidden" name="category_tag" value="${category_tag}" />
+				<input type="hidden" name="page_items" value="${page_items}" />
+			</form>
+			<br>
+		</div>
+	</c:if>
 
-<script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
+	<script>
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
 </body>
 </html>

@@ -48,19 +48,17 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
+            long found_items = productService.countAllProductsByCategory(category);
             
-            if (page_items == null) page_items = 10;
-            if (page_number == null) page_number = 0;
-            Page<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category, PageRequest.of(page_number, page_items));
-            
-            /*if (page_items == null) page_items = 0;
+            if (page_items == null) page_items = 5;
             if (page_number == null) page_number = 1;
-            productService.prePagination(modelMap, products, page_items, page_number);*/
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
-            modelMap.addAttribute(PAGE_MAX.getValue(), products.getNumberOfElements());
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber());
+            if (page_items * page_number > found_items) page_number = (int) found_items / page_items;
+            Page<Product> products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
+            modelMap.addAttribute(FOUND_ITEMS.getValue(), found_items);
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber() + 1);
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
         } catch (ServiceException e) {
             log.error(e);
         }
@@ -93,22 +91,20 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
+            long found_items = productService.countAllProductsByCategory(category);
             
-            if (page_items == null) page_items = 10;
-            if (page_number == null) page_number = 0;
-            Page<Product> products = productService.getProductsByCategoryAndQuantityNotNull(category, PageRequest.of(page_number, page_items));
+            if (page_items == null) page_items = 5;
+            if (page_number == null) page_number = 1;
+            if (page_items * page_number > found_items) page_number = (int) found_items / page_items;
+            Page<Product> products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
             
             Product product = productService.read(product_id);
             orderService.addProductToBasket(order, product);
 
-            /*if (page_items == null) page_items = 0;
-            if (page_number == null) page_number = 1;
-            productService.prePagination(modelMap, products, page_items, page_number);*/
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
-            modelMap.addAttribute(PAGE_MAX.getValue(), products.getNumberOfElements());
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber());
-
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
+            modelMap.addAttribute(FOUND_ITEMS.getValue(), found_items);
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber() + 1);
+            modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
         } catch (ServiceException e) {
             log.error(e);
         }

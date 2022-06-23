@@ -23,6 +23,7 @@ public enum RequestParamEnum {
     SEARCH_COMPARING("search_comparing"),
     MIN_PRICE("min_price"),
     MAX_PRICE("max_price"),
+    FOUND_ITEMS("found_items"),
     PAGE_ITEMS("page_items"),
     PAGE_NUMBER("page_number"),
     PAGE_MAX("page_max");

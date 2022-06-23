@@ -4,6 +4,7 @@ import com.commandoby.sonyShop.repository.ProductRepository;
 import com.commandoby.sonyShop.repository.SearchProductsRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
+import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 
@@ -54,6 +55,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
 	@Override
+	public long countAllProducts() throws ServiceException {
+		return productRepository.count();
+	}
+
+	@Override
+	public long countAllProductsByCategory(Category category) throws ServiceException {
+		return productRepository.countByCategory(category);
+	}
+
+	@Override
 	public List<Product> getAllProducts() throws ServiceException {
 		List<Product> products = new ArrayList<>();
 		Optional.ofNullable(productRepository.findAll())
@@ -79,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getProductsByCategoryAndQuantityNotNull(Category category, Pageable pageable) throws ServiceException {
+    public Page<Product> getProductsByCategoryNotNull(Category category, Pageable pageable) throws ServiceException {
         Optional<Page<Product>> products = Optional.ofNullable(
-                productRepository.getAllByCategoryAndQuantityNotLike(category, 0, pageable));
+                productRepository.getAllByCategory(category, pageable));
         return products.orElseThrow(() ->
                 new ServiceException("Error retrieving the list of products for category: "
                         + category.getName() + ".", new Exception()));
