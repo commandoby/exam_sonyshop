@@ -13,13 +13,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
@@ -48,22 +45,25 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
-            long found_items = productService.countAllProductsByCategory(category);
             
             if (page_items == null) page_items = 5;
             if (page_number == null) page_number = 1;
-            if (page_items * page_number > found_items) page_number = (int) found_items / page_items;
             Page<Product> products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
+            
+            if (page_items * (page_number - 1) >= products.getTotalElements()) {
+            	page_number = (int) Math.ceil(products.getTotalElements() / (float) page_items);
+            	products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
+            }
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
-            modelMap.addAttribute(FOUND_ITEMS.getValue(), found_items);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber() + 1);
+            modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
             modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
         } catch (ServiceException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
+        modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
         modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }
@@ -91,27 +91,29 @@ public class ProductController {
 
         try {
             Category category = categoryService.getCategoryForProducts(category_tag);
-            long found_items = productService.countAllProductsByCategory(category);
             
             if (page_items == null) page_items = 5;
             if (page_number == null) page_number = 1;
-            if (page_items * page_number > found_items) page_number = (int) found_items / page_items;
             Page<Product> products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
+            
+            if (page_items * (page_number - 1) >= products.getTotalElements()) {
+            	page_number = (int) Math.ceil(products.getTotalElements() / (float) page_items);
+            	products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
+            }
             
             Product product = productService.read(product_id);
             orderService.addProductToBasket(order, product);
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
-            modelMap.addAttribute(FOUND_ITEMS.getValue(), found_items);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), products.getNumber() + 1);
+            modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
             modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
         } catch (ServiceException e) {
             log.error(e);
         }
 
-
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(ORDER.getValue(), order);
+        modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
         modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }

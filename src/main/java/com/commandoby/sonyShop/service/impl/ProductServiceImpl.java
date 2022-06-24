@@ -4,14 +4,12 @@ import com.commandoby.sonyShop.repository.ProductRepository;
 import com.commandoby.sonyShop.repository.SearchProductsRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
-import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.ProductService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,41 +97,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
+    public Page<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
                                                    Map<String, Integer> paramsIntegerMap) throws ServiceException {
         return searchProductsRepository.searchProductsByParams(paramsStringMap, paramsIntegerMap);
-    }
-
-
-    @Override
-    public void prePagination(ModelMap modelMap, List<Product> products,
-                              Integer pageItems, Integer pageNumber) throws ServiceException {
-        if (!pageItems.equals(0) && !products.isEmpty()) {
-            List<Product> productPageList = pagination(modelMap, products, pageItems, pageNumber);
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), productPageList);
-        } else {
-            modelMap.addAttribute(PRODUCT_LIST.getValue(), products);
-            modelMap.addAttribute(PAGE_NUMBER.getValue(), "1");
-        }
-    }
-
-    private List<Product> pagination(ModelMap modelMap, List<Product> products,
-                                     Integer pageItems, Integer pageNumber) throws ServiceException {
-        int pages = (int) Math.ceil(products.size() / pageItems.doubleValue());
-        if (pageNumber > pages) pageNumber = pages;
-
-        List<Product> productPageList = new ArrayList<>();
-        products.stream()
-                .skip((long) pageItems * (pageNumber - 1))
-                .limit(pageItems)
-                .forEach(productPageList::add);
-
-        if (productPageList.isEmpty()) throw new ServiceException(
-                "Page " + pageNumber + " was suddenly blank.", new Exception());
-
-        modelMap.addAttribute(PAGE_MAX.getValue(), pages);
-        modelMap.addAttribute(PAGE_NUMBER.getValue(), pageNumber);
-        return productPageList;
     }
 
     @Override
@@ -152,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Integer> defaultParamsIntegerMap(
             Map<String, Integer> paramsIntegerMap) throws ServiceException {
-        paramsIntegerMap.putIfAbsent(PAGE_ITEMS.getValue(), 0);
+        paramsIntegerMap.putIfAbsent(PAGE_ITEMS.getValue(), 5);
         paramsIntegerMap.putIfAbsent(PAGE_NUMBER.getValue(), 1);
         if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null
                 && paramsIntegerMap.get(MIN_PRICE.getValue()) < 0) {

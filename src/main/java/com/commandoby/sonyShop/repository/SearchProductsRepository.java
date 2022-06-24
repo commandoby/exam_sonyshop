@@ -3,11 +3,10 @@ package com.commandoby.sonyShop.repository;
 import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.components.Product;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import org.springframework.data.domain.Page;
 
 public interface SearchProductsRepository {
-    List<Product> searchProductsByParams(Map<String, String> paramsStringMap,
-                                         Map<String, Integer> paramsIntegerMap) throws RepositoryException;
+	Page<Product> searchProductsByParams(Map<String, String> psm, Map<String, Integer> pim) throws RepositoryException;
 }

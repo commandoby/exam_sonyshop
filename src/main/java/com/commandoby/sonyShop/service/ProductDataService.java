@@ -24,6 +24,6 @@ public interface ProductDataService extends BaseService<Product> {
 
     Page<Product> getProductsByCategoryNotNull(Category category, Pageable pageable) throws ServiceException;
 
-    List<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
+    Page<Product> getSearchProductsByParams(Map<String, String> paramsStringMap,
                                             Map<String, Integer> paramsIntegerMap) throws ServiceException;
 }

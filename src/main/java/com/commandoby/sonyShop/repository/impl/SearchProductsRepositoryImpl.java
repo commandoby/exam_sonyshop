@@ -4,6 +4,10 @@ import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.repository.SearchProductsRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.components.Product;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,52 +24,55 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
     public EntityManager entityManager;
 
     @Override
-    public List<Product> searchProductsByParams(Map<String, String> paramsStringMap,
-                                                Map<String, Integer> paramsIntegerMap) throws RepositoryException {
+    public Page<Product> searchProductsByParams(Map<String, String> psm,
+                                                Map<String, Integer> pim) throws RepositoryException {
         List<Product> products = null;
         List<Predicate> predicates = new ArrayList<>();
         Map<String, Order> orderMap = new HashMap<>();
 
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-        Root<Product> root = criteria.from(Product.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
 
-        orderMap.put("Price+", builder.asc(root.get("price")));
-        orderMap.put("Price-", builder.desc(root.get("price")));
-        orderMap.put("Name+", builder.asc(root.get("name")));
-        orderMap.put("Name-", builder.desc(root.get("name")));
+        orderMap.put("Price+", criteriaBuilder.asc(root.get("price")));
+        orderMap.put("Price-", criteriaBuilder.desc(root.get("price")));
+        orderMap.put("Name+", criteriaBuilder.asc(root.get("name")));
+        orderMap.put("Name-", criteriaBuilder.desc(root.get("name")));
 
-        if (paramsStringMap.get(SEARCH_VALUE.getValue()) != null
-                && !paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")) {
-            predicates.add(builder.or(
-                    builder.like(root.get("name"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%"),
-                    builder.like(root.get("description"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%")));
+        if (psm.get(SEARCH_VALUE.getValue()) != null
+                && !psm.get(SEARCH_VALUE.getValue()).equals("")) {
+            predicates.add(criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("name"), "%" + psm.get(SEARCH_VALUE.getValue()) + "%"),
+                    criteriaBuilder.like(root.get("description"), "%" + psm.get(SEARCH_VALUE.getValue()) + "%")));
         }
 
-        if (paramsStringMap.get(CATEGORY_TAG.getValue()) != null
-                && !paramsStringMap.get(CATEGORY_TAG.getValue()).equals("")) {
+        if (psm.get(CATEGORY_TAG.getValue()) != null
+                && !psm.get(CATEGORY_TAG.getValue()).equals("")) {
             Join<Product, Category> categoryJoin = root.join("category");
-            predicates.add(builder.equal(categoryJoin.get("tag"), paramsStringMap.get(CATEGORY_TAG.getValue())));
+            predicates.add(criteriaBuilder.equal(categoryJoin.get("tag"), psm.get(CATEGORY_TAG.getValue())));
         }
 
-        if (!paramsStringMap.get(IS_QUANTITY.getValue()).equals("on")) {
-            predicates.add(builder.notEqual(root.get("quantity"), 0));
+        if (!psm.get(IS_QUANTITY.getValue()).equals("on")) {
+            predicates.add(criteriaBuilder.notEqual(root.get("quantity"), 0));
         }
 
-        if (paramsIntegerMap.get(MIN_PRICE.getValue()) != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MIN_PRICE.getValue())));
+        if (pim.get(MIN_PRICE.getValue()) != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), pim.get(MIN_PRICE.getValue())));
         }
 
-        if (paramsIntegerMap.get(MAX_PRICE.getValue()) != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("price"), paramsIntegerMap.get(MAX_PRICE.getValue())));
+        if (pim.get(MAX_PRICE.getValue()) != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), pim.get(MAX_PRICE.getValue())));
         }
 
-        if (paramsStringMap.get(SEARCH_COMPARING.getValue()) != null) {
-            criteria.select(root).where(predicates.toArray(new Predicate[]{}))
-                    .orderBy(orderMap.get(paramsStringMap.get(SEARCH_COMPARING.getValue())));
-            products = entityManager.createQuery(criteria).getResultList();
-        }
+        if (psm.get(SEARCH_COMPARING.getValue()) != null) {
+            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}))
+                    .orderBy(orderMap.get(psm.get(SEARCH_COMPARING.getValue())));
+			products = entityManager.createQuery(criteriaQuery)
+					.setFirstResult((pim.get(PAGE_NUMBER.getValue()) - 1) * pim.get(PAGE_ITEMS.getValue()))
+					.setMaxResults(pim.get(PAGE_ITEMS.getValue()))
+					.getResultList();
+		}
 
-        return products;
+        return new PageImpl<Product>(products, PageRequest.of(pim.get(PAGE_NUMBER.getValue()) - 1, pim.get(PAGE_ITEMS.getValue())), 0);
     }
 }

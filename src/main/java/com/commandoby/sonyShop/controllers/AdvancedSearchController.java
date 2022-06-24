@@ -11,6 +11,7 @@ import com.commandoby.sonyShop.service.OrderService;
 import com.commandoby.sonyShop.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -50,54 +51,57 @@ public class AdvancedSearchController {
                                           @ModelAttribute Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
-        Map<String, String> paramsStringMap = new HashMap<>();
-        paramsStringMap.put(SEARCH_VALUE.getValue(), search_value);
-        paramsStringMap.put(CATEGORY_TAG.getValue(), category_tag);
-        paramsStringMap.put(SEARCH_COMPARING.getValue(), search_comparing);
-        paramsStringMap.put(IS_QUANTITY.getValue(), is_quantity);
-        productService.defaultParamsStringMap(paramsStringMap);
+        Map<String, String> psm = new HashMap<>();
+        psm.put(SEARCH_VALUE.getValue(), search_value);
+        psm.put(CATEGORY_TAG.getValue(), category_tag);
+        psm.put(SEARCH_COMPARING.getValue(), search_comparing);
+        psm.put(IS_QUANTITY.getValue(), is_quantity);
+        productService.defaultParamsStringMap(psm);
 
-        Map<String, Integer> paramsIntegerMap = new HashMap<>();
-        paramsIntegerMap.put(MIN_PRICE.getValue(), min_price);
-        paramsIntegerMap.put(MAX_PRICE.getValue(), max_price);
-        paramsIntegerMap.put(PAGE_ITEMS.getValue(), page_items);
-        paramsIntegerMap.put(PAGE_NUMBER.getValue(), page_number);
-        productService.defaultParamsIntegerMap(paramsIntegerMap);
+        Map<String, Integer> pim = new HashMap<>();
+        pim.put(MIN_PRICE.getValue(), min_price);
+        pim.put(MAX_PRICE.getValue(), max_price);
+        pim.put(PAGE_ITEMS.getValue(), page_items);
+        pim.put(PAGE_NUMBER.getValue(), page_number);
+        productService.defaultParamsIntegerMap(pim);
 
-        List<Product> products = new ArrayList<>();
+        Page<Product> products = null;
         try {
             if (product_id != null) {
                 Product product = productService.read(product_id);
                 orderService.addProductToBasket(order, product);
             }
 
-            if (!paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")
-                    || paramsIntegerMap.get(MIN_PRICE.getValue()) != null
-                    || paramsIntegerMap.get(MAX_PRICE.getValue()) != null) {
-                products = productService.getSearchProductsByParams(paramsStringMap, paramsIntegerMap);
+            if (!psm.get(SEARCH_VALUE.getValue()).equals("")
+                    || pim.get(MIN_PRICE.getValue()) != null
+                    || pim.get(MAX_PRICE.getValue()) != null) {
+                products = productService.getSearchProductsByParams(psm, pim);
+                
+                if (pim.get(PAGE_ITEMS.getValue()) * (pim.get(PAGE_NUMBER.getValue()) - 1) >= products.getTotalElements()) {
+                	pim.put(PAGE_NUMBER.getValue(), (int) Math.ceil(products.getTotalElements() / (float) pim.get(PAGE_ITEMS.getValue())));
+                    products = productService.getSearchProductsByParams(psm, pim);
+                }
+
+                modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
+                modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
             } else {
                 modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
             }
-
-            productService.prePagination(modelMap, products,
-                    paramsIntegerMap.get(PAGE_ITEMS.getValue()),
-                    paramsIntegerMap.get(PAGE_NUMBER.getValue()));
-
-            modelMap.addAttribute(PRODUCT_SIZE.getValue(), products.size());
         } catch (ServiceException e) {
             log.error(e);
         }
 
-        modelMap.addAttribute(SEARCH_VALUE.getValue(), paramsStringMap.get(SEARCH_VALUE.getValue()));
-        modelMap.addAttribute(CATEGORY_TAG.getValue(), paramsStringMap.get(CATEGORY_TAG.getValue()));
-        modelMap.addAttribute(SEARCH_COMPARING.getValue(), paramsStringMap.get(SEARCH_COMPARING.getValue()));
-        modelMap.addAttribute(IS_QUANTITY.getValue(), paramsStringMap.get(IS_QUANTITY.getValue()));
+        modelMap.addAttribute(SEARCH_VALUE.getValue(), psm.get(SEARCH_VALUE.getValue()));
+        modelMap.addAttribute(CATEGORY_TAG.getValue(), psm.get(CATEGORY_TAG.getValue()));
+        modelMap.addAttribute(SEARCH_COMPARING.getValue(), psm.get(SEARCH_COMPARING.getValue()));
+        modelMap.addAttribute(IS_QUANTITY.getValue(), psm.get(IS_QUANTITY.getValue()));
         modelMap.addAttribute(CATEGORIES.getValue(), categoryService.getCategories());
-        modelMap.addAttribute(PAGE_ITEMS.getValue(), paramsIntegerMap.get(PAGE_ITEMS.getValue()));
-        modelMap.addAttribute(MIN_PRICE.getValue(), paramsIntegerMap.get(MIN_PRICE.getValue()));
-        modelMap.addAttribute(MAX_PRICE.getValue(), paramsIntegerMap.get(MAX_PRICE.getValue()));
-        if (!paramsStringMap.get(CATEGORY_TAG.getValue()).equals("")) {
-            Category category = categoryService.getCategoryByTag(paramsStringMap.get(CATEGORY_TAG.getValue()));
+        modelMap.addAttribute(PAGE_ITEMS.getValue(), pim.get(PAGE_ITEMS.getValue()));
+        modelMap.addAttribute(PAGE_NUMBER.getValue(), pim.get(PAGE_NUMBER.getValue()));
+        modelMap.addAttribute(MIN_PRICE.getValue(), pim.get(MIN_PRICE.getValue()));
+        modelMap.addAttribute(MAX_PRICE.getValue(), pim.get(MAX_PRICE.getValue()));
+        if (!psm.get(CATEGORY_TAG.getValue()).equals("")) {
+            Category category = categoryService.getCategoryByTag(psm.get(CATEGORY_TAG.getValue()));
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
         }
 
