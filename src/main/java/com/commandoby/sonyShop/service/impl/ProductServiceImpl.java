@@ -53,16 +53,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 	@Override
-	public long countAllProducts() throws ServiceException {
-		return productRepository.count();
-	}
-
-	@Override
-	public long countAllProductsByCategory(Category category) throws ServiceException {
-		return productRepository.countByCategory(category);
-	}
-
-	@Override
 	public List<Product> getAllProducts() throws ServiceException {
 		List<Product> products = new ArrayList<>();
 		Optional.ofNullable(productRepository.findAll())

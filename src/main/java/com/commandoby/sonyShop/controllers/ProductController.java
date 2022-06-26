@@ -58,13 +58,14 @@ public class ProductController {
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
             modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
             modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
+            modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
+            modelMap.addAttribute(PAGE_MAX.getValue(), (int) Math.ceil(products.getTotalElements() / (float) page_items));
         } catch (ServiceException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
-        modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
-        modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }
 
@@ -107,14 +108,15 @@ public class ProductController {
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
             modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
             modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
+            modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
+            modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
+            modelMap.addAttribute(PAGE_MAX.getValue(), (int) Math.ceil(products.getTotalElements() / (float) page_items));
         } catch (ServiceException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
         modelMap.addAttribute(ORDER.getValue(), order);
-        modelMap.addAttribute(PAGE_NUMBER.getValue(), page_number);
-        modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
         return new ModelAndView(PagesPathEnum.PRODUCT_LIST_PAGE.getPath(), modelMap);
     }
 

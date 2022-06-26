@@ -11,10 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProductDataService extends BaseService<Product> {
-	
-	long countAllProducts() throws ServiceException;
-
-	long countAllProductsByCategory(Category category) throws ServiceException;
 
     List<Product> getAllProducts() throws ServiceException;
 

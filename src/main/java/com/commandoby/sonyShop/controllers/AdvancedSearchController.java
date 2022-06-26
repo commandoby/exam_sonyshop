@@ -84,6 +84,9 @@ public class AdvancedSearchController {
 
                 modelMap.addAttribute(PRODUCT_LIST.getValue(), products.getContent());
                 modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
+                modelMap.addAttribute(PAGE_ITEMS.getValue(), pim.get(PAGE_ITEMS.getValue()));
+                modelMap.addAttribute(PAGE_NUMBER.getValue(), pim.get(PAGE_NUMBER.getValue()));
+                modelMap.addAttribute(PAGE_MAX.getValue(), (int) Math.ceil(products.getTotalElements() / (float) pim.get(PAGE_ITEMS.getValue())));
             } else {
                 modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
             }
@@ -96,8 +99,6 @@ public class AdvancedSearchController {
         modelMap.addAttribute(SEARCH_COMPARING.getValue(), psm.get(SEARCH_COMPARING.getValue()));
         modelMap.addAttribute(IS_QUANTITY.getValue(), psm.get(IS_QUANTITY.getValue()));
         modelMap.addAttribute(CATEGORIES.getValue(), categoryService.getCategories());
-        modelMap.addAttribute(PAGE_ITEMS.getValue(), pim.get(PAGE_ITEMS.getValue()));
-        modelMap.addAttribute(PAGE_NUMBER.getValue(), pim.get(PAGE_NUMBER.getValue()));
         modelMap.addAttribute(MIN_PRICE.getValue(), pim.get(MIN_PRICE.getValue()));
         modelMap.addAttribute(MAX_PRICE.getValue(), pim.get(MAX_PRICE.getValue()));
         if (!psm.get(CATEGORY_TAG.getValue()).equals("")) {

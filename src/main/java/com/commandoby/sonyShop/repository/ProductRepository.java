@@ -11,10 +11,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
-	
-	long count();
-
-	long countByCategory(Category category);
 
     List<Product> getAllByCategory(Category category) throws RepositoryException;
 

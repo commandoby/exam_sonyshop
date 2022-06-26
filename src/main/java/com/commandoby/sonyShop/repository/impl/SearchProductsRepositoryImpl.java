@@ -73,6 +73,7 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
 					.getResultList();
 		}
 
-        return new PageImpl<Product>(products, PageRequest.of(pim.get(PAGE_NUMBER.getValue()) - 1, pim.get(PAGE_ITEMS.getValue())), 0);
+        return new PageImpl<Product>(products, PageRequest.of(pim.get(PAGE_NUMBER.getValue()) - 1, pim.get(PAGE_ITEMS.getValue())), 
+        		entityManager.createQuery(criteriaQuery).getResultStream().count());
     }
 }

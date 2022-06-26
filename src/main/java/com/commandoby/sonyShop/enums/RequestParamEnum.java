@@ -25,8 +25,8 @@ public enum RequestParamEnum {
     MAX_PRICE("max_price"),
     FOUND_ITEMS("found_items"),
     PAGE_ITEMS("page_items"),
-    PAGE_NUMBER("page_number");
-    //PAGE_MAX("page_max");
+    PAGE_NUMBER("page_number"),
+    PAGE_MAX("page_max");
 
     private final String value;
 
