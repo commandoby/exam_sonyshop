@@ -14,6 +14,7 @@ public class Product extends BaseEntity {
     private String imageName;
     private String description;
     private Category category;
+    private Image image;
     private int price;
     private int quantity;
     private List<Order> orders;
@@ -21,11 +22,12 @@ public class Product extends BaseEntity {
     public Product() {}
 
     public Product(String name, String imageName, String description, Category category,
-                   int price, int quantity) {
+                   Image image ,int price, int quantity) {
         this.name = name;
         this.imageName = imageName;
         this.description = description;
         this.category = category;
+        this.image = image;
         this.price = price;
         this.quantity = quantity;
     }
@@ -35,6 +37,7 @@ public class Product extends BaseEntity {
         imageName = builder.imageName;
         description = builder.description;
         category = builder.category;
+        image = builder.image;
         price = builder.price;
         quantity = builder.quantity;
     }
@@ -74,6 +77,16 @@ public class Product extends BaseEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "image_id", nullable = false)
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Column(name = "price")
@@ -143,6 +156,7 @@ public class Product extends BaseEntity {
         private String imageName;
         private String description;
         private Category category;
+        private Image image;
         private int price;
         private int quantity;
 
@@ -165,6 +179,11 @@ public class Product extends BaseEntity {
 
         public Builder withCategory(Category category) {
             this.category = category;
+            return this;
+        }
+
+        public Builder withImage(Image image) {
+            this.image = image;
             return this;
         }
 

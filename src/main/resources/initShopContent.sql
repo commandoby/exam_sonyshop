@@ -1,7 +1,7 @@
 -- add users
 DELETE FROM sonyshop.users WHERE id >= 0;
 INSERT INTO sonyshop.users(name, surname, email, password, date_of_birth, balance)
-VALUES ("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999);
+VALUES ("Admin", "124356", "admin", "admin", "1980-01-01", 9999999);
 
 -- add categories
 DELETE FROM sonyshop.categories WHERE id >= 0;

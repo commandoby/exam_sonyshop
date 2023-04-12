@@ -13,15 +13,17 @@ public class Category extends BaseEntity{
     private String name;
     private String tag;
     private String imageName;
+    private Image image;
     private int rating;
     private List<Product> productList;
 
     public Category() {}
 
-    public Category(String name, String tag, String imageName, int rating) {
+    public Category(String name, String tag, String imageName, Image image, int rating) {
         this.name = name;
         this.tag = tag;
         this.imageName = imageName;
+        this.image = image;
         this.rating = rating;
     }
 
@@ -50,6 +52,16 @@ public class Category extends BaseEntity{
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "image_id", nullable = false)
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Column(name = "rating")

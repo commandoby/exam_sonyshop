@@ -2,6 +2,14 @@
 -- DDL for schema sonyshop
 DROP SCHEMA IF EXISTS sonyshop;
 CREATE SCHEMA IF NOT EXISTS sonyshop;
+    
+    -- DDL for Table images
+DROP TABLE IF EXISTS sonyshop.images;
+CREATE TABLE IF NOT EXISTS sonyshop.images (
+    id INT NOT NULL,
+    image MEDIUMBLOB NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX IDX_IMAGE_ID_UNIQUE (id ASC));
 
 -- DDL for Table categories
 DROP TABLE IF EXISTS sonyshop.categories;
@@ -9,12 +17,18 @@ CREATE TABLE IF NOT EXISTS sonyshop.categories (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     tag VARCHAR(45) NOT NULL,
-    image_name VARCHAR(200) NOT NULL,
+    image_name VARCHAR(200),
     rating INT NOT NULL,
+    image_id INT NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_CATEGORY_ID_UNIQUE (id ASC),
     UNIQUE INDEX IDX_NAME_UNIQUE (name ASC),
-    UNIQUE INDEX IDX_TAG_UNIQUE (tag ASC));
+    UNIQUE INDEX IDX_TAG_UNIQUE (tag ASC),
+    CONSTRAINT FK_CATEGORIES_IMAGE_ID_IMAGES_ID
+    FOREIGN KEY (image_id)
+    REFERENCES sonyshop.images (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 -- DDL for Table users
 DROP TABLE IF EXISTS sonyshop.users;
@@ -50,16 +64,22 @@ DROP TABLE IF EXISTS sonyshop.products;
 CREATE TABLE IF NOT EXISTS sonyshop.products (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(200) NOT NULL,
-    image_name VARCHAR(200) NOT NULL,
+    image_name VARCHAR(200),
     description VARCHAR(400) NULL,
     price INT NOT NULL,
     quantity INT,
     category_id INT NOT NULL,
+    image_id INT NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_ID_UNIQUE (id ASC),
     CONSTRAINT FK_PRODUCTS_CATEGORY_ID_CATEGORIES_ID
     FOREIGN KEY (category_id)
     REFERENCES sonyshop.categories (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT FK_PRODUCTS_IMAGE_ID_IMAGES_ID
+    FOREIGN KEY (image_id)
+    REFERENCES sonyshop.images (id)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 
