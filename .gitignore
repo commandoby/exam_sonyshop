@@ -4,7 +4,6 @@ bin/
 out/
 sample/
 target/
-initShopContent.sql
   
 # Compiled class file
 *.class
@@ -21,3 +20,5 @@ initShopContent.sql
 *.png
 .classpath
 .project
+initShopContent.sql
+initShopContentNew.sql

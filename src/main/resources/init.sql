@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS sonyshop.categories (
     tag VARCHAR(45) NOT NULL,
     image_name VARCHAR(200),
     rating INT NOT NULL,
-    image_id INT NOT NULL,
+    image_id INT,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_CATEGORY_ID_UNIQUE (id ASC),
     UNIQUE INDEX IDX_NAME_UNIQUE (name ASC),
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS sonyshop.products (
     price INT NOT NULL,
     quantity INT,
     category_id INT NOT NULL,
-    image_id INT NOT NULL,
+    image_id INT,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_ID_UNIQUE (id ASC),
     CONSTRAINT FK_PRODUCTS_CATEGORY_ID_CATEGORIES_ID
