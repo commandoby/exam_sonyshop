@@ -5,8 +5,6 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
-import com.mysql.cj.jdbc.Blob;
-
 import jakarta.persistence.Column;
 
 @Entity

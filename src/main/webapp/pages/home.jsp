@@ -55,7 +55,8 @@
                         <div class="card-body">
                             <h4 class="card-title">${category.getName()}</h4>
                             <img class="card-img" style="height:160px"
-                                 src="${contextPath}/images/${category.getImageName()}" alt="Card image">
+<%--                                  src="${contextPath}/images/${category.getImageName()}" alt="Card image"> --%>
+src="data:image/jpg;base64, ${category.getImage().getImage() }" alt="Card image">
                         </div>
                         <div class="progress" style="height:8px">
                             <div class="progress-bar bg-light"
