@@ -133,7 +133,7 @@
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                         src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
