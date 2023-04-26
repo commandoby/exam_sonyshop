@@ -1,6 +1,8 @@
 package com.commandoby.sonyShop.components;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -41,5 +43,26 @@ public class Image extends BaseEntity {
 			this.base64Image = Base64.getEncoder().encodeToString(this.image);
 			System.out.println("here");
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(image);
+		result = prime * result + Objects.hash(base64Image);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Image other = (Image) obj;
+		return Objects.equals(base64Image, other.base64Image) && Arrays.equals(image, other.image);
 	}
 }

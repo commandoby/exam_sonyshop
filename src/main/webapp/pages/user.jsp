@@ -125,7 +125,7 @@
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             <div class="media" style="word-break: break-word">
                                 <img class="card-img p-3" style="max-width:160px;max-height: 180px"
-                                     src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                                     src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
                                      alt="Card image">
                                 <div class="media-body" align="left">
                                     <p>${product.getName()}</p>

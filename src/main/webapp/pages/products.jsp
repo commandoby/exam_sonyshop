@@ -132,7 +132,7 @@
 			<c:if test="${not empty product_list}">
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
-                    <img class="card-img p-3" style="max-width:220px;max-height: 360px"
+                    <img class="card-img p-3" style="max-width:220px;max-height:360px"
                          src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
                          alt="Card image">
                     <div class="media-body">

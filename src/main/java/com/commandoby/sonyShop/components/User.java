@@ -16,185 +16,207 @@ import java.util.Objects;
 @Component
 public class User extends BaseEntity {
 
-    private String name;
+	private String name;
 
-    private String surname;
+	private String surname;
 
-    @NotEmpty(message = "Email/login must not be empty")
-    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
-    private String email;
+	@NotEmpty(message = "Email/login must not be empty")
+	@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
+	private String email;
 
-    @Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
-    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
-    private String password;
+	@Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
+	@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
+	private String password;
 
-    private LocalDate dateOfBirth;
+	private LocalDate dateOfBirth;
 
-    private int balance;
+	private int balance;
 
-    private List<Order> orders = new ArrayList<>();
+	private Image image;
 
-    public User() {}
+	private List<Order> orders = new ArrayList<>();
 
-    public User(String name, String surname, String email, String password,
-                LocalDate dateOfBirth, int balance) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.dateOfBirth = dateOfBirth;
-        this.balance = balance;
-    }
+	public User() {
+	}
 
-    public User(Builder builder) {
-        name = builder.name;
-        surname = builder.surname;
-        email = builder.email;
-        password = builder.password;
-        dateOfBirth = builder.dateOfBirth;
-        balance = builder.balance;
-    }
+	public User(String name, String surname, String email, String password, LocalDate dateOfBirth, int balance,
+			Image image) {
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.password = password;
+		this.dateOfBirth = dateOfBirth;
+		this.balance = balance;
+		this.image = image;
+	}
 
-    @Column(name = "name")
-    public String getName() {
-        return name;
-    }
+	public User(Builder builder) {
+		name = builder.name;
+		surname = builder.surname;
+		email = builder.email;
+		password = builder.password;
+		dateOfBirth = builder.dateOfBirth;
+		balance = builder.balance;
+		image = builder.image;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
 
-    @Column(name = "surname")
-    public String getSurname() {
-        return surname;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+	@Column(name = "surname")
+	public String getSurname() {
+		return surname;
+	}
 
-    @Column(name = "email")
-    public String getEmail() {
-        return email;
-    }
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	@Column(name = "email")
+	public String getEmail() {
+		return email;
+	}
 
-    @Column(name = "password")
-    public String getPassword() {
-        return password;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	@Column(name = "password")
+	public String getPassword() {
+		return password;
+	}
 
-    @Column(name = "date_of_birth")
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
+	@Column(name = "date_of_birth")
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-    @Column(name = "balance")
-    public int getBalance() {
-        return balance;
-    }
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
+	@Column(name = "balance")
+	public int getBalance() {
+		return balance;
+	}
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public List<Order> getOrders() {
-        return orders;
-    }
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
+	@ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "image_id", nullable = false)
+	public Image getImage() {
+		return image;
+	}
 
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
+	public void setImage(Image image) {
+		this.image = image;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return balance == user.balance && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(dateOfBirth, user.dateOfBirth) && Objects.equals(orders, user.orders);
-    }
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	public List<Order> getOrders() {
+		return orders;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, surname, email, password, dateOfBirth, balance, orders);
-    }
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", dateOfBirth='" + dateOfBirth + '\'' +
-                ", balance=" + balance +
-                ", orders=" + orders.size() +
-                '}';
-    }
+	public void addOrder(Order order) {
+		orders.add(order);
+	}
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(balance, dateOfBirth, email, image, name, orders, password, surname);
+	}
 
-    public static final class Builder {
-        private String name;
-        private String surname;
-        private String email;
-        private String password;
-        private LocalDate dateOfBirth;
-        private int balance;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return balance == other.balance && Objects.equals(dateOfBirth, other.dateOfBirth)
+				&& Objects.equals(email, other.email) && Objects.equals(image, other.image)
+				&& Objects.equals(name, other.name) && Objects.equals(orders, other.orders)
+				&& Objects.equals(password, other.password) && Objects.equals(surname, other.surname);
+	}
 
-        private Builder() {}
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password
+				+ ", dateOfBirth=" + dateOfBirth + ", balance=" + balance + ", image=" + image + ", orders=" + orders
+				+ "]";
+	}
 
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
+	public static Builder newBuilder() {
+		return new Builder();
+	}
 
-        public Builder withSurname(String surname) {
-            this.surname = surname;
-            return this;
-        }
+	public static final class Builder {
+		private String name;
+		private String surname;
+		private String email;
+		private String password;
+		private LocalDate dateOfBirth;
+		private int balance;
+		private Image image;
 
-        public Builder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
+		private Builder() {
+		}
 
-        public Builder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
+		public Builder withName(String name) {
+			this.name = name;
+			return this;
+		}
 
-        public Builder withDateOfBirth(LocalDate data) {
-            this.dateOfBirth = data;
-            return this;
-        }
+		public Builder withSurname(String surname) {
+			this.surname = surname;
+			return this;
+		}
 
-        public Builder withBalance(int balance) {
-            this.balance = balance;
-            return this;
-        }
+		public Builder withEmail(String email) {
+			this.email = email;
+			return this;
+		}
 
-        public User build() {
-            return new User(this);
-        }
-    }
+		public Builder withPassword(String password) {
+			this.password = password;
+			return this;
+		}
+
+		public Builder withDateOfBirth(LocalDate data) {
+			this.dateOfBirth = data;
+			return this;
+		}
+
+		public Builder withBalance(int balance) {
+			this.balance = balance;
+			return this;
+		}
+
+		public Builder withImage(Image image) {
+			this.image = image;
+			return this;
+		}
+
+		public User build() {
+			return new User(this);
+		}
+	}
 }

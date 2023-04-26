@@ -42,7 +42,7 @@
         <input type="hidden" name="product_id" value="product.getId()"/>
         <div class="media">
             <img class="card-img p-3" style="max-width:400px;max-height: 640px"
-                 src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                 src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
                  alt="Card image">
             <div class="media-body">
                 <h2>${product.getName()}</h2>

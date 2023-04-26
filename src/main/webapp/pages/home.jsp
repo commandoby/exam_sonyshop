@@ -55,11 +55,11 @@
 				<div class="row">
 					<c:forEach items="${categories}" var="category">
 						<button type="submit" class="btn btn-light"
-							style="width: 360px; height: 260px" name="category_tag"
+							style="width: 360px; height: 360px" name="category_tag"
 							value="${category.getTag()}" formaction="/sonyshop/products">
 							<div class="card-body">
 								<h4 class="card-title">${category.getName()}</h4>
-								<img class="card-img" style="height: 160px"
+								<img class="card-img" style="height:260px"
 									src="data:image/jpeg;base64, ${category.getImage().getBase64Image()}"
 									alt="Card image">
 							</div>

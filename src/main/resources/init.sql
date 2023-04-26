@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS sonyshop.categories (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     tag VARCHAR(45) NOT NULL,
-    image_name VARCHAR(200),
     rating INT NOT NULL,
     image_id INT,
     PRIMARY KEY (id),
@@ -40,9 +39,15 @@ CREATE TABLE IF NOT EXISTS sonyshop.users (
     password VARCHAR(50) NOT NULL,
     date_of_birth DATE NOT NULL,
     balance INT,
+    image_id INT,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_USER_ID_UNIQUE (id ASC),
-    UNIQUE INDEX IDX_EMAIL_UNIQUE (email ASC));
+    UNIQUE INDEX IDX_EMAIL_UNIQUE (email ASC),
+    CONSTRAINT FK_USERS_IMAGE_ID_IMAGES_ID
+    FOREIGN KEY (image_id)
+    REFERENCES sonyshop.images (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 -- DDL for Table orders
 DROP TABLE IF EXISTS sonyshop.orders;
@@ -64,7 +69,6 @@ DROP TABLE IF EXISTS sonyshop.products;
 CREATE TABLE IF NOT EXISTS sonyshop.products (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(200) NOT NULL,
-    image_name VARCHAR(200),
     description VARCHAR(400) NULL,
     price INT NOT NULL,
     quantity INT,
