@@ -20,5 +20,3 @@ target/
 *.png
 .classpath
 .project
-initShopContent.sql
-initShopContentNew.sql
