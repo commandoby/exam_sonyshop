@@ -41,7 +41,6 @@ public class Image extends BaseEntity {
 	private void convertByteToBase64Image() {
 		if (this.base64Image == null || this.base64Image.equals("")) {
 			this.base64Image = Base64.getEncoder().encodeToString(this.image);
-			System.out.println("here");
 		}
 	}
 
