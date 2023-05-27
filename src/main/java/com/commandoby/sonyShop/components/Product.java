@@ -15,18 +15,21 @@ public class Product extends BaseEntity {
 	private Category category;
 	private Image image;
 	private int price;
+	private Integer year;
 	private int quantity;
 	private List<Order> orders;
 
 	public Product() {
 	}
 
-	public Product(String name, String description, Category category, Image image, int price, int quantity) {
+	public Product(String name, String description, Category category, Image image, int price, Integer year,
+			int quantity) {
 		this.name = name;
 		this.description = description;
 		this.category = category;
 		this.image = image;
 		this.price = price;
+		this.year = checkYear(year);
 		this.quantity = quantity;
 	}
 
@@ -36,6 +39,7 @@ public class Product extends BaseEntity {
 		category = builder.category;
 		image = builder.image;
 		price = builder.price;
+		year = checkYear(builder.year);
 		quantity = builder.quantity;
 	}
 
@@ -86,6 +90,15 @@ public class Product extends BaseEntity {
 		this.price = price;
 	}
 
+	@Column(name = "year")
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = checkYear(year);
+	}
+
 	@Column(name = "quantity")
 	public int getQuantity() {
 		return quantity;
@@ -106,7 +119,14 @@ public class Product extends BaseEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, description, image, name, orders, price, quantity);
+		return Objects.hash(category, description, image, name, orders, price, quantity, year);
+	}
+
+	private Integer checkYear(Integer year) {
+		if (year != null && year < 1993) {
+			return 1993;
+		}
+		return year;
 	}
 
 	@Override
@@ -120,13 +140,14 @@ public class Product extends BaseEntity {
 		Product other = (Product) obj;
 		return Objects.equals(category, other.category) && Objects.equals(description, other.description)
 				&& Objects.equals(image, other.image) && Objects.equals(name, other.name)
-				&& Objects.equals(orders, other.orders) && price == other.price && quantity == other.quantity;
+				&& Objects.equals(orders, other.orders) && price == other.price && quantity == other.quantity
+				&& year == other.year;
 	}
 
 	@Override
 	public String toString() {
 		return "Product [name=" + name + ", description=" + description + ", category=" + category + ", image=" + image
-				+ ", price=" + price + ", quantity=" + quantity + ", orders=" + orders + "]";
+				+ ", price=" + price + ", year=" + year + ", quantity=" + quantity + ", orders=" + orders + "]";
 	}
 
 	public static Builder newBuilder() {
@@ -139,6 +160,7 @@ public class Product extends BaseEntity {
 		private Category category;
 		private Image image;
 		private int price;
+		private Integer year;
 		private int quantity;
 
 		private Builder() {
@@ -166,6 +188,11 @@ public class Product extends BaseEntity {
 
 		public Builder withPrice(int price) {
 			this.price = price;
+			return this;
+		}
+
+		public Builder withYear(Integer year) {
+			this.year = year;
 			return this;
 		}
 

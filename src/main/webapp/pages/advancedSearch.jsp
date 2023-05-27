@@ -256,6 +256,9 @@
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
+                        <c:if test="${not empty product.getYear()}">
+                        	<p class="card-text">Year: ${product.getYear()}</p>
+                        </c:if>
                         <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary"
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">

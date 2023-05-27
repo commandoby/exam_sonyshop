@@ -47,6 +47,9 @@
             <div class="media-body">
                 <h2>${product.getName()}</h2>
                 <p class="card-text">${product.getDescription()}</p>
+                <c:if test="${not empty product.getYear()}">
+                	<p class="card-text">Year: ${product.getYear()}</p>
+                </c:if>
                 <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
