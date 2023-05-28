@@ -24,7 +24,7 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
 	public EntityManager entityManager;
 
 	@Override
-	public Page<Product> searchProductsByParams(Map<String, String> psm, Map<String, Integer> pim)
+	public Page<Product> searchProductsByParams(Map<String, String> paramsStringMap, Map<String, Integer> paramsIntMap)
 			throws RepositoryException {
 		List<Product> products = new ArrayList<>();
 		List<Predicate> predicates = new ArrayList<>();
@@ -39,42 +39,49 @@ public class SearchProductsRepositoryImpl implements SearchProductsRepository {
 		orderMap.put("Name+", criteriaBuilder.asc(root.get("name")));
 		orderMap.put("Name-", criteriaBuilder.desc(root.get("name")));
 
-		if (psm.get(SEARCH_VALUE.getValue()) != null && !psm.get(SEARCH_VALUE.getValue()).equals("")) {
+		if (paramsStringMap.get(SEARCH_VALUE.getValue()) != null
+				&& !paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")) {
 			predicates.add(criteriaBuilder.or(
-					criteriaBuilder.like(root.get("name"), "%" + psm.get(SEARCH_VALUE.getValue()) + "%"),
-					criteriaBuilder.like(root.get("description"), "%" + psm.get(SEARCH_VALUE.getValue()) + "%")));
+					criteriaBuilder.like(root.get("name"), "%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%"),
+					criteriaBuilder.like(root.get("description"),
+							"%" + paramsStringMap.get(SEARCH_VALUE.getValue()) + "%")));
 		}
 
-		if (psm.get(CATEGORY_TAG.getValue()) != null && !psm.get(CATEGORY_TAG.getValue()).equals("")) {
+		if (paramsStringMap.get(CATEGORY_TAG.getValue()) != null
+				&& !paramsStringMap.get(CATEGORY_TAG.getValue()).equals("")) {
 			Join<Product, Category> categoryJoin = root.join("category");
-			predicates.add(criteriaBuilder.equal(categoryJoin.get("tag"), psm.get(CATEGORY_TAG.getValue())));
+			predicates
+					.add(criteriaBuilder.equal(categoryJoin.get("tag"), paramsStringMap.get(CATEGORY_TAG.getValue())));
 		}
 
-		if (!psm.get(IS_QUANTITY.getValue()).equals("on")) {
+		if (!paramsStringMap.get(IS_QUANTITY.getValue()).equals("on")) {
 			predicates.add(criteriaBuilder.notEqual(root.get("quantity"), 0));
 		}
 
-		if (pim.get(MIN_PRICE.getValue()) != null) {
-			predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), pim.get(MIN_PRICE.getValue())));
+		if (paramsIntMap.get(MIN_PRICE.getValue()) != null) {
+			predicates.add(
+					criteriaBuilder.greaterThanOrEqualTo(root.get("price"), paramsIntMap.get(MIN_PRICE.getValue())));
 		}
 
-		if (pim.get(MAX_PRICE.getValue()) != null) {
-			predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), pim.get(MAX_PRICE.getValue())));
+		if (paramsIntMap.get(MAX_PRICE.getValue()) != null) {
+			predicates
+					.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), paramsIntMap.get(MAX_PRICE.getValue())));
 		}
 
-		if (psm.get(SEARCH_COMPARING.getValue()) != null) {
+		if (paramsStringMap.get(SEARCH_COMPARING.getValue()) != null) {
 			criteriaQuery.select(root).where(predicates.toArray(new Predicate[] {}))
-					.orderBy(orderMap.get(psm.get(SEARCH_COMPARING.getValue())));
+					.orderBy(orderMap.get(paramsStringMap.get(SEARCH_COMPARING.getValue())));
 
 			if (entityManager.createQuery(criteriaQuery).getResultList().size() > 0) {
 				products = entityManager.createQuery(criteriaQuery)
-						.setFirstResult((pim.get(PAGE_NUMBER.getValue()) - 1) * pim.get(PAGE_ITEMS.getValue()))
-						.setMaxResults(pim.get(PAGE_ITEMS.getValue())).getResultList();
+						.setFirstResult((paramsIntMap.get(PAGE_NUMBER.getValue()) - 1)
+								* paramsIntMap.get(PAGE_ITEMS.getValue()))
+						.setMaxResults(paramsIntMap.get(PAGE_ITEMS.getValue())).getResultList();
 			}
 		}
 
 		return new PageImpl<Product>(products,
-				PageRequest.of(pim.get(PAGE_NUMBER.getValue()) - 1, pim.get(PAGE_ITEMS.getValue())),
+				PageRequest.of(paramsIntMap.get(PAGE_NUMBER.getValue()) - 1, paramsIntMap.get(PAGE_ITEMS.getValue())),
 				entityManager.createQuery(criteriaQuery).getResultStream().count());
 	}
 }

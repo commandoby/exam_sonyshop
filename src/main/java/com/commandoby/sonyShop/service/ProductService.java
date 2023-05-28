@@ -8,5 +8,5 @@ public interface ProductService extends ProductDataService {
 
     Map<String, String> defaultParamsStringMap(Map<String, String> paramsStringMap) throws ServiceException;
 
-    Map<String, Integer> defaultParamsIntegerMap(Map<String, Integer> paramsIntegerMap) throws ServiceException;
+    Map<String, Integer> defaultParamsIntMap(Map<String, Integer> paramsIntegerMap) throws ServiceException;
 }

@@ -31,7 +31,7 @@ public class ProductServiceImplTests {
         Map<String, Integer> map = new HashMap<>();
         map.put(MIN_PRICE.getValue(), 1000);
         map.put(MAX_PRICE.getValue(), 500);
-        productService.defaultParamsIntegerMap(map);
+        productService.defaultParamsIntMap(map);
         assertEquals(1000, map.get(MAX_PRICE.getValue()));
     }
 
