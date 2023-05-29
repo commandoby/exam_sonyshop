@@ -37,8 +37,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product read(int id) throws ServiceException {
-		return productRepository.findById(id).orElseThrow(() -> new ServiceException(
+		Product product = productRepository.findById(id).orElseThrow(() -> new ServiceException(
 				"Error retrieving a product from the database by ID: " + id + ".", new Exception()));
+		product.setViews(product.getViews() + 1);
+		update(product);
+		return product;
+		
 	}
 
 	@Override

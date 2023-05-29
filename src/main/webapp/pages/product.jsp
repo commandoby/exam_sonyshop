@@ -59,6 +59,8 @@
                             value="${product.getId()}">Add to basket</button>
                 </c:if>
                 </c:if>
+                <br>
+                <p class="card-text"  align="right">Views: ${product.getViews()}</p>
             </div>
         </div>
     </div>

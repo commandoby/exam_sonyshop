@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS sonyshop.products (
     price INT NOT NULL,
     year INT,
     quantity INT NOT NULL,
+    views INT NOT NULL DEFAULT 0,
     category_id INT NOT NULL,
     image_id INT,
     PRIMARY KEY (id),

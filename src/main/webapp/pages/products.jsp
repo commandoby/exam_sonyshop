@@ -155,6 +155,9 @@
                             </button>
                         </c:if>
                         </c:if>
+                	<br>
+                	<p class="card-text"  align="right" style="color:#BCBCBC; position:relative; right:20px">
+                	Views: ${product.getViews()}</p>
                     </div>
                 </div>
                 <br>

@@ -165,8 +165,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean duplicateCheck(String email) throws ServiceException {
-        User user = getUserByEmail(email);
-        return user != null;
+        //User user = getUserByEmail(email);
+    	Optional<User> user = Optional.ofNullable(userRepository.getUserByEmail(email));
+        return user.isPresent();
     }
 
     @Override
