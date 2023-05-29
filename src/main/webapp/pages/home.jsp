@@ -65,11 +65,11 @@
 							</div>
 							<div class="progress" style="height: 8px">
 								<div class="progress-bar bg-light"
-									style="width:${50 - (category.getRating() / category_max_rating * 50)}%"></div>
+									style="width:${50 - category.getRating() / category_max_rating * 50}%"></div>
 								<div class="progress-bar" data-toggle="tooltip" title="Rating"
 									style="width:${category.getRating() / category_max_rating * 100}%"></div>
 								<div class="progress-bar bg-light"
-									style="width:${50 - (category.getRating() / category_max_rating * 50)}%"></div>
+									style="width:${50 - category.getRating() / category_max_rating * 50}%"></div>
 							</div>
 							&nbsp
 						</button>

@@ -1,6 +1,7 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.components.Category;
+import com.commandoby.sonyShop.components.Image;
 import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.components.User;
@@ -40,7 +41,7 @@ public class OrderServiceImplTests {
 
     @BeforeEach
     public void blank() throws ServiceException {
-        Category category = new Category("Phone", "phone", "phone.jpeg", 1);
+        Category category = new Category("Phone", "phone", new Image(), 1);
 
         product1 = Product.newBuilder().withName("Sony Xperia 10 II")
                 .withCategory(category).withPrice(1000).withQuantity(5).build();

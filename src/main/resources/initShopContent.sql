@@ -181,7 +181,20 @@ VALUES (1, LOAD_FILE(CONCAT(@Uploads,"phone.jpeg"))),
 (165, LOAD_FILE(CONCAT(@UploadsLens,"FE 50mm F2.5 G.jpeg"))),
 (166, LOAD_FILE(CONCAT(@UploadsLens,"E 70-350mm F4.5-6.3 G OSS.jpeg"))),
 (167, LOAD_FILE(CONCAT(@UploadsLens,"FE 50mm F2.8 Macro.jpeg"))),
-(168, LOAD_FILE(CONCAT(@UploadsLens,"FE 70-300mm F4.5-5.6 G OGS.jpg")));
+(168, LOAD_FILE(CONCAT(@UploadsLens,"FE 70-300mm F4.5-5.6 G OGS.jpg"))),
+(169, LOAD_FILE(CONCAT(@UploadsPhoto,"a7 IV Body.jpeg"))),
+(170, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha NEX-5T Body.jpg"))),
+(171, LOAD_FILE(CONCAT(@UploadsPhoto,"ZV-1.jpeg"))),
+(172, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha a7R IV Body.jpeg"))),
+(173, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha a6000 Body.jpg"))),
+(174, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha NEX-6 Body.jpg"))),
+(175, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha a7S II Body.jpg"))),
+(176, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha NEX-6L Kit 16-50mm.jpg"))),
+(177, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha a7R III Body.jpeg"))),
+(178, LOAD_FILE(CONCAT(@UploadsPhoto,"Alpha a6100 Kit 16-50mm.jpeg"))),
+(179, LOAD_FILE(CONCAT(@UploadsPhoto,"Cyber-shot RX0 II DSC-RX0M2.jpeg"))),
+(180, LOAD_FILE(CONCAT(@UploadsPhoto,"Cyber-shot DSC-RX10 IV.jpeg"))),
+(181, LOAD_FILE(CONCAT(@UploadsPhoto,"Cyber-shot DSC-RX10M2.jpg")));
 
 -- add users
 DELETE FROM sonyshop.users WHERE id >= 0;
@@ -527,4 +540,29 @@ Bluetooth 5.0, 5-20000 Гц, поворотные чашки, быстрая з�
 ("Sony FE 50mm F2.8 Macro", "макро, байонет Sony E, 50 мм F/2.8, автофокус, светофильтр 55 мм", 
 1890, null, 10, 11, 167),
 ("Sony FE 70-300mm F4.5-5.6 G OGS", "длиннофокусный, байонет Sony E, 70-300 мм F/4.5-5.6, стабилизатор, 
-автофокус, светофильтр 72 мм", 3099, null, 10, 11, 168);
+автофокус, светофильтр 72 мм", 3099, null, 10, 11, 168),
+("Sony a7 IV Body", "беззеркальная камера, байонет Sony E, матрица Full frame (полный кадр) 33 Мп, 
+без объектива (body), Wi-Fi, два слота для карт памяти", 8760, 2021, 8, 5, 169),
+("Sony Alpha NEX-5T Body", "беззеркальная камера, байонет Sony E, матрица APS-C (1.5 crop) 16.1 Мп, 
+без объектива (body), Wi-Fi", 949, 2013, 21, 5, 170),
+("Sony ZV-1", "компакт-камера, матрица 1\" 20.1 Мп, F1.8-2.8 24-70 мм, Wi-Fi", 3263, 2020, 11, 5, 171),
+("Sony Alpha a7R IV Body", "беззеркальная камера, байонет Sony E, матрица Full frame (полный кадр) 61 Мп, 
+без объектива (body), Wi-Fi, два слота для карт памяти", 8290, 2019, 9, 5, 172),
+("Sony Alpha a6000 Body", "беззеркальная камера, байонет Sony E, матрица APS-C (1.5 crop) 24.3 Мп, 
+без объектива (body), Wi-Fi", 1990, 2014, 20, 5, 173),
+("Sony Alpha NEX-6 Body", "беззеркальная камера, байонет Sony E, матрица APS-C (1.5 crop) 16.1 Мп, 
+без объектива (body), Wi-Fi", 1049, 2012, 25, 5, 174),
+("Sony Alpha a7S II Body", "беззеркальная камера, байонет Sony E, матрица Full frame 
+(полный кадр) 12.2 Мп, без объектива (body), Wi-Fi", 5499, 2015, 13, 5, 175),
+("Sony Alpha NEX-6L Kit 16-50mm", "беззеркальная камера, байонет Sony E, матрица APS-C (1.5 crop) 16.1 Мп, 
+с объективом F3.5-5.6 16-50 мм, Wi-Fi", 1249, 2012, 25, 5, 176),
+("Sony Alpha a7R III Body", "беззеркальная камера, байонет Sony E, матрица Full frame 
+(полный кадр) 42.4 Мп, без объектива (body), Wi-Fi, два слота для карт памяти", 6490, 2017, 11, 5, 177),
+("Sony Alpha a6100 Kit 16-50mm", "беззеркальная камера, байонет Sony E, матрица APS-C (1.5 crop) 24.2 Мп, 
+с объективом F3.5-5.6 16-50 мм, Wi-Fi", 2979, 2019, 17, 5, 178),
+("Sony Cyber-shot RX0 II DSC-RX0M2", "компакт-камера, матрица 1\" 15.3 Мп, F4 24 мм, Wi-Fi", 
+3058, 2019, 14, 5, 179),
+("Sony Cyber-shot DSC-RX10 IV", "компакт-камера, матрица 1\" 20 Мп, с объективом объектив 25X F2.4-4 
+24-600 мм, Wi-Fi", 5190, 2017, 10, 5, 180),
+("Sony Cyber-shot DSC-RX10M2", "компакт-камера, матрица 1\" 20.2 Мп, с объективом объектив 8.3X F2.8 
+24-200 мм, Wi-Fi", 3490, 2015, 14, 5, 181);
