@@ -1,3 +1,5 @@
+USE sonyshop;
+
 -- add images
 SET @Uploads := "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/";
 SET @UploadsPhone := "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/phone/";
@@ -12,8 +14,8 @@ SET @UploadsVideo := "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/video/";
 SET @UploadsGame := "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/gameconsole/";
 SET @UploadsLens := "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/lens/";
 
-DELETE FROM sonyshop.images WHERE id >= 0;
-INSERT INTO sonyshop.images(id, image)
+DELETE FROM images WHERE id >= 0;
+INSERT INTO images(id, image)
 VALUES (1, LOAD_FILE(CONCAT(@Uploads,"phone.jpeg"))),
 (2, LOAD_FILE(CONCAT(@Uploads,"player.jpeg"))),
 (3, LOAD_FILE(CONCAT(@Uploads,"headphones.jpeg"))),
@@ -197,13 +199,13 @@ VALUES (1, LOAD_FILE(CONCAT(@Uploads,"phone.jpeg"))),
 (181, LOAD_FILE(CONCAT(@UploadsPhoto,"Cyber-shot DSC-RX10M2.jpg")));
 
 -- add users
-DELETE FROM sonyshop.users WHERE id >= 0;
-INSERT INTO sonyshop.users(name, surname, email, password, date_of_birth, balance)
+DELETE FROM users WHERE id >= 0;
+INSERT INTO users(name, surname, email, password, date_of_birth, balance)
 VALUES ("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999);
 
 -- add categories
-DELETE FROM sonyshop.categories WHERE id >= 0;
-INSERT INTO sonyshop.categories(id, name, tag, rating, image_id)
+DELETE FROM categories WHERE id >= 0;
+INSERT INTO categories(id, name, tag, rating, image_id)
 VALUES (1, "Phone", "phone", 1, 1),
        (2, "MP3 player", "player", 1, 2),
        (3, "Headphones", "headphones", 1, 3),
@@ -217,8 +219,8 @@ VALUES (1, "Phone", "phone", 1, 1),
        (11, "Lens", "lens", 1, 145);
 
 -- add products
-DELETE FROM sonyshop.products WHERE id >= 0;
-INSERT INTO sonyshop.products(name, description, price, year, quantity, category_id, image_id)
+DELETE FROM products WHERE id >= 0;
+INSERT INTO products(name, description, price, year, quantity, category_id, image_id)
 VALUES ("Sony Xperia 10 II XQ-AU52 Dual", "Android, экран 6\" OLED (1080x2520), 
 Qualcomm Snapdragon 665, ОЗУ 4 ГБ, флэш-память 128 ГБ, карты памяти, камера 12 Мп, 
 аккумулятор 3600 мАч, 2 SIM", 899, 2020, 24, 1, 7),
