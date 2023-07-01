@@ -60,7 +60,7 @@
 							<div class="card-body">
 								<h4 class="card-title">${category.getName()}</h4>
 								<img class="card-img" style="height:260px"
-									src="data:image/jpeg;base64, ${category.getImage().getBase64Image()}"
+									src="https://storage.cloud.google.com/sonyshop/audiospeakers.jpeg"
 									alt="Card image">
 							</div>
 							<div class="progress" style="height: 8px">
