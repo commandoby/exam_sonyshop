@@ -1,5 +1,6 @@
 .idea/
 .settings/
+.dbeaver/
 bin/
 out/
 sample/

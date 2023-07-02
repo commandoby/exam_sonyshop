@@ -12,7 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="product" value="${product}"/>
 <h2 align="center">Product page</h2>
 
@@ -42,7 +41,7 @@
         <input type="hidden" name="product_id" value="product.getId()"/>
         <div class="media">
             <img class="card-img p-3" style="max-width:400px;max-height: 640px"
-                 src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
+                 src="${product.getImage().getImageURL()}"
                  alt="Card image">
             <div class="media-body">
                 <h2>${product.getName()}</h2>

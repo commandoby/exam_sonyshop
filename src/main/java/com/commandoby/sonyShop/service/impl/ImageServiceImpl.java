@@ -1,10 +1,13 @@
 package com.commandoby.sonyShop.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.commandoby.sonyShop.components.Image;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.repository.ImageRepository;
 import com.commandoby.sonyShop.service.BaseService;
 
+@Service
 public class ImageServiceImpl implements BaseService<Image> {
 
 	private final ImageRepository imageRepository;

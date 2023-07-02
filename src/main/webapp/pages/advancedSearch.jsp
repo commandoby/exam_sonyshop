@@ -12,7 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h2 align="center">Search page</h2>
 
 <div class="container">
@@ -250,7 +249,7 @@
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
+                         src="${product.getImage().getImageURL()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>

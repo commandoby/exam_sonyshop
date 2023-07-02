@@ -12,7 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="user" value="${user}"/>
 <h2 align="center">User page</h2>
 
@@ -37,7 +36,7 @@
         <input type="hidden" name="user_edit" value="${user_edit}"/>
         <div class="media">
             <img class="card-img p-3" style="width:320px;height: 320px"
-                 src="${contextPath}/images/user.jpeg"
+                 src="${sessionScope.user.getImage().getImageURL()}"
                  alt="Card image">
             <div class="media-body">
                 <br>
@@ -125,7 +124,7 @@
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             <div class="media" style="word-break: break-word">
                                 <img class="card-img p-3" style="max-width:160px;max-height: 180px"
-                                     src="data:image/jpeg;base64, ${product.getImage().getBase64Image()}"
+                                     src="${product.getImage().getImageURL()}"
                                      alt="Card image">
                                 <div class="media-body" align="left">
                                     <p>${product.getName()}</p>

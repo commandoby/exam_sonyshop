@@ -16,7 +16,6 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 	<h2 align="center">Shop products of Sony.</h2>
 
 	<form method="get">
@@ -60,7 +59,7 @@
 							<div class="card-body">
 								<h4 class="card-title">${category.getName()}</h4>
 								<img class="card-img" style="height:260px"
-									src="https://storage.cloud.google.com/sonyshop/audiospeakers.jpeg"
+									src="${category.getImage().getImageURL()}"
 									alt="Card image">
 							</div>
 							<div class="progress" style="height: 8px">

@@ -8,7 +8,7 @@ USE sonyshop;
 DROP TABLE IF EXISTS images;
 CREATE TABLE IF NOT EXISTS images (
     id INT NOT NULL,
-    image MEDIUMBLOB NOT NULL,
+    imageURL VARCHAR(200) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_IMAGE_ID_UNIQUE (id ASC));
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS categories (
     name VARCHAR(45) NOT NULL,
     tag VARCHAR(45) NOT NULL,
     rating INT NOT NULL,
-    image_id INT,
+    image_id INT default 1,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_CATEGORY_ID_UNIQUE (id ASC),
     UNIQUE INDEX IDX_NAME_UNIQUE (name ASC),
