@@ -103,7 +103,7 @@ public class ProductController {
             }
             
             Product product = productService.read(product_id);
-            orderService.addProductToBasket(order, product);
+            orderService.addProductToCart(order, product);
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
             modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
@@ -127,7 +127,7 @@ public class ProductController {
 
         try {
             Product product = productService.read(product_id);
-            orderService.addProductToBasket(order, product);
+            orderService.addProductToCart(order, product);
             modelMap.addAttribute(PRODUCT.getValue(), product);
         } catch (ServiceException e) {
             log.error(e);

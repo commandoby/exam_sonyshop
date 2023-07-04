@@ -30,7 +30,7 @@
 				<div class="input-group-append">
 					<c:if test="${not empty sessionScope.user.getEmail()}">
 						<button type="button" class="btn btn-primary"
-							onclick="document.location='/sonyshop/basket'">Basket
+							onclick="document.location='/sonyshop/cart'">Cart
 							(${sessionScope.order.getProductList().size()})</button>
 						<button type="button" class="btn btn-primary"
 							onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">

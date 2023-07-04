@@ -30,31 +30,31 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/basket")
-    public ModelAndView getBasket(@ModelAttribute("order") Order order) throws ControllerException {
+    @GetMapping("/cart")
+    public ModelAndView getCart(@ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
         if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
 
-        return new ModelAndView(PagesPathEnum.BASKET_PAGE.getPath(), modelMap);
+        return new ModelAndView(PagesPathEnum.CART_PAGE.getPath(), modelMap);
     }
 
-    @PostMapping("/basket")
-    public ModelAndView getBasketAndRemoveProduct(@RequestParam int id,
+    @PostMapping("/cart")
+    public ModelAndView getCartAndRemoveProduct(@RequestParam int id,
                                                   @ModelAttribute("order") Order order) throws ControllerException {
         ModelMap modelMap = new ModelMap();
 
         if (order == null) order = new Order();
 
         try {
-            orderService.removeProductWithOfBasketByNumber(order, id);
+            orderService.removeProductFromCartByNumber(order, id);
         } catch (NotFoundException | ServiceException e) {
             log.error(e);
         }
 
         modelMap.addAttribute(ORDER.getValue(), order);
 
-        return new ModelAndView(PagesPathEnum.BASKET_PAGE.getPath(), modelMap);
+        return new ModelAndView(PagesPathEnum.CART_PAGE.getPath(), modelMap);
     }
 
     @GetMapping("/pay")
@@ -69,8 +69,8 @@ public class OrderController {
                 modelMap.addAttribute(USER.getValue(), user);
                 log.info("Purchased " + order.getProductList().size() + " products.");
 
-                modelMap.addAttribute(BASKET_SIZE.getValue(), order.getProductList().size());
-                modelMap.addAttribute(BASKET_PRICE.getValue(), order.getOrderPrice());
+                modelMap.addAttribute(CART_SIZE.getValue(), order.getProductList().size());
+                modelMap.addAttribute(CART_PRICE.getValue(), order.getOrderPrice());
                 modelMap.addAttribute(ORDER.getValue(), new Order());
             } catch (ServiceException e) {
                 log.error(e);

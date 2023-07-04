@@ -65,7 +65,7 @@ public class AdvancedSearchController {
 		try {
 			if (product_id != null) {
 				Product product = productService.read(product_id);
-				orderService.addProductToBasket(order, product);
+				orderService.addProductToCart(order, product);
 			}
 
 			if (!paramsStringMap.get(SEARCH_VALUE.getValue()).equals("")

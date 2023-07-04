@@ -6,7 +6,7 @@ public enum PagesPathEnum {
     SIGN_IN_PAGE("login"),
     PRODUCT_LIST_PAGE("products"),
     PRODUCT_PAGE("product"),
-    BASKET_PAGE("basket"),
+    CART_PAGE("cart"),
     PAY_PAGE("pay"),
     USER_PAGE("user"),
     ADVANCED_SEARCH("advancedSearch");

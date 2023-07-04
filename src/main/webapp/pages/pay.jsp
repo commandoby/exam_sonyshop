@@ -18,16 +18,16 @@
         <br><br><br>
         <h1>Thank you for choosing us!</h1>
         <br>
-        <h2><small>You have purchased </small>${basket_size}<small> products.</small></h2>
-        <h2>You paid <b style="color: orangered">${basket_price}</b>!</h2>
+        <h2><small>You have purchased </small>${cart_size}<small> products.</small></h2>
+        <h2>You paid <b style="color: orangered">${cart_price}</b>!</h2>
         <c:choose>
-            <c:when test="${basket_price > 10000}">
+            <c:when test="${cart_price > 2500}">
                 <p>Not bad!</p>
             </c:when>
-            <c:when test="${basket_price > 2000}">
+            <c:when test="${cart_price > 500}">
                 <p>There could have been more.</p>
             </c:when>
-            <c:when test="${basket_price > 0}">
+            <c:when test="${cart_price > 0}">
                 <p>You have disappointed us. = (</p>
             </c:when>
             <c:otherwise>

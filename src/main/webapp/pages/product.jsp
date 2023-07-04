@@ -20,8 +20,8 @@
         <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">Home page</button>
             <c:if test="${not empty sessionScope.user.getEmail()}">
-                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
-                    Basket (${sessionScope.order.getProductList().size()})</button>
+                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/cart'">
+                    Cart (${sessionScope.order.getProductList().size()})</button>
                 <button type="button" class="btn btn-primary"
                         onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                         ${sessionScope.user.getEmail()}</button>
@@ -55,7 +55,7 @@
                 <c:if test="${not empty sessionScope.user.getEmail()}">
                 <c:if test="${product.getQuantity() > 0}">
                     <button type="submit" class="btn btn-primary" name="product_id"
-                            value="${product.getId()}">Add to basket</button>
+                            value="${product.getId()}">Add to cart</button>
                 </c:if>
                 </c:if>
                 <br>
