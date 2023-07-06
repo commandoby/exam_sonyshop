@@ -1,19 +1,19 @@
 USE sonyshop;
 
 -- add images
-SET @Uploads := "https://storage.cloud.google.com/sonyshop_bucket/";
-SET @UploadsUser := "https://storage.cloud.google.com/sonyshop_bucket/user/";
-SET @UploadsPhone := "https://storage.cloud.google.com/sonyshop_bucket/phone/";
-SET @UploadsPlayer := "https://storage.cloud.google.com/sonyshop_bucket/player/";
-SET @UploadsHeadphones := "https://storage.cloud.google.com/sonyshop_bucket/headphones/";
-SET @UploadsTV := "https://storage.cloud.google.com/sonyshop_bucket/tv/";
-SET @UploadsPhoto := "https://storage.cloud.google.com/sonyshop_bucket/photo/";
-SET @UploadsMem := "https://storage.cloud.google.com/sonyshop_bucket/memcard/";
-SET @UploadsAS := "https://storage.cloud.google.com/sonyshop_bucket/audiospeakers/";
-SET @UploadsMicrophone := "https://storage.cloud.google.com/sonyshop_bucket/microphone/";
-SET @UploadsVideo := "https://storage.cloud.google.com/sonyshop_bucket/video/";
-SET @UploadsGame := "https://storage.cloud.google.com/sonyshop_bucket/gameconsole/";
-SET @UploadsLens := "https://storage.cloud.google.com/sonyshop_bucket/lens/";
+SET @Uploads := "https://storage.googleapis.com/sonyshop_bucket/";
+SET @UploadsUser := "https://storage.googleapis.com/sonyshop_bucket/user/";
+SET @UploadsPhone := "https://storage.googleapis.com/sonyshop_bucket/phone/";
+SET @UploadsPlayer := "https://storage.googleapis.com/sonyshop_bucket/player/";
+SET @UploadsHeadphones := "https://storage.googleapis.com/sonyshop_bucket/headphones/";
+SET @UploadsTV := "https://storage.googleapis.com/sonyshop_bucket/tv/";
+SET @UploadsPhoto := "https://storage.googleapis.com/sonyshop_bucket/photo/";
+SET @UploadsMem := "https://storage.googleapis.com/sonyshop_bucket/memcard/";
+SET @UploadsAS := "https://storage.googleapis.com/sonyshop_bucket/audiospeakers/";
+SET @UploadsMicrophone := "https://storage.googleapis.com/sonyshop_bucket/microphone/";
+SET @UploadsVideo := "https://storage.googleapis.com/sonyshop_bucket/video/";
+SET @UploadsGame := "https://storage.googleapis.com/sonyshop_bucket/gameconsole/";
+SET @UploadsLens := "https://storage.googleapis.com/sonyshop_bucket/lens/";
 
 DELETE FROM images WHERE id >= 0;
 INSERT INTO images(id, imageURL)

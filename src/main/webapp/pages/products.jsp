@@ -141,7 +141,6 @@
                          <c:if test="${not empty product.getYear()}">
                          	<p class="card-text">Year: ${product.getYear()}</p>
                          </c:if>
-                        <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                         <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
