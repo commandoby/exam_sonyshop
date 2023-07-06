@@ -10,176 +10,218 @@ import java.util.Objects;
 @Table(name = "products")
 @Component
 public class Product extends BaseEntity {
-    private String name;
-    private String imageName;
-    private String description;
-    private Category category;
-    private int price;
-    private int quantity;
-    private List<Order> orders;
+	private String name;
+	private String description;
+	private Category category;
+	private Image image;
+	private int price;
+	private Integer year;
+	private int quantity;
+	private int views;
+	private List<Order> orders;
 
-    public Product() {}
+	public Product() {
+	}
 
-    public Product(String name, String imageName, String description, Category category,
-                   int price, int quantity) {
-        this.name = name;
-        this.imageName = imageName;
-        this.description = description;
-        this.category = category;
-        this.price = price;
-        this.quantity = quantity;
-    }
+	public Product(String name, String description, Category category, Image image, int price, Integer year,
+			int quantity, int views) {
+		this.name = name;
+		this.description = description;
+		this.category = category;
+		this.image = image;
+		this.price = price;
+		this.year = checkYear(year);
+		this.quantity = quantity;
+		this.views = views;
+	}
 
-    public Product(Builder builder) {
-        name = builder.name;
-        imageName = builder.imageName;
-        description = builder.description;
-        category = builder.category;
-        price = builder.price;
-        quantity = builder.quantity;
-    }
+	public Product(Builder builder) {
+		name = builder.name;
+		description = builder.description;
+		category = builder.category;
+		image = builder.image;
+		price = builder.price;
+		year = checkYear(builder.year);
+		quantity = builder.quantity;
+		views = builder.views;
+	}
 
-    @Column(name = "name")
-    public String getName() {
-        return name;
-    }
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Column(name = "image_name")
-    public String getImageName() {
-        return imageName;
-    }
+	@Column(name = "description")
+	public String getDescription() {
+		return description;
+	}
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @Column(name = "description")
-    public String getDescription() {
-        return description;
-    }
+	@ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id", nullable = false)
+	public Category getCategory() {
+		return category;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "category_id", nullable = false)
-    public Category getCategory() {
-        return category;
-    }
+	@ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "image_id", nullable = false)
+	public Image getImage() {
+		return image;
+	}
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+	public void setImage(Image image) {
+		this.image = image;
+	}
 
-    @Column(name = "price")
-    public int getPrice() {
-        return price;
-    }
+	@Column(name = "price")
+	public int getPrice() {
+		return price;
+	}
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
+	public void setPrice(int price) {
+		this.price = price;
+	}
 
-    @Column(name = "quantity")
-    public int getQuantity() {
-        return quantity;
-    }
+	@Column(name = "year")
+	public Integer getYear() {
+		return year;
+	}
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+	public void setYear(Integer year) {
+		this.year = checkYear(year);
+	}
 
-    @ManyToMany(mappedBy = "productList")
-    public List<Order> getOrders() {
-        return orders;
-    }
+	@Column(name = "quantity")
+	public int getQuantity() {
+		return quantity;
+	}
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return price == product.price
-                && quantity == product.quantity
-                && Objects.equals(name, product.name)
-                && Objects.equals(imageName, product.imageName)
-                && Objects.equals(description, product.description)
-                && Objects.equals(category, product.category);
-    }
+	@Column(name = "views")
+	public int getViews() {
+		return views;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, imageName, description, category, price, quantity);
-    }
+	public void setViews(int views) {
+		this.views = views;
+	}
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", description='" + description + '\'' +
-                ", category=" + category.getName() +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
-    }
+	@ManyToMany(mappedBy = "productList")
+	public List<Order> getOrders() {
+		return orders;
+	}
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
 
-    public static final class Builder {
-        private String name;
-        private String imageName;
-        private String description;
-        private Category category;
-        private int price;
-        private int quantity;
+	private Integer checkYear(Integer year) {
+		if (year != null && year < 1993) {
+			return 1993;
+		}
+		return year;
+	}
 
-        private Builder() {}
+	@Override
+	public int hashCode() {
+		return Objects.hash(category, description, image, name, orders, price, quantity, views, year);
+	}
 
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		return Objects.equals(category, other.category) && Objects.equals(description, other.description)
+				&& Objects.equals(image, other.image) && Objects.equals(name, other.name)
+				&& Objects.equals(orders, other.orders) && price == other.price && quantity == other.quantity
+				&& views == other.views && Objects.equals(year, other.year);
+	}
 
-        public Builder withImageName(String imageName) {
-            this.imageName = imageName;
-            return this;
-        }
+	@Override
+	public String toString() {
+		return "Product [name=" + name + ", description=" + description + ", category=" + category + ", image=" + image
+				+ ", price=" + price + ", year=" + year + ", quantity=" + quantity + ", views=" + views + ", orders="
+				+ orders + "]";
+	}
 
-        public Builder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
+	public static Builder newBuilder() {
+		return new Builder();
+	}
 
-        public Builder withCategory(Category category) {
-            this.category = category;
-            return this;
-        }
+	public static final class Builder {
+		private String name;
+		private String description;
+		private Category category;
+		private Image image;
+		private int price;
+		private Integer year;
+		private int quantity;
+		private int views;
 
-        public Builder withPrice(int price) {
-            this.price = price;
-            return this;
-        }
+		private Builder() {
+		}
 
-        public Builder withQuantity(int quantity) {
-            this.quantity = quantity;
-            return this;
-        }
+		public Builder withName(String name) {
+			this.name = name;
+			return this;
+		}
 
-        public Product build() {
-            return new Product(this);
-        }
-    }
+		public Builder withDescription(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder withCategory(Category category) {
+			this.category = category;
+			return this;
+		}
+
+		public Builder withImage(Image image) {
+			this.image = image;
+			return this;
+		}
+
+		public Builder withPrice(int price) {
+			this.price = price;
+			return this;
+		}
+
+		public Builder withYear(Integer year) {
+			this.year = year;
+			return this;
+		}
+
+		public Builder withQuantity(int quantity) {
+			this.quantity = quantity;
+			return this;
+		}
+
+		public Builder withViews(int views) {
+			this.views = views;
+			return this;
+		}
+
+		public Product build() {
+			return new Product(this);
+		}
+	}
 }

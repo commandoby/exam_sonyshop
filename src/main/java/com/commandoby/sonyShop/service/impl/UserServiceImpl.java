@@ -25,9 +25,11 @@ public class UserServiceImpl implements UserService {
 
     private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
+    private final ImageServiceImpl imageServiceImpl;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ImageServiceImpl imageServiceImpl) {
         this.userRepository = userRepository;
+		this.imageServiceImpl = imageServiceImpl;
     }
 
     @Override
@@ -94,7 +96,8 @@ public class UserServiceImpl implements UserService {
                     .withDateOfBirth(LocalDate.parse(date_of_birth))
                     .withEmail(email)
                     .withPassword(password)
-                    .withBalance(100000).build();
+                    .withBalance(100000)
+                    .withImage(imageServiceImpl.read(1)).build();
             create(user);
 
             modelMap.addAttribute(NAME.getValue(), name);
@@ -165,8 +168,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean duplicateCheck(String email) throws ServiceException {
-        User user = getUserByEmail(email);
-        return user != null;
+        //User user = getUserByEmail(email);
+    	Optional<User> user = Optional.ofNullable(userRepository.getUserByEmail(email));
+        return user.isPresent();
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ProductController {
             if (page_number == null) page_number = 1;
             Page<Product> products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
             
-            if (page_items * (page_number - 1) >= products.getTotalElements()) {
+            if (products.getTotalElements() > 0 && page_items * (page_number - 1) >= products.getTotalElements()) {
             	page_number = (int) Math.ceil(products.getTotalElements() / (float) page_items);
             	products = productService.getProductsByCategoryNotNull(category, PageRequest.of(page_number - 1, page_items));
             }
@@ -103,7 +103,7 @@ public class ProductController {
             }
             
             Product product = productService.read(product_id);
-            orderService.addProductToBasket(order, product);
+            orderService.addProductToCart(order, product);
 
             modelMap.addAttribute(CATEGORY_NAME.getValue(), category.getName());
             modelMap.addAttribute(FOUND_ITEMS.getValue(), products.getTotalElements());
@@ -127,7 +127,7 @@ public class ProductController {
 
         try {
             Product product = productService.read(product_id);
-            orderService.addProductToBasket(order, product);
+            orderService.addProductToCart(order, product);
             modelMap.addAttribute(PRODUCT.getValue(), product);
         } catch (ServiceException e) {
             log.error(e);

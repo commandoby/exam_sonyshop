@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 public class UserServiceImplTests {
     private static UserRepository userRepositoryMock;
+    private static ImageServiceImpl imageServiceImplMock;
 
     private static UserService userService;
 
@@ -19,8 +20,9 @@ public class UserServiceImplTests {
     @BeforeAll
     public static void setUp() {
         userRepositoryMock = Mockito.mock(UserRepository.class);
+        imageServiceImplMock = Mockito.mock(ImageServiceImpl.class);
 
-        userService = new UserServiceImpl(userRepositoryMock);
+        userService = new UserServiceImpl(userRepositoryMock, imageServiceImplMock);
 
         user = User.newBuilder()
                 .withEmail("ivan")

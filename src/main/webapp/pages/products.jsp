@@ -12,7 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h2 align="center">List products category: ${category_name}</h2>
 
 
@@ -29,8 +28,8 @@
                     Home page
                 </button>
                 <c:if test="${not empty sessionScope.user.getEmail()}">
-                    <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
-                        Basket (${sessionScope.order.getProductList().size()})
+                    <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/cart'">
+                        Cart (${sessionScope.order.getProductList().size()})
                     </button>
                     <button type="button" class="btn btn-primary"
                             onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
@@ -132,14 +131,16 @@
 			<c:if test="${not empty product_list}">
             <c:forEach items="${product_list}" var="product">
                 <div class="media border">
-                    <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                    <img class="card-img p-3" style="max-width:220px;max-height:360px"
+                         src="${product.getImage().getImageURL()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
                             <b style="color: orangered">${product.getPrice()}</b></h4>
                         <p class="card-text">${product.getDescription()}</p>
-                        <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
+                         <c:if test="${not empty product.getYear()}">
+                         	<p class="card-text">Year: ${product.getYear()}</p>
+                         </c:if>
                         <button type="button" class="btn btn-primary" formmethod="get"
                                 onclick="document.location='/sonyshop/product?product_id=${product.getId()}'">
                             List of product
@@ -148,10 +149,13 @@
                         <c:if test="${product.getQuantity() > 0}">
                             <button type="submit" class="btn btn-primary" formmethod="post"
                                     name="product_id" value="${product.getId()}">
-                                Add to basket
+                                Add to cart
                             </button>
                         </c:if>
                         </c:if>
+                	<br>
+                	<p class="card-text"  align="right" style="color:#BCBCBC; position:relative; right:20px">
+                	Views: ${product.getViews()}</p>
                     </div>
                 </div>
                 <br>

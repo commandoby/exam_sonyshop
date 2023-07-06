@@ -12,7 +12,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="product" value="${product}"/>
 <h2 align="center">Product page</h2>
 
@@ -21,8 +20,8 @@
         <div class="btn-group">
             <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop'">Home page</button>
             <c:if test="${not empty sessionScope.user.getEmail()}">
-                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/basket'">
-                    Basket (${sessionScope.order.getProductList().size()})</button>
+                <button type="button" class="btn btn-primary" onclick="document.location='/sonyshop/cart'">
+                    Cart (${sessionScope.order.getProductList().size()})</button>
                 <button type="button" class="btn btn-primary"
                         onclick="document.location='/sonyshop/user?email=${sessionScope.user.getEmail()}'">
                         ${sessionScope.user.getEmail()}</button>
@@ -42,20 +41,25 @@
         <input type="hidden" name="product_id" value="product.getId()"/>
         <div class="media">
             <img class="card-img p-3" style="max-width:400px;max-height: 640px"
-                 src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                 src="${product.getImage().getImageURL()}"
                  alt="Card image">
             <div class="media-body">
                 <h2>${product.getName()}</h2>
                 <p class="card-text">${product.getDescription()}</p>
+                <c:if test="${not empty product.getYear()}">
+                	<p class="card-text">Year: ${product.getYear()}</p>
+                </c:if>
                 <p class="card-text">Quantity in stock: ${product.getQuantity()}</p>
                 <br>
                 <h3><small> Price: </small><b style="color: orangered">${product.getPrice()}</b></h3>
                 <c:if test="${not empty sessionScope.user.getEmail()}">
                 <c:if test="${product.getQuantity() > 0}">
                     <button type="submit" class="btn btn-primary" name="product_id"
-                            value="${product.getId()}">Add to basket</button>
+                            value="${product.getId()}">Add to cart</button>
                 </c:if>
                 </c:if>
+                <br>
+                <p class="card-text"  align="right">Views: ${product.getViews()}</p>
             </div>
         </div>
     </div>

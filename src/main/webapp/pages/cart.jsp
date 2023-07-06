@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Basket</title>
+    <title>Cart</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -15,8 +15,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<h2 align="center">Basket of products</h2>
+<h2 align="center">Cart of products</h2>
 
 <form method="get">
     <div class="container" align="right">
@@ -48,14 +47,14 @@
 <form>
     <div class="container">
         <br>
-        <h3>There are ${sessionScope.order.getProductList().size()} products in the basket for the amount of:
+        <h3>There are ${sessionScope.order.getProductList().size()} products in the cart for the amount of:
             <b style="color: orangered">${sessionScope.order.getOrderPrice()}</b></h3>
         <h3>User balance: <b style="color: orangered">${sessionScope.user.getBalance()}</b></h3>
         <c:if test="${not empty sessionScope.order}">
             <c:forEach items="${sessionScope.order.getProductList()}" var="product">
                 <div class="media border">
                     <img class="card-img p-3" style="max-width:220px;max-height: 360px"
-                         src="${contextPath}/images/${product.getCategory().getTag()}/${product.getImageName()}"
+                         src="${product.getImage().getImageURL()}"
                          alt="Card image">
                     <div class="media-body">
                         <h4>${product.getName()}&nbsp&nbsp&nbsp<small> Price: </small>
@@ -68,7 +67,7 @@
                         </button>
                         <button type="submit" class="btn btn-primary" formmethod="post"
                                 name="id" value="<%= id_product %>">
-                            Remove from basket
+                            Remove from cart
                         </button>
                     </div>
                 </div>

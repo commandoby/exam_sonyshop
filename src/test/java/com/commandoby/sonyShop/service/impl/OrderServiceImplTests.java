@@ -1,6 +1,7 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.components.Category;
+import com.commandoby.sonyShop.components.Image;
 import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.Product;
 import com.commandoby.sonyShop.components.User;
@@ -40,7 +41,7 @@ public class OrderServiceImplTests {
 
     @BeforeEach
     public void blank() throws ServiceException {
-        Category category = new Category("Phone", "phone", "phone.jpeg", 1);
+        Category category = new Category("Phone", "phone", new Image(), 1);
 
         product1 = Product.newBuilder().withName("Sony Xperia 10 II")
                 .withCategory(category).withPrice(1000).withQuantity(5).build();
@@ -53,8 +54,8 @@ public class OrderServiceImplTests {
 
         user = User.newBuilder().withName("User").withEmail("user").withBalance(10000).build();
 
-        orderService.addProductToBasket(order, product1);
-        orderService.addProductToBasket(order, product2);
+        orderService.addProductToCart(order, product1);
+        orderService.addProductToCart(order, product2);
     }
 
     @Test
@@ -64,39 +65,39 @@ public class OrderServiceImplTests {
 
     @Test
     public void addProductToBasket_PriceTest() throws ServiceException {
-        orderService.addProductToBasket(order, product2);
+        orderService.addProductToCart(order, product2);
         assertEquals(6000, order.getOrderPrice());
     }
 
     @Test
     public void removeProductWithOfBasketByNumber_Test() throws ServiceException, NotFoundException {
-        orderService.removeProductWithOfBasketByNumber(order, 0);
+        orderService.removeProductFromCartByNumber(order, 0);
         assertEquals(product2, order.getProductList().get(0));
     }
 
     @Test
     public void removeProductWithOfBasketByNumber_PriceTest() throws ServiceException, NotFoundException {
-        orderService.removeProductWithOfBasketByNumber(order, 1);
+        orderService.removeProductFromCartByNumber(order, 1);
         assertEquals(1000, order.getOrderPrice());
     }
 
     @Test
     public void removeProductWithOfBasket_Test() throws ServiceException, NotFoundException {
-        orderService.removeProductWithOfBasket(order, product1);
+        orderService.removeProductFromCart(order, product1);
         assertEquals(product2, order.getProductList().get(0));
     }
 
     @Test
     public void removeProductWithOfBasket_PriceTest() throws ServiceException, NotFoundException {
-        orderService.removeProductWithOfBasket(order, product1);
+        orderService.removeProductFromCart(order, product1);
         assertEquals(2500, order.getOrderPrice());
     }
 
     @Test
     public void removeProductWithOfBasket_ExceptionTest() throws ServiceException, NotFoundException {
-        orderService.removeProductWithOfBasket(order, product1);
+        orderService.removeProductFromCart(order, product1);
         Throwable exception = assertThrows(NotFoundException.class,
-                () -> orderService.removeProductWithOfBasket(order, product1));
+                () -> orderService.removeProductFromCart(order, product1));
         assertEquals("Will not find a product to remove: Sony Xperia 10 II", exception.getMessage());
     }
 
@@ -120,14 +121,14 @@ public class OrderServiceImplTests {
 
     @Test
     public void orderPayMethod_UpdateQuantityProductsTest() throws ServiceException {
-        orderService.addProductToBasket(order, product1);
+        orderService.addProductToCart(order, product1);
         orderService.orderPayMethod(user, order);
         assertEquals(3, product1.getQuantity());
     }
 
     @Test
     public void orderPayMethod_NotEnoughProductsTest() throws ServiceException {
-        orderService.addProductToBasket(order, product2);
+        orderService.addProductToCart(order, product2);
         orderService.orderPayMethod(user, order);
         assertEquals(1, order.getProductList().size());
     }

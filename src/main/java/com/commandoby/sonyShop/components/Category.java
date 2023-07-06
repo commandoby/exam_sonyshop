@@ -9,88 +9,91 @@ import java.util.Objects;
 @Entity
 @Table(name = "categories")
 @Component
-public class Category extends BaseEntity{
-    private String name;
-    private String tag;
-    private String imageName;
-    private int rating;
-    private List<Product> productList;
+public class Category extends BaseEntity {
+	private String name;
+	private String tag;
+	private Image image;
+	private int rating;
+	private List<Product> productList;
 
-    public Category() {}
+	public Category() {
+	}
 
-    public Category(String name, String tag, String imageName, int rating) {
-        this.name = name;
-        this.tag = tag;
-        this.imageName = imageName;
-        this.rating = rating;
-    }
+	public Category(String name, String tag, Image image, int rating) {
+		this.name = name;
+		this.tag = tag;
+		this.image = image;
+		this.rating = rating;
+	}
 
-    @Column(name = "name")
-    public String getName() {
-        return name;
-    }
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Column(name = "tag")
-    public String getTag() {
-        return tag;
-    }
+	@Column(name = "tag")
+	public String getTag() {
+		return tag;
+	}
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
-    @Column(name = "image_name")
-    public String getImageName() {
-        return imageName;
-    }
+	@ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "image_id", nullable = false)
+	public Image getImage() {
+		return image;
+	}
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
+	public void setImage(Image image) {
+		this.image = image;
+	}
 
-    @Column(name = "rating")
-    public int getRating() {
-        return rating;
-    }
+	@Column(name = "rating")
+	public int getRating() {
+		return rating;
+	}
 
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public List<Product> getProductList() {
-        return productList;
-    }
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	public List<Product> getProductList() {
+		return productList;
+	}
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return rating == category.rating && Objects.equals(name, category.name) && Objects.equals(imageName, category.imageName) && Objects.equals(tag, category.tag);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(image, name, productList, rating, tag);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, imageName, tag, rating);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Category other = (Category) obj;
+		return Objects.equals(image, other.image) && Objects.equals(name, other.name)
+				&& Objects.equals(productList, other.productList) && rating == other.rating
+				&& Objects.equals(tag, other.tag);
+	}
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", tag='" + tag + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", rating=" + rating +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Category [name=" + name + ", tag=" + tag + ", image=" + image + ", rating=" + rating + ", productList="
+				+ productList + "]";
+	}
 }

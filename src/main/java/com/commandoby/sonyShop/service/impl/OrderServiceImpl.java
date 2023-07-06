@@ -59,14 +59,14 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void addProductToBasket(Order order, Product product) throws ServiceException {
+    public void addProductToCart(Order order, Product product) throws ServiceException {
         if (order == null) order = new Order();
         order.getProductList().add(product);
         updateOrderPrice(order);
     }
 
     @Override
-    public void removeProductWithOfBasketByNumber(Order order, int number) throws NotFoundException, ServiceException {
+    public void removeProductFromCartByNumber(Order order, int number) throws NotFoundException, ServiceException {
         if (order.getProductList().get(number) != null) {
             order.getProductList().remove(number);
             updateOrderPrice(order);
@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void removeProductWithOfBasket(Order order, Product product) throws NotFoundException, ServiceException {
+    public void removeProductFromCart(Order order, Product product) throws NotFoundException, ServiceException {
         for (int i = 0; i < order.getProductList().size(); i++) {
             if (order.getProductList().get(i).getId() == product.getId()) {
                 order.getProductList().remove(i);
@@ -135,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
                         + " products. In stock: " + product.getQuantity() + ".");
 
                 for (int i = 0; i < products.size(); i++) {
-                    removeProductWithOfBasket(order, product);
+                    removeProductFromCart(order, product);
                 }
             } catch (NotFoundException | ServiceException e) {
                 throw new ServiceException("Error removing duplicate product from cart from ID: "
