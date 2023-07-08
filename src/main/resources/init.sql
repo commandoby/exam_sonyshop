@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS images (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE IF NOT EXISTS categories (
     id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(45) NOT NULL,
-    tag VARCHAR(45) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    tag VARCHAR(50) NOT NULL,
     rating INT NOT NULL,
     image_id INT default 1,
     PRIMARY KEY (id),
@@ -34,13 +34,14 @@ CREATE TABLE IF NOT EXISTS categories (
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
     id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(45) NOT NULL,
-    surname VARCHAR(45) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
     email VARCHAR(200) NOT NULL,
     password VARCHAR(50) NOT NULL,
     date_of_birth DATE NOT NULL,
     balance INT,
     image_id INT,
+    role VARCHAR(50) default 'ROLE_USER',
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_USER_ID_UNIQUE (id ASC),
     UNIQUE INDEX IDX_EMAIL_UNIQUE (email ASC),

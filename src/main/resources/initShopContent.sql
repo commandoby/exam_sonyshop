@@ -202,8 +202,8 @@ VALUES (1, CONCAT(@UploadsUser,"user.jpeg")),
 
 -- add users
 DELETE FROM users WHERE id >= 0;
-INSERT INTO users(name, surname, email, password, date_of_birth, balance, image_id)
-VALUES ("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999, 1);
+INSERT INTO users(name, surname, email, password, date_of_birth, balance, image_id, role)
+VALUES ("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999, 1, "ROLE_ADMIN");
 
 -- add categories
 DELETE FROM categories WHERE id >= 0;

@@ -1,6 +1,10 @@
 package com.commandoby.sonyShop.components;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.commandoby.sonyShop.enums.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -8,13 +12,16 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Component
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
 	private String name;
 
@@ -33,6 +40,8 @@ public class User extends BaseEntity {
 	private int balance;
 
 	private Image image;
+	
+	private Set<Role> role = new HashSet<>();
 
 	private List<Order> orders = new ArrayList<>();
 
@@ -40,7 +49,7 @@ public class User extends BaseEntity {
 	}
 
 	public User(String name, String surname, String email, String password, LocalDate dateOfBirth, int balance,
-			Image image) {
+			Image image, Role role) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
@@ -129,12 +138,54 @@ public class User extends BaseEntity {
 		return orders;
 	}
 
+	@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+	@Enumerated(EnumType.STRING)
+	@JoinColumn(name = "role")
+	public Set<Role> getRoles() {
+		return role;
+	}
+
+	public void setRoles(Set<Role> role) {
+		this.role = role;
+	}
+
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
 
 	public void addOrder(Order order) {
 		orders.add(order);
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return getRoles();
+	}
+
+	@Override
+	public String getUsername() {
+		return getName();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 	@Override

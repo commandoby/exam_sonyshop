@@ -4,6 +4,8 @@ import com.commandoby.sonyShop.repository.CategoryRepository;
 import com.commandoby.sonyShop.components.Category;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.CategoryService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 

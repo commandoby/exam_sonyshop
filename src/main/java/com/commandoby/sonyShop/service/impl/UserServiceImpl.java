@@ -3,10 +3,15 @@ package com.commandoby.sonyShop.service.impl;
 import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.repository.UserRepository;
 import com.commandoby.sonyShop.components.User;
+import com.commandoby.sonyShop.enums.Role;
+import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -15,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static com.commandoby.sonyShop.enums.PagesPathEnum.*;
@@ -26,10 +32,13 @@ public class UserServiceImpl implements UserService {
     private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final ImageServiceImpl imageServiceImpl;
+    
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ImageServiceImpl imageServiceImpl) {
+    public UserServiceImpl(UserRepository userRepository, ImageServiceImpl imageServiceImpl, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
 		this.imageServiceImpl = imageServiceImpl;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -71,6 +80,22 @@ public class UserServiceImpl implements UserService {
                         + email + ".", new Exception()));
     }
 
+	@Override
+	public UserDetails loadUserByUsername(String email)  throws UsernameNotFoundException {
+        User user = null;
+		try {
+			user = userRepository.getUserByEmail(email);
+		} catch (RepositoryException e) {
+			log.error(e);
+		}
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
+	}
+
     @Override
     public ModelAndView register(String name, String surname, String date_of_birth,
                                  String email, String password, String second_password) throws ServiceException {
@@ -95,9 +120,10 @@ public class UserServiceImpl implements UserService {
                     .withSurname(surname)
                     .withDateOfBirth(LocalDate.parse(date_of_birth))
                     .withEmail(email)
-                    .withPassword(password)
+                    .withPassword(bCryptPasswordEncoder.encode(password))
                     .withBalance(100000)
                     .withImage(imageServiceImpl.read(1)).build();
+            user.setRoles(Set.of(Role.ROLE_USER));
             create(user);
 
             modelMap.addAttribute(NAME.getValue(), name);

@@ -3,10 +3,12 @@ package com.commandoby.sonyShop.service;
 import com.commandoby.sonyShop.components.Order;
 import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.ServiceException;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-public interface UserService extends UserDataService {
+public interface UserService extends UserDataService, UserDetailsService {
 
     ModelAndView register(String name, String surname, String date_of_birth,
                           String email, String password, String second_password) throws ServiceException;
