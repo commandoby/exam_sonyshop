@@ -11,6 +11,14 @@ CREATE TABLE IF NOT EXISTS images (
     imageURL VARCHAR(200) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_IMAGE_ID_UNIQUE (id ASC));
+   
+       -- DDL for Table roles
+DROP TABLE IF EXISTS roles;
+CREATE TABLE IF NOT EXISTS roles (
+    id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX IDX_ROLE_ID_UNIQUE (id ASC));
 
 -- DDL for Table categories
 DROP TABLE IF EXISTS categories;
@@ -41,7 +49,6 @@ CREATE TABLE IF NOT EXISTS users (
     date_of_birth DATE NOT NULL,
     balance INT,
     image_id INT,
-    role VARCHAR(50) default 'ROLE_USER',
     PRIMARY KEY (id),
     UNIQUE INDEX IDX_USER_ID_UNIQUE (id ASC),
     UNIQUE INDEX IDX_EMAIL_UNIQUE (email ASC),
@@ -104,3 +111,17 @@ CREATE TABLE IF NOT EXISTS orders_products (
     CONSTRAINT FK_ORDERS_PRODUCTS_PRODUCT_ID_PRODUCTS_ID
     FOREIGN KEY (product_id)
     REFERENCES products (id));
+    
+   -- DDL for Table users_roles
+DROP TABLE IF EXISTS users_roles;
+CREATE TABLE IF NOT EXISTS users_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    CONSTRAINT FK_USERS_ROLES_USER_ID_USERS_ID
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT FK_USERS_ROLES_ROLE_ID_ROLES_ID
+    FOREIGN KEY (role_id)
+    REFERENCES roles (id));

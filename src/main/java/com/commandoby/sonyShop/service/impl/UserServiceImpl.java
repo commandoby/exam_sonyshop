@@ -1,9 +1,9 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.Role;
 import com.commandoby.sonyShop.repository.UserRepository;
 import com.commandoby.sonyShop.components.User;
-import com.commandoby.sonyShop.enums.Role;
 import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
                     .withPassword(bCryptPasswordEncoder.encode(password))
                     .withBalance(100000)
                     .withImage(imageServiceImpl.read(1)).build();
-            user.setRoles(Set.of(Role.ROLE_USER));
+            user.setRoles(Set.of(new Role(1, "ROLE_USER")));
             create(user);
 
             modelMap.addAttribute(NAME.getValue(), name);

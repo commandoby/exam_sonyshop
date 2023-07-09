@@ -4,8 +4,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.commandoby.sonyShop.enums.Role;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -40,8 +38,8 @@ public class User extends BaseEntity implements UserDetails {
 	private int balance;
 
 	private Image image;
-	
-	private Set<Role> role = new HashSet<>();
+
+	private Set<Role> roles = new HashSet<>();
 
 	private List<Order> orders = new ArrayList<>();
 
@@ -138,16 +136,14 @@ public class User extends BaseEntity implements UserDetails {
 		return orders;
 	}
 
-	@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-	@Enumerated(EnumType.STRING)
-	@JoinColumn(name = "role")
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	public Set<Role> getRoles() {
-		return role;
+		return roles;
 	}
 
-	public void setRoles(Set<Role> role) {
-		this.role = role;
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 	public void setOrders(List<Order> orders) {
