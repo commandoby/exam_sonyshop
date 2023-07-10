@@ -21,7 +21,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class OrderController {
 
-    private final Logger log = LogManager.getLogger(OrderController.class);
+    //private final Logger log = LogManager.getLogger(OrderController.class);
     private final UserService userService;
     private final OrderService orderService;
 
@@ -49,7 +49,7 @@ public class OrderController {
         try {
             orderService.removeProductFromCartByNumber(order, id);
         } catch (NotFoundException | ServiceException e) {
-            log.error(e);
+           // log.error(e);
         }
 
         modelMap.addAttribute(ORDER.getValue(), order);
@@ -67,13 +67,13 @@ public class OrderController {
                 orderService.orderPayMethod(user, order);
                 userService.userPayMethod(user, order);
                 modelMap.addAttribute(USER.getValue(), user);
-                log.info("Purchased " + order.getProductList().size() + " products.");
+                //log.info("Purchased " + order.getProductList().size() + " products.");
 
                 modelMap.addAttribute(CART_SIZE.getValue(), order.getProductList().size());
                 modelMap.addAttribute(CART_PRICE.getValue(), order.getOrderPrice());
                 modelMap.addAttribute(ORDER.getValue(), new Order());
             } catch (ServiceException e) {
-                log.error(e);
+                //log.error(e);
             }
         }
         return new ModelAndView(PagesPathEnum.PAY_PAGE.getPath(), modelMap);

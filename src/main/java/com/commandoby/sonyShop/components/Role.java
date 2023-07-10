@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ public class Role extends BaseEntity implements GrantedAuthority {
 	
 	private String name;
 	private Set<User> users;
+	
+	public Role() {
+	}
 
 	public Role(String name) {
 		super();
@@ -37,6 +41,7 @@ public class Role extends BaseEntity implements GrantedAuthority {
 		this.name = name;
 	}
 
+	@Transient
 	@ManyToMany(mappedBy = "roles")
 	public Set<User> getUsers() {
 		return users;
@@ -46,6 +51,7 @@ public class Role extends BaseEntity implements GrantedAuthority {
 		this.users = users;
 	}
 
+    @Transient
 	@Override
 	public String getAuthority() {
 		return getName();

@@ -9,6 +9,7 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,7 +30,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final Logger log = LogManager.getLogger(UserServiceImpl.class);
+    //private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final ImageServiceImpl imageServiceImpl;
     
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			user = userRepository.getUserByEmail(email);
 		} catch (RepositoryException e) {
-			log.error(e);
+			//log.error(e);
 		}
 
         if (user == null) {
@@ -179,7 +180,7 @@ public class UserServiceImpl implements UserService {
             if (findUser.getPassword().equals(user.getPassword())) {
                 modelMap.addAttribute(USER.getValue(), findUser);
                 modelAndView.addAllObjects(modelMap);
-                log.info("User " + user.getEmail() + " entered the store.");
+                //log.info("User " + user.getEmail() + " entered the store.");
                 return true;
             } else {
                 modelMap.addAttribute(INFO.getValue(), "Invalid password.");
@@ -218,7 +219,7 @@ public class UserServiceImpl implements UserService {
             user.setSurname(new_surname);
             user.setDateOfBirth(LocalDate.parse(new_date_of_birth));
             update(user);
-            log.info("User: " + user.getEmail() + " changed the data.");
+            //log.info("User: " + user.getEmail() + " changed the data.");
             modelMap.addAttribute(USER_EDIT.getValue(), "");
         } else {
             modelMap.addAttribute(INFO.getValue(), "Invalid password.");
@@ -237,7 +238,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword().equals(old_password)) {
             user.setPassword(new_password);
             update(user);
-            log.info("User: " + user.getEmail() + " changed the password.");
+            //log.info("User: " + user.getEmail() + " changed the password.");
             modelMap.addAttribute(USER_EDIT.getValue(), "");
         }
         return new ModelAndView(USER_PAGE.getPath(), modelMap);

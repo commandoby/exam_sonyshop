@@ -19,7 +19,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class UserController {
 
-    private final Logger log = LogManager.getLogger(UserController.class);
+    //private final Logger log = LogManager.getLogger(UserController.class);
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -61,7 +61,7 @@ public class UserController {
                 modelAndView = userService.editUserPassword(user, new_password, old_password, second_password);
             }
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         return modelAndView;

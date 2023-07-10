@@ -85,6 +85,8 @@ public class User extends BaseEntity implements UserDetails {
 		this.surname = surname;
 	}
 
+	//@NotEmpty(message = "Email/login must not be empty")
+	//@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
 	@Column(name = "email")
 	public String getEmail() {
 		return email;
@@ -94,6 +96,8 @@ public class User extends BaseEntity implements UserDetails {
 		this.email = email;
 	}
 
+	//@Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
+	//@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
 	@Column(name = "password")
 	public String getPassword() {
 		return password;
@@ -154,31 +158,37 @@ public class User extends BaseEntity implements UserDetails {
 		orders.add(order);
 	}
 
+    @Transient
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return getRoles();
 	}
 
+    @Transient
 	@Override
 	public String getUsername() {
 		return getName();
 	}
 
+    @Transient
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+    @Transient
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+    @Transient
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+    @Transient
 	@Override
 	public boolean isEnabled() {
 		return true;

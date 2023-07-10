@@ -25,7 +25,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes("order")
 public class ProductController {
 
-    private final Logger log = LogManager.getLogger(ProductController.class);
+    //private final Logger log = LogManager.getLogger(ProductController.class);
     private final CategoryService categoryService;
     private final ProductService productService;
     private final OrderService orderService;
@@ -62,7 +62,7 @@ public class ProductController {
             modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
             modelMap.addAttribute(PAGE_MAX.getValue(), (int) Math.ceil(products.getTotalElements() / (float) page_items));
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
@@ -77,7 +77,7 @@ public class ProductController {
             Product product = productService.read(product_id);
             modelMap.addAttribute(PRODUCT.getValue(), product);
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
         return new ModelAndView(PagesPathEnum.PRODUCT_PAGE.getPath(), modelMap);
     }
@@ -112,7 +112,7 @@ public class ProductController {
             modelMap.addAttribute(PAGE_ITEMS.getValue(), page_items);
             modelMap.addAttribute(PAGE_MAX.getValue(), (int) Math.ceil(products.getTotalElements() / (float) page_items));
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         modelMap.addAttribute(CATEGORY_TAG.getValue(), category_tag);
@@ -130,7 +130,7 @@ public class ProductController {
             orderService.addProductToCart(order, product);
             modelMap.addAttribute(PRODUCT.getValue(), product);
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         modelMap.addAttribute(ORDER.getValue(), order);
