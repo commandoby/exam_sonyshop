@@ -105,14 +105,17 @@ public class UserServiceImpl implements UserService {
         if (email != null) {
             if (!password.equals(second_password)) {
                 modelMap.addAttribute(INFO.getValue(), "Password mismatch.");
+                //System.out.println("1");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
             if (duplicateCheck(email)) {
                 modelMap.addAttribute(INFO.getValue(), "User exists.");
+                //System.out.println("2");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
             if (validateLocalData(date_of_birth)) {
                 modelMap.addAttribute(INFO.getValue(), "Incorrect date format.");
+                //System.out.println("3");
                 return new ModelAndView(REGISTER_PAGE.getPath(), modelMap);
             }
 
@@ -126,6 +129,7 @@ public class UserServiceImpl implements UserService {
                     .withImage(imageServiceImpl.read(1)).build();
             user.setRoles(Set.of(new Role(1, "ROLE_USER")));
             create(user);
+            //System.out.println("4");
 
             modelMap.addAttribute(NAME.getValue(), name);
             modelMap.addAttribute(SURNAME.getValue(), surname);
@@ -133,6 +137,7 @@ public class UserServiceImpl implements UserService {
             modelMap.addAttribute(EMAIL.getValue(), email);
         }
 
+        //System.out.println("5");
         return new ModelAndView(SIGN_IN_PAGE.getPath(), modelMap);
     }
 
@@ -177,7 +182,8 @@ public class UserServiceImpl implements UserService {
         ModelMap modelMap = new ModelMap();
         User findUser = getUserByEmail(user.getEmail());
         if (findUser != null) {
-            if (findUser.getPassword().equals(user.getPassword())) {
+            //if (findUser.getPassword().equals(user.getPassword())) {
+            if (bCryptPasswordEncoder.matches(user.getPassword(), findUser.getPassword())) {
                 modelMap.addAttribute(USER.getValue(), findUser);
                 modelAndView.addAllObjects(modelMap);
                 //log.info("User " + user.getEmail() + " entered the store.");

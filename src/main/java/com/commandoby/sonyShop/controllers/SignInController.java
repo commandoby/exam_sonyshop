@@ -29,11 +29,13 @@ public class SignInController {
     }
 
     @GetMapping("/signin")
-    public ModelAndView signIn(SessionStatus sessionStatus,
-                               @ModelAttribute("user") User user) throws ControllerException {
+    public ModelAndView signIn(SessionStatus sessionStatus
+                               //ModelAttribute("user") User user
+    		) throws ControllerException {
         //log.info("User " + user.getEmail() + " left the store.");
         sessionStatus.setComplete();
 
+        //System.out.println("9");
         return new ModelAndView(PagesPathEnum.SIGN_IN_PAGE.getPath(), new ModelMap());
     }
 
@@ -45,13 +47,18 @@ public class SignInController {
                                  @RequestParam String password,
                                  @RequestParam String second_password) throws ControllerException {
         ModelAndView modelAndView = new ModelAndView();
+        //System.out.println("8");
 
         try {
             modelAndView = userService.register(name, surname, date_of_birth, email, password, second_password);
         } catch (ServiceException e) {
             //log.error(e);
+
+            //System.out.println("6");
         }
 
+
+        //System.out.println("7");
         return modelAndView;
     }
 
