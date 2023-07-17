@@ -32,6 +32,8 @@ public class User extends BaseEntity implements UserDetails {
 	@Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
 	@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
 	private String password;
+	
+	private String securePassword;
 
 	private LocalDate dateOfBirth;
 
@@ -85,8 +87,6 @@ public class User extends BaseEntity implements UserDetails {
 		this.surname = surname;
 	}
 
-	//@NotEmpty(message = "Email/login must not be empty")
-	//@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
 	@Column(name = "email")
 	public String getEmail() {
 		return email;
@@ -96,15 +96,22 @@ public class User extends BaseEntity implements UserDetails {
 		this.email = email;
 	}
 
-	//@Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
-	//@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
-	@Column(name = "password")
+	@Transient
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Column(name = "password")
+	public String getSecurePassword() {
+		return securePassword;
+	}
+
+	public void setSecurePassword(String securePassword) {
+		this.securePassword = securePassword;
 	}
 
 	@Column(name = "date_of_birth")

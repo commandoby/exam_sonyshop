@@ -1,5 +1,6 @@
 package com.commandoby.sonyShop.components;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -55,6 +56,28 @@ public class Role extends BaseEntity implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		return getName();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, users);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Role other = (Role) obj;
+		return Objects.equals(name, other.name) && Objects.equals(users, other.users);
+	}
+
+	@Override
+	public String toString() {
+		return "Role [name=" + name + "]";
 	}
 
 }

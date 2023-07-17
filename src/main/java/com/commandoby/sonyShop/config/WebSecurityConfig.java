@@ -3,6 +3,7 @@ package com.commandoby.sonyShop.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,14 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/sonyshop/new").not().fullyAuthenticated()
                     //.antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/sonyshop/user", "/sonyshop/cart").hasRole("USER")
-                    .antMatchers("/").permitAll()
+                    .antMatchers("/sonyshop/user**", "/sonyshop/cart**").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/sonyshop/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                    .formLogin()
-                    .loginPage("/sonyshop/signin")
-                    .defaultSuccessUrl("/sonyshop")
-                    .permitAll()
                 .and()
                     .logout()
                     .permitAll()
