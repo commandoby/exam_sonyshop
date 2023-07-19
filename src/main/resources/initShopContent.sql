@@ -203,17 +203,17 @@ VALUES (1, CONCAT(@UploadsUser,"user.jpeg")),
 -- add roles
 DELETE FROM roles WHERE id >= 0;
 INSERT INTO roles(id, name)
-VALUES (1, "USER"), (2, "ADMIN");
+VALUES (1, "ROLE_USER"), (2, "ROLE_ADMIN");
 
 -- add users
 DELETE FROM users WHERE id >= 0;
 INSERT INTO users(name, surname, email, password, date_of_birth, balance, image_id)
-VALUES ("Admin", "Admin", "admin", "admin", "1980-01-01", 9999999, 1);
+VALUES ("Admin", "Admin", "admin", "$2a$10$MSZPBGAMG8yyXJQ/xqNeMeYrVOIEtUX5nwUOL11TFu7CvxSjoQWAW", "1980-01-01", 9999999, 1);
 
 -- add users_roles
 DELETE FROM users_roles WHERE user_id >= 0;
 INSERT INTO users_roles(user_id, role_id)
-VALUES (1, 2);
+VALUES (1, 1), (1, 2);
 
 -- add categories
 DELETE FROM categories WHERE id >= 0;

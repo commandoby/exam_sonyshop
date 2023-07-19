@@ -35,7 +35,6 @@ public class SignInController {
         //log.info("User " + user.getEmail() + " left the store.");
         sessionStatus.setComplete();
 
-        System.out.println("9");
         return new ModelAndView(PagesPathEnum.SIGN_IN_PAGE.getPath(), new ModelMap());
     }
 

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(50) NOT NULL,
     surname VARCHAR(50) NOT NULL,
     email VARCHAR(200) NOT NULL,
-    password VARCHAR(500) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     date_of_birth DATE NOT NULL,
     balance INT,
     image_id INT,
