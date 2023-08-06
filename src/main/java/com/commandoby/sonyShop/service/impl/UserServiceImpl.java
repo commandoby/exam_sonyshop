@@ -7,10 +7,8 @@ import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,7 @@ import static com.commandoby.sonyShop.enums.PagesPathEnum.*;
 import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     //private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
