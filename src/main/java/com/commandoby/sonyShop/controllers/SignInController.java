@@ -21,7 +21,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.EMAIL;
 @SessionAttributes({"user", "order"})
 public class SignInController {
 
-    private final Logger log = LogManager.getLogger(UserController.class);
+    //private final Logger log = LogManager.getLogger(UserController.class);
     private final UserService userService;
 
     public SignInController(UserService userService) {
@@ -29,9 +29,10 @@ public class SignInController {
     }
 
     @GetMapping("/signin")
-    public ModelAndView signIn(SessionStatus sessionStatus,
-                               @ModelAttribute("user") User user) throws ControllerException {
-        log.info("User " + user.getEmail() + " left the store.");
+    public ModelAndView signIn(SessionStatus sessionStatus//, 
+                               //@ModelAttribute("user") User user
+    		) throws ControllerException {
+        //log.info("User " + user.getEmail() + " left the store.");
         sessionStatus.setComplete();
 
         return new ModelAndView(PagesPathEnum.SIGN_IN_PAGE.getPath(), new ModelMap());
@@ -49,8 +50,9 @@ public class SignInController {
         try {
             modelAndView = userService.register(name, surname, date_of_birth, email, password, second_password);
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
+
 
         return modelAndView;
     }

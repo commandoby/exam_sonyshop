@@ -6,6 +6,7 @@ import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class UserController {
 
-    private final Logger log = LogManager.getLogger(UserController.class);
+    //private final Logger log = LogManager.getLogger(UserController.class);
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -61,7 +62,7 @@ public class UserController {
                 modelAndView = userService.editUserPassword(user, new_password, old_password, second_password);
             }
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         return modelAndView;

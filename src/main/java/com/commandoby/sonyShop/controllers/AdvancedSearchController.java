@@ -26,7 +26,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes("order")
 public class AdvancedSearchController {
 
-	private final Logger log = LogManager.getLogger(AdvancedSearchController.class);
+	//private final Logger log = LogManager.getLogger(AdvancedSearchController.class);
 	private final ProductService productService;
 	private final CategoryService categoryService;
 	private final OrderService orderService;
@@ -91,7 +91,7 @@ public class AdvancedSearchController {
 				modelMap.addAttribute(INFO.getValue(), "Enter search parameters.");
 			}
 		} catch (ServiceException e) {
-			log.error(e);
+			//log.error(e);
 		}
 
 		modelMap.addAttribute(SEARCH_VALUE.getValue(), paramsStringMap.get(SEARCH_VALUE.getValue()));

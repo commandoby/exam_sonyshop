@@ -1,12 +1,18 @@
 package com.commandoby.sonyShop.service.impl;
 
 import com.commandoby.sonyShop.components.Order;
+import com.commandoby.sonyShop.components.Role;
 import com.commandoby.sonyShop.repository.UserRepository;
 import com.commandoby.sonyShop.components.User;
+import com.commandoby.sonyShop.exceptions.RepositoryException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -15,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static com.commandoby.sonyShop.enums.PagesPathEnum.*;
@@ -23,13 +30,16 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final Logger log = LogManager.getLogger(UserServiceImpl.class);
+    //private final Logger log = LogManager.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final ImageServiceImpl imageServiceImpl;
+    
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ImageServiceImpl imageServiceImpl) {
+    public UserServiceImpl(UserRepository userRepository, ImageServiceImpl imageServiceImpl, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
 		this.imageServiceImpl = imageServiceImpl;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -71,6 +81,22 @@ public class UserServiceImpl implements UserService {
                         + email + ".", new Exception()));
     }
 
+	@Override
+	public UserDetails loadUserByUsername(String email)  throws UsernameNotFoundException {
+        User user = null;
+		try {
+			user = userRepository.getUserByEmail(email);
+		} catch (RepositoryException e) {
+			//log.error(e);
+		}
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
+	}
+
     @Override
     public ModelAndView register(String name, String surname, String date_of_birth,
                                  String email, String password, String second_password) throws ServiceException {
@@ -98,6 +124,8 @@ public class UserServiceImpl implements UserService {
                     .withPassword(password)
                     .withBalance(100000)
                     .withImage(imageServiceImpl.read(1)).build();
+            user.setRoles(Set.of(new Role(1, "USER")));
+            user.setSecurePassword(bCryptPasswordEncoder.encode(password));
             create(user);
 
             modelMap.addAttribute(NAME.getValue(), name);
@@ -150,10 +178,11 @@ public class UserServiceImpl implements UserService {
         ModelMap modelMap = new ModelMap();
         User findUser = getUserByEmail(user.getEmail());
         if (findUser != null) {
-            if (findUser.getPassword().equals(user.getPassword())) {
+            if (bCryptPasswordEncoder.matches(user.getPassword(), findUser.getSecurePassword())) {
+            	System.out.println(findUser.getRoles());
                 modelMap.addAttribute(USER.getValue(), findUser);
                 modelAndView.addAllObjects(modelMap);
-                log.info("User " + user.getEmail() + " entered the store.");
+                //log.info("User " + user.getEmail() + " entered the store.");
                 return true;
             } else {
                 modelMap.addAttribute(INFO.getValue(), "Invalid password.");
@@ -192,7 +221,7 @@ public class UserServiceImpl implements UserService {
             user.setSurname(new_surname);
             user.setDateOfBirth(LocalDate.parse(new_date_of_birth));
             update(user);
-            log.info("User: " + user.getEmail() + " changed the data.");
+            //log.info("User: " + user.getEmail() + " changed the data.");
             modelMap.addAttribute(USER_EDIT.getValue(), "");
         } else {
             modelMap.addAttribute(INFO.getValue(), "Invalid password.");
@@ -211,7 +240,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword().equals(old_password)) {
             user.setPassword(new_password);
             update(user);
-            log.info("User: " + user.getEmail() + " changed the password.");
+            //log.info("User: " + user.getEmail() + " changed the password.");
             modelMap.addAttribute(USER_EDIT.getValue(), "");
         }
         return new ModelAndView(USER_PAGE.getPath(), modelMap);

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final Logger log = LogManager.getLogger(OrderServiceImpl.class);
+    //private final Logger log = LogManager.getLogger(OrderServiceImpl.class);
     private final OrderRepository orderRepository;
     private final ProductService productService;
 
@@ -131,8 +131,8 @@ public class OrderServiceImpl implements OrderService {
             }
         } else {
             try {
-                log.info("Trying to purchase " + products.size()
-                        + " products. In stock: " + product.getQuantity() + ".");
+                //log.info("Trying to purchase " + products.size()
+                   //     + " products. In stock: " + product.getQuantity() + ".");
 
                 for (int i = 0; i < products.size(); i++) {
                     removeProductFromCart(order, product);

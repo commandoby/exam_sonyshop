@@ -1,5 +1,7 @@
 package com.commandoby.sonyShop.components;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -8,13 +10,16 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Component
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
 	private String name;
 
@@ -27,6 +32,8 @@ public class User extends BaseEntity {
 	@Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
 	@Pattern(regexp = "\\S+", message = "Spaces are not allowed")
 	private String password;
+	
+	private String securePassword;
 
 	private LocalDate dateOfBirth;
 
@@ -34,13 +41,15 @@ public class User extends BaseEntity {
 
 	private Image image;
 
+	private Set<Role> roles = new HashSet<>();
+
 	private List<Order> orders = new ArrayList<>();
 
 	public User() {
 	}
 
 	public User(String name, String surname, String email, String password, LocalDate dateOfBirth, int balance,
-			Image image) {
+			Image image, Role role) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
@@ -87,13 +96,22 @@ public class User extends BaseEntity {
 		this.email = email;
 	}
 
-	@Column(name = "password")
+	@Transient
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Column(name = "password")
+	public String getSecurePassword() {
+		return securePassword;
+	}
+
+	public void setSecurePassword(String securePassword) {
+		this.securePassword = securePassword;
 	}
 
 	@Column(name = "date_of_birth")
@@ -129,12 +147,58 @@ public class User extends BaseEntity {
 		return orders;
 	}
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
 
 	public void addOrder(Order order) {
 		orders.add(order);
+	}
+
+    @Transient
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return getRoles();
+	}
+
+    @Transient
+	@Override
+	public String getUsername() {
+		return getName();
+	}
+
+    @Transient
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+    @Transient
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+    @Transient
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+    @Transient
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 	@Override

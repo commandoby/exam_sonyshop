@@ -23,7 +23,7 @@ import static com.commandoby.sonyShop.enums.RequestParamEnum.*;
 @SessionAttributes({"user", "order"})
 public class HomeController {
 
-    private final Logger log = LogManager.getLogger(HomeController.class);
+    //private final Logger log = LogManager.getLogger(HomeController.class);
     private final UserService userService;
     private final CategoryService categoryService;
 
@@ -39,7 +39,7 @@ public class HomeController {
         try {
             modelMap = categoryService.getHomePageModelMap(modelMap);
         } catch (ServiceException e) {
-            log.error(e);
+           // log.error(e);
         }
 
         if (order == null) modelMap.addAttribute(ORDER.getValue(), new Order());
@@ -62,7 +62,7 @@ public class HomeController {
         try {
             modelMap = categoryService.getHomePageModelMap(modelMap);
         } catch (ServiceException e) {
-            log.error(e);
+            //log.error(e);
         }
 
         modelMap.addAttribute(ORDER.getValue(), new Order());
