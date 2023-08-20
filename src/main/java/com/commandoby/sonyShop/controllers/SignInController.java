@@ -1,9 +1,12 @@
 package com.commandoby.sonyShop.controllers;
 
+import com.commandoby.sonyShop.components.User;
 import com.commandoby.sonyShop.enums.PagesPathEnum;
 import com.commandoby.sonyShop.exceptions.ControllerException;
 import com.commandoby.sonyShop.exceptions.ServiceException;
 import com.commandoby.sonyShop.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;

@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.0.2.Final</version>
+			<version>6.1.6.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -81,16 +81,6 @@
 			<artifactId>maven-war-plugin</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.1</version>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.xml.bind</groupId>
-			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>2.3.3</version>
-		</dependency>
 
 		<!--Spring-->
 		<dependency>
@@ -129,11 +119,11 @@
 		<!--			<artifactId>spring-boot-starter-log4j2</artifactId>-->
 		<!--			<version>${spring.version}</version>-->
 		<!--		</dependency>-->
-		<!--<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<version>${spring.version}</version>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
