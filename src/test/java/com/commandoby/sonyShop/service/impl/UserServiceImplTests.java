@@ -18,7 +18,7 @@ public class UserServiceImplTests {
     private static User user;
 
     @BeforeAll
-    public static void setUp() {
+    /*public static void setUp() {
         userRepositoryMock = Mockito.mock(UserRepository.class);
         imageServiceImplMock = Mockito.mock(ImageServiceImpl.class);
 
@@ -32,7 +32,7 @@ public class UserServiceImplTests {
                 .withBalance(10000)
                 .withPassword("ivan")
                 .build();
-    }
+    }*/
 
     @AfterAll
     public static void tearDown() {

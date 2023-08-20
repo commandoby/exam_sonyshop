@@ -56,8 +56,8 @@ public class JwtTokenRepository implements CsrfTokenRepository {
 	@Override
 	public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
         if (Objects.nonNull(token)) {
-            if (!response.getHeaderNames().contains(ACCESS_CONTROL_EXPOSE_HEADERS))
-                response.addHeader(ACCESS_CONTROL_EXPOSE_HEADERS, token.getHeaderName());
+            if (!response.getHeaderNames().contains("*"))
+                response.addHeader("*", token.getHeaderName());
 
             if (response.getHeaderNames().contains(token.getHeaderName()))
                 response.setHeader(token.getHeaderName(), token.getToken());
